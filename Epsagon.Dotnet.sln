@@ -1,0 +1,47 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsagon.Dotnet.Core", "Epsagon.Dotnet.Core\Epsagon.Dotnet.Core.csproj", "{ED68DC9F-7E6D-4EE0-B6A4-920B5F847089}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsagon.Dotnet.Config", "Epsagon.Dotnet.Config\Epsagon.Dotnet.Config.csproj", "{12C60B1A-5D29-4711-9355-4B0B802832F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsagon.Dotnet.Lambda", "Epsagon.Dotnet.Lambda\Epsagon.Dotnet.Lambda.csproj", "{5ADB56E9-7132-4F29-8175-4BE92E6E94E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsagon.Dotnet.OpenTracing", "Epsagon.Dotnet.OpenTracing\Epsagon.Dotnet.OpenTracing.csproj", "{06444146-3DDB-4FF9-9AF6-8E32F093F988}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsagon.Dotnet.Instrumentation", "Epsagon.Dotnet.Instrumentation\Epsagon.Dotnet.Instrumentation.csproj", "{C55DBA1F-7FDD-48FC-A3DD-2A0C3FEABB06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoLambdaFunction", "DemoLambdaFunction\DemoLambdaFunction.csproj", "{4C4AFA19-C82F-4CE4-92ED-C4AC9EB8A685}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED68DC9F-7E6D-4EE0-B6A4-920B5F847089}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED68DC9F-7E6D-4EE0-B6A4-920B5F847089}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED68DC9F-7E6D-4EE0-B6A4-920B5F847089}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED68DC9F-7E6D-4EE0-B6A4-920B5F847089}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12C60B1A-5D29-4711-9355-4B0B802832F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12C60B1A-5D29-4711-9355-4B0B802832F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12C60B1A-5D29-4711-9355-4B0B802832F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12C60B1A-5D29-4711-9355-4B0B802832F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5ADB56E9-7132-4F29-8175-4BE92E6E94E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ADB56E9-7132-4F29-8175-4BE92E6E94E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ADB56E9-7132-4F29-8175-4BE92E6E94E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ADB56E9-7132-4F29-8175-4BE92E6E94E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06444146-3DDB-4FF9-9AF6-8E32F093F988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06444146-3DDB-4FF9-9AF6-8E32F093F988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06444146-3DDB-4FF9-9AF6-8E32F093F988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06444146-3DDB-4FF9-9AF6-8E32F093F988}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C55DBA1F-7FDD-48FC-A3DD-2A0C3FEABB06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C55DBA1F-7FDD-48FC-A3DD-2A0C3FEABB06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C55DBA1F-7FDD-48FC-A3DD-2A0C3FEABB06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C55DBA1F-7FDD-48FC-A3DD-2A0C3FEABB06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C4AFA19-C82F-4CE4-92ED-C4AC9EB8A685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C4AFA19-C82F-4CE4-92ED-C4AC9EB8A685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C4AFA19-C82F-4CE4-92ED-C4AC9EB8A685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C4AFA19-C82F-4CE4-92ED-C4AC9EB8A685}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
