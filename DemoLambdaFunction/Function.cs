@@ -1,5 +1,8 @@
 ﻿using System;
+using Amazon;
+using Amazon.Lambda;
 using Amazon.Lambda.Core;
+using Amazon.Lambda.Model;
 using Epsagon.Dotnet.Config;
 using Epsagon.Dotnet.Lambda;
 
@@ -12,7 +15,16 @@ namespace DemoLambdaFunction
         [Epsagon(AppName = "Dotnet Test")]
         public override string HandlerFunction(string input, ILambdaContext context)
         {
-            return input.ToUpper();
+            var client = new AmazonLambdaClient(RegionEndpoint.USEast1);
+            var request = new InvokeRequest
+            {
+                FunctionName = "dotnet-private-test",
+                InvocationType = InvocationType.RequestResponse,
+                Payload = "\"test invoke\""
+            };
+
+            var response = client.InvokeAsync(request).Result;
+            return response.Payload.ToString();
         }
     }
 }

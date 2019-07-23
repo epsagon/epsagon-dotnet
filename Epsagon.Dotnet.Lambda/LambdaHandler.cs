@@ -1,5 +1,6 @@
 ﻿using System;
 using Amazon.Lambda.Core;
+using Amazon.Runtime.Internal;
 using Epsagon.Dotnet.Config;
 using Epsagon.Dotnet.Core;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,7 @@ namespace Epsagon.Dotnet.Lambda
         public LambdaHandler() : base()
         {
             EpsagonUtils.RegisterServices();
+            EpsagonUtils.RegisterCustomizers();
             _configService = EpsagonUtils.GetService<IConfigurationService>();
         }
 
@@ -43,8 +45,7 @@ namespace Epsagon.Dotnet.Lambda
             }
 
             var config = _configService.GetConfig();
-            context.Logger.Log($"Appname: {config.AppName}");
-
+            
             return this.HandlerFunction(input, context);
         }
     }
