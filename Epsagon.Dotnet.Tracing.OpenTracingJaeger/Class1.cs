@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Epsagon.Dotnet.OpenTracing
+namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
 {
     public class Class1
     {

@@ -1,11 +1,10 @@
 using System;
-namespace Epsagon.Dotnet.Config
+namespace Epsagon.Dotnet.Core.Configuration
 {
     public interface IConfigurationService
     {
         IEpsagonConfiguration GetConfig();
         IEpsagonConfiguration DefaultConfig();
-        IEpsagonConfiguration FromAttribute(EpsagonAttribute attr);
         void SetConfig(IEpsagonConfiguration config);
     }
 }

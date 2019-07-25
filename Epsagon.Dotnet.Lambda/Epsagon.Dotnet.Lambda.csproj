@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Epsagon.Dotnet.Config\Epsagon.Dotnet.Config.csproj" />
     <ProjectReference Include="..\Epsagon.Dotnet.Core\Epsagon.Dotnet.Core.csproj" />
+    <ProjectReference Include="..\Epsagon.Dotnet.Instrumentation\Epsagon.Dotnet.Instrumentation.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.Core" Version="1.1.0" />

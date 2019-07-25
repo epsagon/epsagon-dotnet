@@ -1,5 +1,5 @@
 using System;
-namespace Epsagon.Dotnet.Config
+namespace Epsagon.Dotnet.Core.Configuration
 {
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     public sealed class EpsagonAttribute : Attribute

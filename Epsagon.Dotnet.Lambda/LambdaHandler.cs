@@ -1,21 +1,17 @@
-﻿using System;
+﻿using System.Reflection;
 using Amazon.Lambda.Core;
-using Amazon.Runtime.Internal;
-using Epsagon.Dotnet.Config;
 using Epsagon.Dotnet.Core;
-using Microsoft.Extensions.Logging;
+using Epsagon.Dotnet.Core.Configuration;
+using Epsagon.Dotnet.Instrumentation;
 
 namespace Epsagon.Dotnet.Lambda
 {
     public abstract class LambdaHandler<TReq, TRes> : BaseLambdaHandler<TReq, TRes>
     {
-        private IConfigurationService _configService;
-
         public LambdaHandler() : base()
         {
             EpsagonUtils.RegisterServices();
-            EpsagonUtils.RegisterCustomizers();
-            _configService = EpsagonUtils.GetService<IConfigurationService>();
+            EpsagonPipelineCustomizer.PatchPipeline();
         }
 
         /// <summary>
@@ -36,16 +32,9 @@ namespace Epsagon.Dotnet.Lambda
         /// <returns></returns>
         private TRes EpsagonEnabledHandler(TReq input, ILambdaContext context)
         {
-            var attrs = GetType().GetMethod(nameof(this.HandlerFunction)).GetCustomAttributes(typeof(EpsagonAttribute), false);
-            if (attrs.Length > 0)
-            {
-                var epsagonAttr = (EpsagonAttribute)attrs[0];
-                var attrConfig = _configService.FromAttribute(epsagonAttr);
-                _configService.SetConfig(attrConfig);
-            }
+            var config = EpsagonUtils.GetConfiguration(GetType());
+            System.Console.WriteLine($"Appname: {config.AppName}");
 
-            var config = _configService.GetConfig();
-            
             return this.HandlerFunction(input, context);
         }
     }

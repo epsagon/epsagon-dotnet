@@ -9,13 +9,16 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.2.0" />
-    <PackageReference Include="AWSSDK.Core" Version="3.3.103.13" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Epsagon.Dotnet.Config\Epsagon.Dotnet.Config.csproj" />
-    <ProjectReference Include="..\Epsagon.Dotnet.Instrumentation\Epsagon.Dotnet.Instrumentation.csproj" />
+    <PackageReference Include="AWSSDK.Core" Version="3.3.103.14" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="AttributeExtractor.cs" />
+    <Compile Remove="Configuration\EpsagonAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Epsagon.Dotnet.Tracing.OpenTracingJaeger\Epsagon.Dotnet.Tracing.OpenTracingJaeger.csproj" />
   </ItemGroup>
 </Project>

@@ -1,8 +1,9 @@
 using System;
 
-namespace Epsagon.Dotnet.Config
+namespace Epsagon.Dotnet.Core.Configuration
 {
-    public class EpsagonConfiguration : IEpsagonConfiguration
+    [AttributeUsage(AttributeTargets.Class)]
+    public class EpsagonConfiguration : Attribute, IEpsagonConfiguration
     {   
         public string Token { get; set; } = Environment.GetEnvironmentVariable("EPSAGON_TOKEN") ?? "";
         public string AppName { get; set; } = Environment.GetEnvironmentVariable("EPSAGON_APP_NAME") ?? "Application";

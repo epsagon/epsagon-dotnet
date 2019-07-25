@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Amazon.Runtime;
 using Amazon.Runtime.Internal;
 
@@ -10,7 +10,13 @@ namespace Epsagon.Dotnet.Instrumentation 
 
         public void Customize(Type type, RuntimePipeline pipeline)
         {
-            
+            var handler = new HandlerFactory().GetInstace(type);
+            pipeline.AddHandler(handler);
+        }
+
+        public static void PatchPipeline()
+        {
+            RuntimePipelineCustomizerRegistry.Instance.Register(new EpsagonPipelineCustomizer());
         }
     }
 }
