@@ -11,7 +11,8 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.S3
         {
             { "PutObjectRequest", () => new PutObjectRequestHandler() },
             { "GetObjectRequest", () => new GetObjectRequestHandler() },
-            { "ListObjectsRequest", () => new ListObjectsRequestHandler() }
+            { "ListObjectsRequest", () => new ListObjectsRequestHandler() },
+            { "HeadObjectRequest", () => new HeadObjectRequestHandler() }
         };
     }
 }

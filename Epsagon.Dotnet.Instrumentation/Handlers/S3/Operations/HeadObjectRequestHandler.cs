@@ -1,11 +1,10 @@
-﻿using System;
 using Amazon.Runtime;
 using Amazon.S3.Model;
 using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.Handlers.S3.Operations
 {
-    public class GetObjectRequestHandler : IOperationHandler
+    public class HeadObjectRequestHandler : IOperationHandler
     {
         public void HandleOperationAfter(IExecutionContext context, IScope scope)
         {
@@ -17,10 +16,10 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.S3.Operations
 
         public void HandleOperationBefore(IExecutionContext context, IScope scope)
         {
-            var request = context.RequestContext.OriginalRequest as GetObjectRequest;
+            var request = context.RequestContext.OriginalRequest as GetObjectMetadataRequest;
             scope.Span.SetTag("resource.name", request.BucketName);
             scope.Span.SetTag("aws.s3.bucket", request.BucketName);
-            scope.Span.SetTag("aws.s3.key", request.Key);
+            scope.Span.SetTag("aws.s3.key", request.Key.ToString());
         }
     }
 }
