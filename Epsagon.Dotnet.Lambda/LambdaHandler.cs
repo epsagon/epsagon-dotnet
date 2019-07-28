@@ -1,12 +1,10 @@
-﻿using System.Reflection;
-using Amazon.Lambda.Core;
+﻿using Amazon.Lambda.Core;
 using Epsagon.Dotnet.Core;
-using Epsagon.Dotnet.Core.Configuration;
 using Epsagon.Dotnet.Instrumentation;
 
 namespace Epsagon.Dotnet.Lambda
 {
-    public abstract class LambdaHandler<TReq, TRes> : BaseLambdaHandler<TReq, TRes>
+    public abstract class LambdaHandler<TReq, TRes>
     {
         public LambdaHandler() : base()
         {
@@ -33,8 +31,6 @@ namespace Epsagon.Dotnet.Lambda
         private TRes EpsagonEnabledHandler(TReq input, ILambdaContext context)
         {
             var config = EpsagonUtils.GetConfiguration(GetType());
-            System.Console.WriteLine($"Appname: {config.AppName}");
-
             return this.HandlerFunction(input, context);
         }
     }

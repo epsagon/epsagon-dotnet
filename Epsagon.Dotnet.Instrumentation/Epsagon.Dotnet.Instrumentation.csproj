@@ -13,9 +13,6 @@
     <PackageReference Include="AWSSDK.SimpleEmail" Version="*"/>
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Class1.cs"/>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Handlers\"/>
     <Folder Include="Handlers\S3\"/>
     <Folder Include="Handlers\S3\Operations\"/>
