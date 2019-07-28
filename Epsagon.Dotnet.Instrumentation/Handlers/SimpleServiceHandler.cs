@@ -4,7 +4,7 @@ using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.Handlers
 {
-    public class SimpleServiceHandler<TOpFactory> : BaseServiceHandler where TOpFactory : IFactory<string, IOperationHandler> 
+    public class SimpleServiceHandler<TOpFactory> : BaseServiceHandler where TOpFactory : IFactory<string, IOperationHandler>
     {
         readonly IFactory<string, IOperationHandler> factory = Activator.CreateInstance<TOpFactory>();
 
@@ -19,7 +19,5 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
             var operation = executionContext.RequestContext.RequestName;
             factory.GetInstace(operation).HandleOperationBefore(executionContext, scope);
         }
-
-
     }
 }

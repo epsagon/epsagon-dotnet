@@ -9,7 +9,7 @@
     <ProjectReference Include="..\Epsagon.Dotnet.Instrumentation\Epsagon.Dotnet.Instrumentation.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Amazon.Lambda.Core" Version="1.1.0" />
+    <PackageReference Include="Amazon.Lambda.Core" Version="*" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
   </ItemGroup>
 </Project>

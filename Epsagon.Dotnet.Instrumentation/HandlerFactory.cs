@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Epsagon.Dotnet.Instrumentation.Handlers;
+using Epsagon.Dotnet.Instrumentation.Handlers.Kinesis;
 using Epsagon.Dotnet.Instrumentation.Handlers.S3;
 
 namespace Epsagon.Dotnet.Instrumentation
@@ -10,6 +11,7 @@ namespace Epsagon.Dotnet.Instrumentation
         public static Dictionary<Type, Func<IServiceHandler>> constructors = new Dictionary<Type, Func<IServiceHandler>>
         {
             { typeof(Amazon.S3.AmazonS3Client), () => new SimpleServiceHandler<S3OperationsFactory>() },
+            { typeof(Amazon.Kinesis.AmazonKinesisClient), () => new SimpleServiceHandler<KinesisOperationsFactory>() }
         };
 
         public IServiceHandler GetInstace(Type key)

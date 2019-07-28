@@ -5,13 +5,13 @@ using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.Handlers.S3.Operations
 {
-    public class GetObjectRequestHandler : IOperationHandler<GetObjectRequest, GetObjectResponse>
+    public class GetObjectRequestHandler : IOperationHandler
     {
-        public void HandleOperationAfter(GetObjectResponse response, IScope scope)
+        public void HandleOperationAfter(IExecutionContext context, IScope scope)
         {
         }
 
-        public void HandleOperationBefore(GetObjectRequest request, IScope scope)
+        public void HandleOperationBefore(IExecutionContext context, IScope scope)
         {
         }
     }

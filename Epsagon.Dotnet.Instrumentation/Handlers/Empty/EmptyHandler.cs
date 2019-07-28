@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Amazon.Runtime;
+﻿using Amazon.Runtime;
 using OpenTracing;
 
-namespace Epsagon.Dotnet.Instrumentation.Handlers
+namespace Epsagon.Dotnet.Instrumentation.Handlers.Empty
 {
     public class EmptyHandler : BaseServiceHandler
     {

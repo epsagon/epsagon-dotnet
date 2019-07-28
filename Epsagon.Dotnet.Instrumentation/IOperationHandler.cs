@@ -4,13 +4,9 @@ using Amazon.Runtime;
 
 namespace Epsagon.Dotnet.Instrumentation
 {
-    public interface IOperationHandler<out TReq, out TRes> 
-        where TReq : AmazonWebServiceRequest 
-        where TRes : AmazonWebServiceResponse
+    public interface IOperationHandler
     {
-        TReq Reqest { get; }
-        TRes Response { get; }
-        void HandleOperationBefore(IScope scope);
-        void HandleOperationAfter(IScope scope);
+        void HandleOperationBefore(IExecutionContext context, IScope scope);
+        void HandleOperationAfter(IExecutionContext context, IScope scope);
     }
 }
