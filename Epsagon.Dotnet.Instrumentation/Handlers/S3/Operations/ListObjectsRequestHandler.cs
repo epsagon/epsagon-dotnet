@@ -13,14 +13,14 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.S3.Operations
         {
             var response = context.ResponseContext as ListObjectsResponse;
             var summeries = JsonConvert.SerializeObject(response.S3Objects.Select(o => o.Key).ToArray());
-            scope.Span.SetTag("s3.keys", summeries);
+            scope.Span.SetTag("aws.s3.keys", summeries);
         }
 
         public void HandleOperationBefore(IExecutionContext context, IScope scope)
         {
             var request = context.RequestContext.OriginalRequest as ListObjectsRequest;
             scope.Span.SetTag("resource.name", request.BucketName);
-            scope.Span.SetTag("s3.bucket", request.BucketName);
+            scope.Span.SetTag("aws.s3.bucket", request.BucketName);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
             updateParams.Add("Condition Expression", request.ConditionExpression);
 
             scope.Span.SetTag("resource.name", request.TableName);
-            scope.Span.SetTag("dynamodb.update_parameters", JsonConvert.SerializeObject(updateParams));
+            scope.Span.SetTag("aws.dynamodb.update_parameters", JsonConvert.SerializeObject(updateParams));
         }
     }
 }

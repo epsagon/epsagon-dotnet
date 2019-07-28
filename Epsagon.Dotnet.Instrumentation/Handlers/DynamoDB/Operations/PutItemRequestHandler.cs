@@ -20,8 +20,8 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
             var item = JsonConvert.SerializeObject(request.Item);
 
             scope.Span.SetTag("resource.name", request.TableName);
-            scope.Span.SetTag("dynamodb.item", item);
-            scope.Span.SetTag("dynamodb.item_hash", CalculateMD5(item));
+            scope.Span.SetTag("aws.dynamodb.item", item);
+            scope.Span.SetTag("aws.dynamodb.item_hash", CalculateMD5(item));
         }
 
         private string CalculateMD5(string input)

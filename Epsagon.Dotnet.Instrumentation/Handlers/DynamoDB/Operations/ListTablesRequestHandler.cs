@@ -10,7 +10,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
         public void HandleOperationAfter(IExecutionContext context, IScope scope)
         {
             var response = context.ResponseContext.Response as ListTablesResponse;
-            scope.Span.SetTag("dynamodb.tables", JsonConvert.SerializeObject(response.TableNames));
+            scope.Span.SetTag("aws.dynamodb.tables", JsonConvert.SerializeObject(response.TableNames));
         }
 
         public void HandleOperationBefore(IExecutionContext context, IScope scope)
