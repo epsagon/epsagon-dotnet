@@ -10,6 +10,7 @@
     <PackageReference Include="AWSSDK.SQS" Version="*"/>
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="*"/>
     <PackageReference Include="AWSSDK.SimpleNotificationService" Version="*"/>
+    <PackageReference Include="AWSSDK.SimpleEmail" Version="*"/>
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Class1.cs"/>
