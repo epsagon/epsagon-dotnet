@@ -5,20 +5,13 @@ using Epsagon.Dotnet.Instrumentation.Handlers.S3.Operations;
 
 namespace Epsagon.Dotnet.Instrumentation.Handlers.S3
 {
-    public class S3OperationsFactory
-        : IFactory<string, IOperationHandler>
+    public class S3OperationsFactory : BaseFactory
     {
-        public IOperationHandler GetInstace(string key)
+        protected override Dictionary<string, Func<IOperationHandler>> Operations => new Dictionary<string, Func<IOperationHandler>>()
         {
-            var operations = new Dictionary<string, Func<IOperationHandler>>()
-            {
-                { "PutObjectRequest", () => new PutObjectRequestHandler() },
-                { "GetObjectRequest", () => new GetObjectRequestHandler() },
-                { "ListObjectsRequest", () => new ListObjectsRequestHandler() }
-            };
-
-            if (operations.ContainsKey(key)) return operations[key]();
-            return new EmptyOperation();
-        }
+            { "PutObjectRequest", () => new PutObjectRequestHandler() },
+            { "GetObjectRequest", () => new GetObjectRequestHandler() },
+            { "ListObjectsRequest", () => new ListObjectsRequestHandler() }
+        };
     }
 }

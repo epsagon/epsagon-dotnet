@@ -5,17 +5,11 @@ using Epsagon.Dotnet.Instrumentation.Handlers.Kinesis.Operations;
 
 namespace Epsagon.Dotnet.Instrumentation.Handlers.Kinesis
 {
-    public class KinesisOperationsFactory : IFactory<string, IOperationHandler>
+    public class KinesisOperationsFactory : BaseFactory
     {
-        public IOperationHandler GetInstace(string key)
+        protected override Dictionary<string, Func<IOperationHandler>> Operations => new Dictionary<string, Func<IOperationHandler>>()
         {
-            var operations = new Dictionary<string, Func<IOperationHandler>>()
-            {
-                { "PutRecordRequest", () => new PutRecordRequestHandler() }
-            };
-
-            if (operations.ContainsKey(key)) return operations[key]();
-            return new EmptyOperation();
-        }
+            { "PutRecordRequest", () => new PutRecordRequestHandler() }
+        };
     }
 }
