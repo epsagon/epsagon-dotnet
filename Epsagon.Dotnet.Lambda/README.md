@@ -43,4 +43,4 @@ public class Function : LambdaHandler<string, string>
 
 Provided under the MIT license. See LICENSE for details.
 
-Copyright 2018, Epsagon
+Copyright 2019, Epsagon
