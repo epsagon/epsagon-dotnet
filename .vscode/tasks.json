@@ -12,6 +12,16 @@
                 "reveal": "silent"
             },
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "pack",
+            "command": "dotnet pack -c Release",
+            "type": "shell",
+            "group": "build",
+            "presentation": {
+                "reveal": "silent",
+            },
+            "problemMatcher": "$msCompile"
         }
     ]
 }
