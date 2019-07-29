@@ -5,8 +5,9 @@
     <PackageId>Epsagon.Dotnet.Tracing.OpenTracingJaeger</PackageId>
     <Authors>Epsagon</Authors>
     <Company>Epsagon</Company>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIconUrl>https://epsagon-public-screenshots.s3.us-east-2.amazonaws.com/logo.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>
