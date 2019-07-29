@@ -1,5 +1,4 @@
-﻿using System;
-using Jaeger.Reporters;
+﻿using Jaeger.Reporters;
 using Jaeger.Samplers;
 using Microsoft.Extensions.Logging;
 

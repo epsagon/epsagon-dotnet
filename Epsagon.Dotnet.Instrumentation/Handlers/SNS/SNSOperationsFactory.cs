@@ -4,7 +4,7 @@ using Epsagon.Dotnet.Instrumentation.Handlers.SNS.Operations;
 
 namespace Epsagon.Dotnet.Instrumentation.Handlers.SNS
 {
-    public class SNSOperationsFactory : BaseFactory
+    public class SNSOperationsFactory : BaseOperationsFactory
     {
         protected override Dictionary<string, Func<IOperationHandler>> Operations => new Dictionary<string, Func<IOperationHandler>>()
         {

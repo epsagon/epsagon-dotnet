@@ -1,4 +1,5 @@
 ﻿using Amazon.Lambda.Core;
+using Microsoft.Extensions.Logging;
 using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Instrumentation;
 
@@ -31,6 +32,9 @@ namespace Epsagon.Dotnet.Lambda
         private TRes EpsagonEnabledHandler(TReq input, ILambdaContext context)
         {
             var config = EpsagonUtils.GetConfiguration(GetType());
+            var logger = EpsagonUtils.GetLogger<LambdaHandler<TReq, TRes>>();
+
+            logger.LogInformation("Epsagon Handler");
             return this.HandlerFunction(input, context);
         }
     }

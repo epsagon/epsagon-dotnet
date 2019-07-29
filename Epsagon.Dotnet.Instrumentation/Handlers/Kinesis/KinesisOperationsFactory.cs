@@ -5,7 +5,7 @@ using Epsagon.Dotnet.Instrumentation.Handlers.Kinesis.Operations;
 
 namespace Epsagon.Dotnet.Instrumentation.Handlers.Kinesis
 {
-    public class KinesisOperationsFactory : BaseFactory
+    public class KinesisOperationsFactory : BaseOperationsFactory
     {
         protected override Dictionary<string, Func<IOperationHandler>> Operations => new Dictionary<string, Func<IOperationHandler>>()
         {
