@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Serialization;
 
-namespace Epsagon.Dotnet.Tracing.Legacy
+namespace Epsagon.Dotnet.Core
 {
     public class JsonLowerCaseUnderscoreContractResolver : DefaultContractResolver
     {

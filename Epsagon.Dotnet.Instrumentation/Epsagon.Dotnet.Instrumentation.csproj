@@ -17,6 +17,15 @@
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="*"/>
     <PackageReference Include="AWSSDK.SimpleNotificationService" Version="*"/>
     <PackageReference Include="AWSSDK.SimpleEmail" Version="*"/>
+    <PackageReference Include="Amazon.Lambda.Core" Version="*" />
+    <PackageReference Include="Amazon.Lambda.S3Events" Version="*" />
+    <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="*" />
+    <PackageReference Include="Amazon.Lambda.SNSEvents" Version="*" />
+    <PackageReference Include="Amazon.Lambda.SQSEvents" Version="*" />
+    <PackageReference Include="Amazon.Lambda.KinesisEvents" Version="*" />
+    <PackageReference Include="Amazon.Lambda.DynamoDBEvents" Version="*" />
+    <PackageReference Include="Amazon.Lambda.CloudWatchEvents" Version="*" />
+    <PackageReference Include="Amazon.Lambda.ApplicationLoadBalancerEvents" Version="*" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Handlers\"/>

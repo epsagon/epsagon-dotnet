@@ -11,21 +11,9 @@ using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
 
 namespace Epsagon.Dotnet.Lambda
 {
-    public abstract class LambdaHandler<TReq, TRes>
+    public abstract class LambdaHandler<TEvent, TRes>
     {
-        private static bool _coldstart = true;
-
-        private static bool ColdStart
-        {
-            get
-            {
-                var value = _coldstart;
-                _coldstart = false;
-                return value;
-            }
-        }
-
-        public LambdaHandler() : base()
+        public LambdaHandler()
         {
             EpsagonUtils.RegisterServices();
             EpsagonPipelineCustomizer.PatchPipeline();
@@ -38,7 +26,7 @@ namespace Epsagon.Dotnet.Lambda
         /// <param name="input"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public abstract TRes HandlerFunction(TReq input, ILambdaContext context);
+        public abstract TRes HandlerFunction(TEvent input, ILambdaContext context);
 
         /// <summary>
         /// Epsagon enabled lambda handler based on <see cref="HandlerFunction(TReq, ILambdaContext)"/>
@@ -47,48 +35,28 @@ namespace Epsagon.Dotnet.Lambda
         /// <param name="input">input event from AWS Lambda</param>
         /// <param name="context">lambda context</param>
         /// <returns></returns>
-        private TRes EpsagonEnabledHandler(TReq input, ILambdaContext context)
+        private TRes EpsagonEnabledHandler(TEvent input, ILambdaContext context)
         {
             var config = EpsagonUtils.GetConfiguration(GetType());
-            var logger = EpsagonUtils.GetLogger<LambdaHandler<TReq, TRes>>();
+            var logger = EpsagonUtils.GetLogger<LambdaHandler<TEvent, TRes>>();
+            var returnValue = default(TRes);
 
             logger.LogDebug("Epsagon Handler Started, configuration: {@Config}", config);
 
-            var scope = EpsagonUtils.GetService<ITracer>()
-                                           .BuildSpan(input.GetType().Name)
-                                           .StartActive(finishSpanOnDispose: true);
-            scope.Span.SetTag("event.id", Guid.NewGuid().ToString());
-            scope.Span.SetTag("event.start_time", DateTime.UtcNow.ToBinary());
-            scope.Span.SetTag("resource.name", context.FunctionName);
-            scope.Span.SetTag("resource.type", "lambda");
-            scope.Span.SetTag("aws.operation", "invoke");
-            scope.Span.SetTag("aws.lambda.memory", context.MemoryLimitInMB.ToString());
-            scope.Span.SetTag("aws.lambda.function_version", context.FunctionVersion);
-            scope.Span.SetTag("aws.lambda.log_group_name", context.LogGroupName);
-            scope.Span.SetTag("aws.lambda.log_stream_name", context.LogStreamName);
-            scope.Span.SetTag("aws.lambda.cold_start", ColdStart);
-
-            var timer = Stopwatch.StartNew();
-            var returnValue = this.HandlerFunction(input, context);
-            timer.Stop();
-
-            scope.Span.SetTag("event.duration", timer.ElapsedMilliseconds);
-            scope.Span.SetTag("aws.lambda.return_value", JsonConvert.SerializeObject(returnValue));
-
-            scope.Dispose();
+            using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context))
+            {
+                handler.HandleBefore();
+                returnValue = this.HandlerFunction(input, context);
+                handler.HandleAfter(returnValue);
+            }
 
             var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
-            logger.LogDebug("trace object: {@Trace}", JsonConvert.SerializeObject(trace, new JsonSerializerSettings
-            {
-                ContractResolver = new JsonLowerCaseUnderscoreContractResolver(),
-                NullValueHandling = NullValueHandling.Ignore
-            }));
+            logger.LogDebug("trace object: {@Trace}", EpsagonUtils.SerializeObject(trace));
 
             return returnValue;
         }
     }
 }
 
-// epsagonEvent.ErrorCode = tags.GetValue<int>("event.error_code");
-// epsagonEvent.Origin = tags.GetValue<string>("event.origin");
-// epsagonEvent.Resource.Metadata.AwsAccount = tags.GetValue<string>("aws.account");
+// TODO: epsagonEvent.ErrorCode = tags.GetValue<int>("event.error_code");
+// TODO: epsagonEvent.Origin = tags.GetValue<string>("event.origin");

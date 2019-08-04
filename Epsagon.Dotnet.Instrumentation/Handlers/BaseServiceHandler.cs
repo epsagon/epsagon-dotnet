@@ -83,6 +83,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
             var operationName = context?.RequestContext?.RequestName;
             var endpoint = context?.RequestContext?.Request?.Endpoint?.ToString();
             var region = context?.RequestContext?.ClientConfig?.RegionEndpoint?.SystemName;
+            var envRegion = Environment.GetEnvironmentVariable("AWS_REGION");
 
             logger.LogDebug("context: {@Context}", context);
 
@@ -92,7 +93,8 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
             span.SetTag("aws.service", serviceName);
             span.SetTag("aws.operation", operationName);
             span.SetTag("aws.endpoint", endpoint);
-            span.SetTag("aws.region", region);
+            span.SetTag("aws.region", region ?? envRegion);
+            span.SetTag("aws.lambda.error_code", 0); // OK
         }
     }
 }

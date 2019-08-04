@@ -10,6 +10,7 @@ using OpenTracing;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using Serilog.Core;
 using Serilog.Events;
+using Newtonsoft.Json;
 
 namespace Epsagon.Dotnet.Core
 {
@@ -19,6 +20,16 @@ namespace Epsagon.Dotnet.Core
 
         public static T GetService<T>() => _serviceProvider.GetService<T>();
         public static ILogger<T> GetLogger<T>() => _serviceProvider.GetService<ILoggerFactory>().CreateLogger<T>();
+
+        public static void SetDataIfNeeded(IScope scope, string tagName, object input)
+        {
+            var config = GetConfiguration(typeof(EpsagonUtils));
+            if (!config.MetadataOnly)
+            {
+                scope.Span.SetTag(tagName, JsonConvert.SerializeObject(input));
+            }
+        }
+
         public static ILogger GetLogger(Type t) => _serviceProvider.GetService<ILoggerFactory>().CreateLogger(t);
 
         public static IEpsagonConfiguration GetConfiguration(Type handler)
@@ -61,6 +72,15 @@ namespace Epsagon.Dotnet.Core
 
             var _logger = EpsagonUtils.GetLogger<EpsagonUtils>();
             _logger.LogDebug("Services registered, epsagon started");
+        }
+
+        public static string SerializeObject(object obj)
+        {
+            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings
+            {
+                ContractResolver = new JsonLowerCaseUnderscoreContractResolver(),
+                NullValueHandling = NullValueHandling.Ignore
+            });
         }
     }
 }
