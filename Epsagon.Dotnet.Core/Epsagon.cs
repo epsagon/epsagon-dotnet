@@ -8,6 +8,8 @@ using Serilog;
 using OpenTracing;
 
 using ILogger = Microsoft.Extensions.Logging.ILogger;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace Epsagon.Dotnet.Core
 {
@@ -34,9 +36,17 @@ namespace Epsagon.Dotnet.Core
 
         public static void RegisterServices()
         {
+            var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Error);
+            if ((System.Environment.GetEnvironmentVariable("EPSAGON_DEBUG") ?? "").ToLower() == "true")
+            {
+                levelSwitch.MinimumLevel = LogEventLevel.Debug;
+            }
+
             Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.ControlledBy(levelSwitch)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
+                .MinimumLevel.Debug()
                 .CreateLogger();
 
             _serviceProvider = new ServiceCollection()

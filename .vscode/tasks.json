@@ -22,6 +22,22 @@
                 "reveal": "silent",
             },
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "deploy",
+            "command": "dotnet lambda deploy-function",
+            "type": "shell",
+            "group": "build",
+            "options": { "cwd": "lambda-test/src/lambda-test" },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$msCompile"
         }
     ]
 }

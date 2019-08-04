@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Epsagon.Dotnet.Core\Epsagon.Dotnet.Core.csproj" />
     <ProjectReference Include="..\Epsagon.Dotnet.Instrumentation\Epsagon.Dotnet.Instrumentation.csproj" />
+    <ProjectReference Include="..\Epsagon.Dotnet.Tracing.Legacy\Epsagon.Dotnet.Tracing.Legacy.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.Core" Version="*" />

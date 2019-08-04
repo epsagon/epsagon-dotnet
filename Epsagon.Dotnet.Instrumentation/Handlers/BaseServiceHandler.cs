@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.Runtime.Internal;
 using Epsagon.Dotnet.Core;
+using Microsoft.Extensions.Logging;
 using OpenTracing;
 using OpenTracing.Tag;
 
@@ -15,6 +16,8 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
         public abstract void HandleBefore(IExecutionContext executionContext, IScope scope);
 
         protected ITracer tracer = EpsagonUtils.GetService<ITracer>();
+        protected ILogger logger = EpsagonUtils.GetLogger<BaseServiceHandler>();
+
         public override void InvokeSync(IExecutionContext executionContext)
         {
             var name = executionContext.RequestContext.RequestName;
@@ -23,12 +26,23 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
                 BuildSpan(executionContext, scope.Span);
 
                 try { HandleBefore(executionContext, scope); }
-                catch { Tags.Error.Set(scope.Span, true); }
+                catch (Exception e)
+                {
+                    scope.Span.SetTag("error.message", e.ToString());
+                    Tags.Error.Set(scope.Span, true);
+                }
 
                 base.InvokeSync(executionContext);
 
                 try { HandleAfter(executionContext, scope); }
-                catch { Tags.Error.Set(scope.Span, true); }
+                catch (Exception e)
+                {
+                    scope.Span.SetTag("error.message", e.ToString());
+                    Tags.Error.Set(scope.Span, true);
+                }
+
+                var tags = (scope.Span as Jaeger.Span).GetTags();
+                logger.LogDebug("Current Span Tags: {@Tags}", tags);
             }
         }
 
@@ -40,24 +54,37 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
                 BuildSpan(executionContext, scope.Span);
 
                 try { HandleBefore(executionContext, scope); }
-                catch { Tags.Error.Set(scope.Span, true); }
+                catch (Exception e)
+                {
+                    scope.Span.SetTag("error.message", e.ToString());
+                    Tags.Error.Set(scope.Span, true);
+                }
 
-                var result = base.InvokeAsync<T>(executionContext);
+                var result = base.InvokeAsync<T>(executionContext).Result;
 
                 try { HandleAfter(executionContext, scope); }
-                catch { Tags.Error.Set(scope.Span, true); }
+                catch (Exception e)
+                {
+                    scope.Span.SetTag("error.message", e.ToString());
+                    Tags.Error.Set(scope.Span, true);
+                }
 
-                return result;
+                var tags = (scope.Span as Jaeger.Span).GetTags();
+                logger.LogDebug("Current Span Tags: {@Tags}", tags);
+
+                return Task.FromResult(result);
             }
         }
 
         private void BuildSpan(IExecutionContext context, ISpan span)
         {
             var resoureType = context?.RequestContext?.ServiceMetaData.ServiceId;
-            var serviceName = context?.RequestContext?.Request?.ServiceName;
+            var serviceName = context.RequestContext?.ServiceMetaData.ServiceId;
             var operationName = context?.RequestContext?.RequestName;
             var endpoint = context?.RequestContext?.Request?.Endpoint?.ToString();
-            var region = context?.RequestContext?.Request?.DeterminedSigningRegion;
+            var region = context?.RequestContext?.ClientConfig?.RegionEndpoint?.SystemName;
+
+            logger.LogDebug("context: {@Context}", context);
 
             span.SetTag("resource.type", resoureType.ToLower());
             span.SetTag("aws.agent", "aws-sdk");

@@ -9,6 +9,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsagon.Dotnet.Instrumentat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsagon.Dotnet.Tracing.OpenTracingJaeger", "Epsagon.Dotnet.Tracing.OpenTracingJaeger\Epsagon.Dotnet.Tracing.OpenTracingJaeger.csproj", "{E220FEA3-AE3E-40B9-87E0-6FF265CE5A45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsagon.Dotnet.Templates", "Epsagon.Dotnet.Templates\Epsagon.Dotnet.Templates.csproj", "{660C9919-73FA-480A-B9AC-29E34A5A9315}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lambda-test", "lambda-test", "{3ECA0A1D-DE96-42DC-A8AB-81D72CA4F73A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1E6F76FF-1B5A-4C4F-95EE-922BEC13D787}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lambda-test", "lambda-test\src\lambda-test\lambda-test.csproj", "{00FFB8CF-134A-4E9A-8C23-3B5D1CA07D07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsagon.Dotnet.Tracing.Legacy", "Epsagon.Dotnet.Tracing.Legacy\Epsagon.Dotnet.Tracing.Legacy.csproj", "{9EC3DC69-2C2D-46BD-AC2A-97799F3C14D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,5 +41,21 @@ Global
 		{E220FEA3-AE3E-40B9-87E0-6FF265CE5A45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E220FEA3-AE3E-40B9-87E0-6FF265CE5A45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E220FEA3-AE3E-40B9-87E0-6FF265CE5A45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{660C9919-73FA-480A-B9AC-29E34A5A9315}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{660C9919-73FA-480A-B9AC-29E34A5A9315}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{660C9919-73FA-480A-B9AC-29E34A5A9315}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{660C9919-73FA-480A-B9AC-29E34A5A9315}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00FFB8CF-134A-4E9A-8C23-3B5D1CA07D07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00FFB8CF-134A-4E9A-8C23-3B5D1CA07D07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00FFB8CF-134A-4E9A-8C23-3B5D1CA07D07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00FFB8CF-134A-4E9A-8C23-3B5D1CA07D07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EC3DC69-2C2D-46BD-AC2A-97799F3C14D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EC3DC69-2C2D-46BD-AC2A-97799F3C14D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EC3DC69-2C2D-46BD-AC2A-97799F3C14D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EC3DC69-2C2D-46BD-AC2A-97799F3C14D3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1E6F76FF-1B5A-4C4F-95EE-922BEC13D787} = {3ECA0A1D-DE96-42DC-A8AB-81D72CA4F73A}
+		{00FFB8CF-134A-4E9A-8C23-3B5D1CA07D07} = {1E6F76FF-1B5A-4C4F-95EE-922BEC13D787}
 	EndGlobalSection
 EndGlobal
