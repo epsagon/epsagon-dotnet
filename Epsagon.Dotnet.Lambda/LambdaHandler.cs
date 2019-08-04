@@ -52,9 +52,11 @@ namespace Epsagon.Dotnet.Lambda
 
             var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
             logger.LogDebug("trace object: {@Trace}", EpsagonUtils.SerializeObject(trace));
+            EpsagonTrace.SendTrace(trace, "us-east-1");
 
-            return returnValue;
+            return default(TRes);
         }
+
     }
 }
 

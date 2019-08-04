@@ -17,17 +17,17 @@ namespace lambda_test
     {
         public override string HandlerFunction(string input, ILambdaContext context)
         {
-            var request = new PutObjectRequest
-            {
-                BucketName = "tal-dotnet-test-bucket",
-                Key = "test",
-                ContentBody = input
-            };
+            // var request = new PutObjectRequest
+            // {
+            //     BucketName = "tal-dotnet-test-bucket",
+            //     Key = "test",
+            //     ContentBody = input
+            // };
 
-            var client = new AmazonS3Client(RegionEndpoint.USEast1);
+            // var client = new AmazonS3Client(RegionEndpoint.USEast1);
 
-            System.Console.WriteLine("Putting object");
-            client.PutObjectAsync(request).Wait();
+            // System.Console.WriteLine("Putting object");
+            // client.PutObjectAsync(request).Wait();
 
             return input.ToUpper();
         }

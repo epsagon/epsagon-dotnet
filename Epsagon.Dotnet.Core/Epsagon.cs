@@ -3,6 +3,7 @@ using System.Reflection;
 using Epsagon.Dotnet.Core.Configuration;
 using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using OpenTracing;
@@ -11,6 +12,7 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 using Serilog.Core;
 using Serilog.Events;
 using Newtonsoft.Json;
+using OpenTracing.Util;
 
 namespace Epsagon.Dotnet.Core
 {
@@ -20,6 +22,12 @@ namespace Epsagon.Dotnet.Core
 
         public static T GetService<T>() => _serviceProvider.GetService<T>();
         public static ILogger<T> GetLogger<T>() => _serviceProvider.GetService<ILoggerFactory>().CreateLogger<T>();
+
+        public static ITracer GetTracer() {
+            if (GlobalTracer.IsRegistered())
+                return GlobalTracer.Instance;
+            return GetService<ITracer>();
+        }
 
         public static void SetDataIfNeeded(IScope scope, string tagName, object input)
         {

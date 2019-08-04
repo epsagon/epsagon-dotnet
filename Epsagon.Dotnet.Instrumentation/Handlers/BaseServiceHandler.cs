@@ -86,6 +86,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
             var envRegion = Environment.GetEnvironmentVariable("AWS_REGION");
 
             logger.LogDebug("context: {@Context}", context);
+            logger.LogDebug("region: {region}", envRegion);
 
             span.SetTag("resource.type", resoureType.ToLower());
             span.SetTag("aws.agent", "aws-sdk");
@@ -93,7 +94,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
             span.SetTag("aws.service", serviceName);
             span.SetTag("aws.operation", operationName);
             span.SetTag("aws.endpoint", endpoint);
-            span.SetTag("aws.region", region ?? envRegion);
+            span.SetTag("aws.region", envRegion ?? region);
             span.SetTag("aws.lambda.error_code", 0); // OK
         }
     }

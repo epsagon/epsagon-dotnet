@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using Amazon.Lambda.Core;
 using Epsagon.Dotnet.Core;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OpenTracing;
 
@@ -22,6 +23,22 @@ namespace Epsagon.Dotnet.Lambda
                 .GetService<ITracer>()
                 .BuildSpan((typeof(TEvent).Name))
                 .StartActive(finishSpanOnDispose: true);
+
+            this.BuildSpan(context, scope.Span);
+        }
+
+
+        private void BuildSpan(ILambdaContext context, ISpan span)
+        {
+            var envRegion = Environment.GetEnvironmentVariable("AWS_REGION");
+
+            span.SetTag("resource.type", "lambda");
+            span.SetTag("aws.agent", "aws-sdk");
+            span.SetTag("aws.agentVersion", ">1.11.0");
+            span.SetTag("aws.service", "lambda");
+            span.SetTag("aws.operation", "invoke");
+            span.SetTag("aws.region", envRegion);
+            span.SetTag("aws.lambda.error_code", 0); // OK
         }
 
         public void HandleBefore() {
@@ -29,9 +46,10 @@ namespace Epsagon.Dotnet.Lambda
             _coldStart = false;
 
             this.scope.Span.SetTag("event.id", Guid.NewGuid().ToString());
-            this.scope.Span.SetTag("event.start_time", DateTime.UtcNow.ToBinary());
+            this.scope.Span.SetTag("event.start_time", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0);
             this.scope.Span.SetTag("resource.name", this.context.FunctionName);
             this.scope.Span.SetTag("resource.type", "lambda");
+            this.scope.Span.SetTag("event.origin", "runner");
             this.scope.Span.SetTag("aws.account", this.context.InvokedFunctionArn.Split(':')[AWS_ACCOUNT_INDEX]);
             this.scope.Span.SetTag("aws.operation", "invoke");
             this.scope.Span.SetTag("aws.lambda.memory", this.context.MemoryLimitInMB.ToString());
@@ -44,10 +62,13 @@ namespace Epsagon.Dotnet.Lambda
         }
 
         public void HandleAfter(TRes returnValue) {
+            var logger = EpsagonUtils.GetLogger<LambdaHandler<TEvent, TRes>>();
             this.timer.Stop();
 
-            this.scope.Span.SetTag("event.duration", this.timer.ElapsedMilliseconds);
-            this.scope.Span.SetTag("aws.lambda.return_value", JsonConvert.SerializeObject(returnValue));
+            logger.LogDebug("Duration {duration}", this.timer.Elapsed.TotalMilliseconds);
+            this.scope.Span.SetTag("event.duration", this.timer.Elapsed.TotalSeconds);
+            // this.scope.Span.SetTag("aws.lambda.return_value", JsonConvert.SerializeObject(returnValue));
+            this.scope.Span.SetTag("aws.lambda.return_value", "");
         }
 
         public void Dispose() => this.scope.Dispose();

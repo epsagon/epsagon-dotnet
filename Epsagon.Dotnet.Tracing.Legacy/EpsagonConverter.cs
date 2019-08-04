@@ -12,6 +12,7 @@ namespace Epsagon.Dotnet.Tracing.Legacy
     {
         public static T GetValue<T>(this IReadOnlyDictionary<string, object> tags, string tagName)
         {
+            var logger =EpsagonUtils.GetLogger(typeof(EpsagonConverter));
             if (tags.ContainsKey(tagName)) return (T)tags[tagName];
             return default(T);
         }
