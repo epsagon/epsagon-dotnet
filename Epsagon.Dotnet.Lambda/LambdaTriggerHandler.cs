@@ -3,7 +3,6 @@ using System.Diagnostics;
 using Amazon.Lambda.Core;
 using Newtonsoft.Json;
 using OpenTracing;
-using OpenTracing.Util;
 using Serilog;
 
 namespace Epsagon.Dotnet.Lambda

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.Runtime.Internal;
 using Epsagon.Dotnet.Core;
-using Microsoft.Extensions.Logging;
 using OpenTracing;
-using OpenTracing.Tag;
 using OpenTracing.Util;
 using Serilog;
 

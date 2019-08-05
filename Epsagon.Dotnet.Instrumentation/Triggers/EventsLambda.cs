@@ -1,7 +1,6 @@
 using System.Linq;
 using Amazon.Lambda.CloudWatchEvents.ScheduledEvents;
 using Amazon.Lambda.Core;
-using Epsagon.Dotnet.Core;
 using Newtonsoft.Json;
 using OpenTracing;
 

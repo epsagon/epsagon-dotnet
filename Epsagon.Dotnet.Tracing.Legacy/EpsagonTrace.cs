@@ -1,13 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using Microsoft.Extensions.Logging;
 using Epsagon.Dotnet.Core;
 using RestSharp;
-using OpenTracing;
 using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
 using Serilog;
 
@@ -45,6 +39,3 @@ namespace Epsagon.Dotnet.Tracing.Legacy
         }
     }
 }
-
-
-// lambda invoked -> bootstrap epsagon -> handle invocation event -> handle lambda event -> handle operation event -> send trace

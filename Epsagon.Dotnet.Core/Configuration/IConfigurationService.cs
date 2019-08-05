@@ -1,4 +1,3 @@
-using System;
 namespace Epsagon.Dotnet.Core.Configuration
 {
     public interface IConfigurationService

@@ -1,5 +1,4 @@
-﻿using System;
-namespace Epsagon.Dotnet.Instrumentation
+﻿namespace Epsagon.Dotnet.Instrumentation
 {
     public interface IFactory<TKey, TValue>
     {

@@ -1,7 +1,5 @@
-﻿using System;
-using OpenTracing;
+﻿using OpenTracing;
 using Amazon.Runtime;
-using System.Collections.Generic;
 
 namespace Epsagon.Dotnet.Instrumentation
 {

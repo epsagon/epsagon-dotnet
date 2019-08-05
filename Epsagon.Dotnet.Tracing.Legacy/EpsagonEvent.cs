@@ -1,5 +1,3 @@
-using System;
-
 namespace Epsagon.Dotnet.Tracing.Legacy
 {
     public class EpsagonEvent

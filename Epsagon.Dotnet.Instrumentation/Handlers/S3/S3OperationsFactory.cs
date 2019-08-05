@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Epsagon.Dotnet.Instrumentation.Handlers.Empty;
 using Epsagon.Dotnet.Instrumentation.Handlers.S3.Operations;
 
 namespace Epsagon.Dotnet.Instrumentation.Handlers.S3

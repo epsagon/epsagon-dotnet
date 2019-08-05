@@ -1,7 +1,6 @@
 using System.Linq;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.S3Events;
-using Epsagon.Dotnet.Core;
 using Newtonsoft.Json;
 using OpenTracing;
 

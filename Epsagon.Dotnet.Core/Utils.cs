@@ -4,7 +4,6 @@ using Epsagon.Dotnet.Core.Configuration;
 using Newtonsoft.Json;
 using OpenTracing;
 using OpenTracing.Tag;
-using Serilog;
 
 namespace Epsagon.Dotnet.Core
 {

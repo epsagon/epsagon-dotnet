@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using Jaeger;
 using System;
 using Epsagon.Dotnet.Core;
-using Epsagon.Dotnet.Core.Configuration;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using OpenTracing.Tag;
 using Newtonsoft.Json;

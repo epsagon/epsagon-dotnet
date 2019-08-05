@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Amazon.Runtime;
 using Amazon.S3.Model;
 using Newtonsoft.Json;

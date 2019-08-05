@@ -2,7 +2,6 @@
 using Jaeger;
 using Jaeger.Reporters;
 using Jaeger.Samplers;
-using Microsoft.Extensions.Logging;
 using OpenTracing.Util;
 
 namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
