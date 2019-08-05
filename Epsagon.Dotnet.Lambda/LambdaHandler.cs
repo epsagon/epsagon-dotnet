@@ -1,22 +1,18 @@
 ﻿using Amazon.Lambda.Core;
-using Microsoft.Extensions.Logging;
-using Epsagon.Dotnet.Core;
-using Epsagon.Dotnet.Instrumentation;
-using OpenTracing;
-using System;
-using System.Diagnostics;
-using Newtonsoft.Json;
 using Epsagon.Dotnet.Tracing.Legacy;
 using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
+using Serilog;
+using OpenTracing.Util;
+using Epsagon.Dotnet.Instrumentation;
 
 namespace Epsagon.Dotnet.Lambda
 {
     public abstract class LambdaHandler<TEvent, TRes>
     {
+
         public LambdaHandler()
         {
-            EpsagonUtils.RegisterServices();
-            EpsagonPipelineCustomizer.PatchPipeline();
+            EpsagonBootstrap.Bootstrap();
         }
 
         /// <summary>
@@ -37,12 +33,18 @@ namespace Epsagon.Dotnet.Lambda
         /// <returns></returns>
         private TRes EpsagonEnabledHandler(TEvent input, ILambdaContext context)
         {
-            var config = EpsagonUtils.GetConfiguration(GetType());
-            var logger = EpsagonUtils.GetLogger<LambdaHandler<TEvent, TRes>>();
+            Log.Debug("entered epsagon lambda handler");
+
             var returnValue = default(TRes);
 
-            logger.LogDebug("Epsagon Handler Started, configuration: {@Config}", config);
+            // handle trigger event
+            using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
+            {
+                var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
+                trigger.Handle(context, scope);
+            }
 
+            // handle invocation event
             using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context))
             {
                 handler.HandleBefore();
@@ -51,14 +53,13 @@ namespace Epsagon.Dotnet.Lambda
             }
 
             var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
-            logger.LogDebug("trace object: {@Trace}", EpsagonUtils.SerializeObject(trace));
             EpsagonTrace.SendTrace(trace, "us-east-1");
+            JaegerTracer.Clear();
+
+            Log.Debug("finishing epsagon lambda handler");
 
             return default(TRes);
         }
 
     }
 }
-
-// TODO: epsagonEvent.ErrorCode = tags.GetValue<int>("event.error_code");
-// TODO: epsagonEvent.Origin = tags.GetValue<string>("event.origin");

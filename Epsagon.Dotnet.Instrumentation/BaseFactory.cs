@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Epsagon.Dotnet.Core;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Epsagon.Dotnet.Instrumentation
 {
@@ -20,8 +19,7 @@ namespace Epsagon.Dotnet.Instrumentation
 
         public TVal GetInstace(TKey key)
         {
-            var logger = EpsagonUtils.GetLogger(GetType());
-            logger.LogDebug("Creating instance for key: {key}", key);
+            Log.Debug("Creating instance for key: {key}", key);
 
             if (this.Operations.ContainsKey(key)) return this.Operations[key]();
             return this.Default;

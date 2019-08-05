@@ -3,8 +3,8 @@ using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation
 {
-    public interface ITrigger<TEvent>
+    public interface ITrigger
     {
-         void Handle(TEvent input, ILambdaContext context, IScope scope);
+         void Handle(ILambdaContext context, IScope scope);
     }
 }

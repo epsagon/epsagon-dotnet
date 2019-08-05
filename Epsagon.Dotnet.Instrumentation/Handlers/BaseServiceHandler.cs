@@ -7,6 +7,8 @@ using Epsagon.Dotnet.Core;
 using Microsoft.Extensions.Logging;
 using OpenTracing;
 using OpenTracing.Tag;
+using OpenTracing.Util;
+using Serilog;
 
 namespace Epsagon.Dotnet.Instrumentation.Handlers
 {
@@ -15,12 +17,13 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
         public abstract void HandleAfter(IExecutionContext executionContext, IScope scope);
         public abstract void HandleBefore(IExecutionContext executionContext, IScope scope);
 
-        protected ITracer tracer = EpsagonUtils.GetService<ITracer>();
-        protected ILogger logger = EpsagonUtils.GetLogger<BaseServiceHandler>();
+        protected ITracer tracer = GlobalTracer.Instance;
 
         public override void InvokeSync(IExecutionContext executionContext)
         {
             var name = executionContext.RequestContext.RequestName;
+            Log.Debug("AWSSDK request invoked, {name}", name);
+
             using (var scope = tracer.BuildSpan(name).StartActive(finishSpanOnDispose: true))
             {
                 BuildSpan(executionContext, scope.Span);
@@ -40,15 +43,14 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
                     scope.Span.SetTag("error.message", e.ToString());
                     Tags.Error.Set(scope.Span, true);
                 }
-
-                var tags = (scope.Span as Jaeger.Span).GetTags();
-                logger.LogDebug("Current Span Tags: {@Tags}", tags);
             }
         }
 
         public override Task<T> InvokeAsync<T>(IExecutionContext executionContext)
         {
             var name = executionContext.RequestContext.RequestName;
+            Log.Debug("AWSSDK request invoked, {name}", name);
+
             using (var scope = tracer.BuildSpan(name).StartActive(finishSpanOnDispose: true))
             {
                 BuildSpan(executionContext, scope.Span);
@@ -69,9 +71,6 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
                     Tags.Error.Set(scope.Span, true);
                 }
 
-                var tags = (scope.Span as Jaeger.Span).GetTags();
-                logger.LogDebug("Current Span Tags: {@Tags}", tags);
-
                 return Task.FromResult(result);
             }
         }
@@ -81,12 +80,10 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
             var resoureType = context?.RequestContext?.ServiceMetaData.ServiceId;
             var serviceName = context.RequestContext?.ServiceMetaData.ServiceId;
             var operationName = context?.RequestContext?.RequestName;
+
             var endpoint = context?.RequestContext?.Request?.Endpoint?.ToString();
             var region = context?.RequestContext?.ClientConfig?.RegionEndpoint?.SystemName;
             var envRegion = Environment.GetEnvironmentVariable("AWS_REGION");
-
-            logger.LogDebug("context: {@Context}", context);
-            logger.LogDebug("region: {region}", envRegion);
 
             span.SetTag("resource.type", resoureType.ToLower());
             span.SetTag("aws.agent", "aws-sdk");

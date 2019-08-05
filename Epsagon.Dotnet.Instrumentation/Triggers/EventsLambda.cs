@@ -6,14 +6,18 @@ using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.Triggers
 {
-    public class EventsLambda : ITrigger<ScheduledEvent>
+    public class EventsLambda : BaseTrigger<ScheduledEvent>
     {
-        public void Handle(ScheduledEvent input, ILambdaContext context, IScope scope)
+        public EventsLambda(ScheduledEvent input) : base(input)
+        {
+        }
+
+        public override void Handle(ILambdaContext context, IScope scope)
         {
             scope.Span.SetTag("event.id", input.Id);
             scope.Span.SetTag("resource.name", input.Resources.First().Split('/').Last());
             scope.Span.SetTag("resource.operation", input.DetailType);
-            scope.Span.SetTag("resource.metadata", EpsagonUtils.SerializeObject(new {
+            scope.Span.SetTag("resource.metadata", Utils.SerializeObject(new {
                 Region = input.Region,
                 Detail = input.Detail,
                 Account = input.Account

@@ -6,14 +6,19 @@ using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.Triggers
 {
-    public class KinesisLambda : ITrigger<KinesisEvent>
+    public class KinesisLambda : BaseTrigger<KinesisEvent>
     {
-        public void Handle(KinesisEvent input, ILambdaContext context, IScope scope)
+        public KinesisLambda(KinesisEvent input) : base(input)
+        {
+        }
+
+        public override void Handle(ILambdaContext context, IScope scope)
         {
             scope.Span.SetTag("event.id", input.Records.First().EventId);
             scope.Span.SetTag("resource.name", input.Records.First().EventSourceARN.Split('/').Last());
             scope.Span.SetTag("resource.operation", input.Records.First().EventName.Replace("aws:kinesis", ""));
-            scope.Span.SetTag("resource.metadata", EpsagonUtils.SerializeObject(new {
+            scope.Span.SetTag("resource.metadata", Utils.SerializeObject(new
+            {
                 Region = input.Records.First().AwsRegion,
                 InvokeIdentity = input.Records.First().InvokeIdentityArn,
                 SequenceNumber = input.Records.First().Kinesis.SequenceNumber,

@@ -8,11 +8,15 @@ using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.Triggers
 {
-    public class ElasticLoadBalancerLambda : ITrigger<ApplicationLoadBalancerRequest>
+    public class ElasticLoadBalancerLambda : BaseTrigger<ApplicationLoadBalancerRequest>
     {
-        public void Handle(ApplicationLoadBalancerRequest input, ILambdaContext context, IScope scope)
+        public ElasticLoadBalancerLambda(ApplicationLoadBalancerRequest input) : base(input)
         {
-            var config = EpsagonUtils.GetConfiguration(GetType());
+        }
+
+        public override void Handle(ILambdaContext context, IScope scope)
+        {
+            var config = Utils.CurrentConfig;
 
             scope.Span.SetTag("event.id", $"elb-{Guid.NewGuid().ToString()}");
             scope.Span.SetTag("resource.name", input.Path);
@@ -29,7 +33,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
                 metadata.Add("headers", JsonConvert.SerializeObject(input.Headers));
             }
 
-            scope.Span.SetTag("resource.metadata", EpsagonUtils.SerializeObject(metadata));
+            scope.Span.SetTag("resource.metadata", Utils.SerializeObject(metadata));
         }
     }
 }

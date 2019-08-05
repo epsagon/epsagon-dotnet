@@ -12,13 +12,11 @@ namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
         public static InMemoryReporter memoryReporter = new InMemoryReporter();
         public static Tracer tracer;
 
-        public static Tracer CreateTracer(ILoggerFactory loggerFactory)
+        public static Tracer CreateTracer()
         {
-            var loggingReporter = new LoggingReporter(loggerFactory);
             var sampler = new ConstSampler(true);
             tracer = new Tracer.Builder("epsagon-tracer")
-                .WithLoggerFactory(loggerFactory)
-                .WithReporter(new CompositeReporter(loggingReporter, memoryReporter))
+                .WithReporter(new CompositeReporter(memoryReporter))
                 .WithSampler(sampler)
                 .Build();
 

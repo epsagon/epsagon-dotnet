@@ -9,6 +9,7 @@ using Epsagon.Dotnet.Core;
 using RestSharp;
 using OpenTracing;
 using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
+using Serilog;
 
 namespace Epsagon.Dotnet.Tracing.Legacy
 {
@@ -23,20 +24,23 @@ namespace Epsagon.Dotnet.Tracing.Legacy
 
         public static void SendTrace(EpsagonTrace trace, string region)
         {
-            var config = EpsagonUtils.GetConfiguration(typeof(EpsagonTrace));
-            var logger = EpsagonUtils.GetLogger<EpsagonTrace>();
+            var config = Utils.CurrentConfig;
+            Log.Debug("sending trace, url: {url}", config.TraceCollectorURL);
 
-            logger.LogDebug("Sending trace to {url}", $"http://dev.tc.epsagon.com");
-
-            var client = new RestClient($"http://dev.tc.epsagon.com") { Timeout = 5000 };
+            var client = new RestClient(config.TraceCollectorURL) { Timeout = 5000 };
             var request = new RestRequest(Method.POST);
 
             request
                 .AddHeader("Authorization", $"Bearer {config.Token}")
                 .AddHeader("Content-Type", "application/json")
-                .AddJsonBody(EpsagonUtils.SerializeObject(trace));
+                .AddJsonBody(Utils.SerializeObject(trace));
+
             var res = client.Execute(request);
-            logger.LogDebug("response: {@success}", res);
+
+            Log.Debug("sent trace, {trace}", Utils.SerializeObject(trace));
+            Log.Debug("request: {@request}", request);
+            Log.Debug("response: {@response}", res);
+
             JaegerTracer.Clear();
         }
     }

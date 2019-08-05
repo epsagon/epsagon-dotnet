@@ -12,10 +12,5 @@ namespace Epsagon.Dotnet.Instrumentation
             var handler = new HandlerFactory().GetInstace(type);
             pipeline.AddHandler(handler);
         }
-
-        public static void PatchPipeline()
-        {
-            RuntimePipelineCustomizerRegistry.Instance.Register(new EpsagonPipelineCustomizer());
-        }
     }
 }

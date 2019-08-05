@@ -1,10 +1,10 @@
 using System;
 using System.Diagnostics;
 using Amazon.Lambda.Core;
-using Epsagon.Dotnet.Core;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OpenTracing;
+using OpenTracing.Util;
+using Serilog;
 
 namespace Epsagon.Dotnet.Lambda
 {
@@ -19,37 +19,29 @@ namespace Epsagon.Dotnet.Lambda
         public LambdaTriggerHandler(TEvent ev, ILambdaContext context)
         {
             this.context = context;
-            this.scope = EpsagonUtils
-                .GetService<ITracer>()
+            this.scope = GlobalTracer.Instance
                 .BuildSpan((typeof(TEvent).Name))
                 .StartActive(finishSpanOnDispose: true);
-
-            this.BuildSpan(context, scope.Span);
         }
 
-
-        private void BuildSpan(ILambdaContext context, ISpan span)
+        public void HandleBefore()
         {
-            var envRegion = Environment.GetEnvironmentVariable("AWS_REGION");
+            Log.Debug("lambda invoke event - START");
 
-            span.SetTag("resource.type", "lambda");
-            span.SetTag("aws.agent", "aws-sdk");
-            span.SetTag("aws.agentVersion", ">1.11.0");
-            span.SetTag("aws.service", "lambda");
-            span.SetTag("aws.operation", "invoke");
-            span.SetTag("aws.region", envRegion);
-            span.SetTag("aws.lambda.error_code", 0); // OK
-        }
-
-        public void HandleBefore() {
             var coldStart = _coldStart;
             _coldStart = false;
 
             this.scope.Span.SetTag("event.id", Guid.NewGuid().ToString());
-            this.scope.Span.SetTag("event.start_time", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0);
-            this.scope.Span.SetTag("resource.name", this.context.FunctionName);
-            this.scope.Span.SetTag("resource.type", "lambda");
             this.scope.Span.SetTag("event.origin", "runner");
+            this.scope.Span.SetTag("event.start_time", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0);
+            this.scope.Span.SetTag("resource.type", "lambda");
+            this.scope.Span.SetTag("resource.name", this.context.FunctionName);
+            this.scope.Span.SetTag("aws.agent", "aws-sdk");
+            this.scope.Span.SetTag("aws.agentVersion", ">1.11.0");
+            this.scope.Span.SetTag("aws.service", "lambda");
+            this.scope.Span.SetTag("aws.operation", "invoke");
+            this.scope.Span.SetTag("aws.region", Environment.GetEnvironmentVariable("AWS_REGION"));
+            this.scope.Span.SetTag("aws.lambda.error_code", 0); // OK
             this.scope.Span.SetTag("aws.account", this.context.InvokedFunctionArn.Split(':')[AWS_ACCOUNT_INDEX]);
             this.scope.Span.SetTag("aws.operation", "invoke");
             this.scope.Span.SetTag("aws.lambda.memory", this.context.MemoryLimitInMB.ToString());
@@ -61,14 +53,13 @@ namespace Epsagon.Dotnet.Lambda
             this.timer = Stopwatch.StartNew();
         }
 
-        public void HandleAfter(TRes returnValue) {
-            var logger = EpsagonUtils.GetLogger<LambdaHandler<TEvent, TRes>>();
+        public void HandleAfter(TRes returnValue)
+        {
             this.timer.Stop();
-
-            logger.LogDebug("Duration {duration}", this.timer.Elapsed.TotalMilliseconds);
             this.scope.Span.SetTag("event.duration", this.timer.Elapsed.TotalSeconds);
-            // this.scope.Span.SetTag("aws.lambda.return_value", JsonConvert.SerializeObject(returnValue));
-            this.scope.Span.SetTag("aws.lambda.return_value", "");
+            this.scope.Span.SetTag("aws.lambda.return_value", JsonConvert.SerializeObject(returnValue));
+
+            Log.Debug("lambda invoke event - FINISHED");
         }
 
         public void Dispose() => this.scope.Dispose();

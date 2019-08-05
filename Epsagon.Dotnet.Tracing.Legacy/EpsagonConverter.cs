@@ -5,6 +5,7 @@ using System;
 using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Core.Configuration;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Epsagon.Dotnet.Tracing.Legacy
 {
@@ -12,7 +13,6 @@ namespace Epsagon.Dotnet.Tracing.Legacy
     {
         public static T GetValue<T>(this IReadOnlyDictionary<string, object> tags, string tagName)
         {
-            var logger =EpsagonUtils.GetLogger(typeof(EpsagonConverter));
             if (tags.ContainsKey(tagName)) return (T)tags[tagName];
             return default(T);
         }
@@ -51,8 +51,8 @@ namespace Epsagon.Dotnet.Tracing.Legacy
 
         public static EpsagonTrace CreateTrace(IEnumerable<Span> spans)
         {
-            var logger = EpsagonUtils.GetLogger(typeof(EpsagonConverter));
-            var config = EpsagonUtils.GetConfiguration(typeof(EpsagonConverter));
+            Log.Debug("creating trace, spans: {@spans}", spans);
+            var config = Utils.CurrentConfig;
 
             return new EpsagonTrace
             {
