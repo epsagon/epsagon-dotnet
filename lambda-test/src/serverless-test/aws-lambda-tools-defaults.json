@@ -16,5 +16,5 @@
   "template": "serverless.template",
   "template-parameters": "",
   "s3-bucket": "tal-dotnet-test-bucket",
-  "stack-name": "dotnet-test-cf"
+  "stack-name": "dotnet-test-yaml-cf"
 }

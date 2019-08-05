@@ -70,7 +70,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
             var envRegion = Environment.GetEnvironmentVariable("AWS_REGION");
 
             span.SetTag("resource.type", resoureType.ToLower());
-            span.SetTag("aws.agent", "aws-sdk");
+            span.SetTag("event.origin", "aws-sdk");
             span.SetTag("aws.agentVersion", ">1.11.0");
             span.SetTag("aws.service", serviceName);
             span.SetTag("aws.operation", operationName);

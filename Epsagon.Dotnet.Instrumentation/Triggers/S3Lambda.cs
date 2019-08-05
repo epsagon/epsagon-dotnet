@@ -2,6 +2,7 @@ using System.Linq;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.S3Events;
 using Epsagon.Dotnet.Core;
+using Newtonsoft.Json;
 using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.Triggers
@@ -20,11 +21,11 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("resource.type", "s3");
             scope.Span.SetTag("resource.name", input.Records.First().S3.Bucket.Name);
             scope.Span.SetTag("resource.operations", input.Records.First().EventName);
-            scope.Span.SetTag("resource.metadata", Utils.SerializeObject(new
+            scope.Span.SetTag("resource.metadata", JsonConvert.SerializeObject(new
             {
                 Region = input.Records.First().AwsRegion,
-                RequestParameters = input.Records.First().RequestParameters,
-                UserIdentity = input.Records.First().UserIdentity,
+                RequestParameters = input.Records.First().RequestParameters.ToString(),
+                UserIdentity = input.Records.First().UserIdentity.ToString(),
                 ObjectKey = input.Records.First().S3.Object.Key,
                 ObjectSize = input.Records.First().S3.Object.Size,
                 ObjectEtag = input.Records.First().S3.Object.ETag,

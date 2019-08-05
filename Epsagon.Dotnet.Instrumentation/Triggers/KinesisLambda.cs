@@ -2,6 +2,7 @@ using System.Linq;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.KinesisEvents;
 using Epsagon.Dotnet.Core;
+using Newtonsoft.Json;
 using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.Triggers
@@ -19,7 +20,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("resource.type", "kinesis");
             scope.Span.SetTag("resource.name", input.Records.First().EventSourceARN.Split('/').Last());
             scope.Span.SetTag("aws.operation", input.Records.First().EventName.Replace("aws:kinesis", ""));
-            scope.Span.SetTag("resource.metadata", Utils.SerializeObject(new
+            scope.Span.SetTag("resource.metadata", JsonConvert.SerializeObject(new
             {
                 Region = input.Records.First().AwsRegion,
                 InvokeIdentity = input.Records.First().InvokeIdentityArn,

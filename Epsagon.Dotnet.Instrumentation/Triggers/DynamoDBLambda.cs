@@ -2,6 +2,7 @@ using System.Linq;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.DynamoDBEvents;
 using Epsagon.Dotnet.Core;
+using Newtonsoft.Json;
 using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.Triggers
@@ -22,7 +23,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("resource.name", resourceName);
             scope.Span.SetTag("resource.type", "dynamodb");
             scope.Span.SetTag("aws.operation", input.Records.First().EventName);
-            scope.Span.SetTag("resource.metadata", Utils.SerializeObject(new {
+            scope.Span.SetTag("resource.metadata", JsonConvert.SerializeObject(new {
                 Region = input.Records.First().AwsRegion,
                 SequenceNumber = input.Records.First().Dynamodb.SequenceNumber,
                 ItemHash = "test" // same as epsagon-java

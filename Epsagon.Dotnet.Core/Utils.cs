@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Epsagon.Dotnet.Core.Configuration;
 using Newtonsoft.Json;
 using OpenTracing;
@@ -16,6 +17,14 @@ namespace Epsagon.Dotnet.Core
         {
             return JsonConvert.SerializeObject(obj, new JsonSerializerSettings
             {
+                ContractResolver = new JsonLowerCaseUnderscoreContractResolver(),
+                NullValueHandling = NullValueHandling.Ignore
+            });
+        }
+
+        public static Dictionary<string, string> DeserializeObject(string str)
+        {
+            return JsonConvert.DeserializeObject<Dictionary<string, string>>(str, new JsonSerializerSettings {
                 ContractResolver = new JsonLowerCaseUnderscoreContractResolver(),
                 NullValueHandling = NullValueHandling.Ignore
             });

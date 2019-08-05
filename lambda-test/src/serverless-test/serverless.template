@@ -1,32 +1,50 @@
-{
-	"AWSTemplateFormatVersion" : "2010-09-09",
-	"Transform" : "AWS::Serverless-2016-10-31",
-	"Description" : "An AWS Serverless Application.",
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  NewObjectsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: "new objects topic"
+      TopicName: NewObjectsTopicTest
 
-	"Resources" : {
-        "FailingFunction": {
-            "Type": "AWS::Serverless::Function",
-            "Properties": {
-                "Handler": "serverless-test::serverless_test.FailedFunction::EpsagonEnabledHandler",
-				"Runtime": "dotnetcore2.1",
-				"CodeUri": "",
-				"MemorySize": 256,
-				"Timeout": 30,
-				"Role": null,
-				"Policies": [ "AWSLambdaFullAccess" ]
-            }
-        },
-        "S3Function": {
-            "Type": "AWS::Serverless::Function",
-            "Properties": {
-                "Handler": "serverless-test::serverless_test.S3Function::EpsagonEnabledHandler",
-				"Runtime": "dotnetcore2.1",
-				"CodeUri": "",
-				"MemorySize": 256,
-				"Timeout": 30,
-				"Role": null,
-				"Policies": [ "AWSLambdaFullAccess" ]
-            }
-        }
-	}
-}
+  TestBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "dotnet-test-new-objects-bucket"
+
+  FailingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: serverless-test::serverless_test.FailedFunction::EpsagonEnabledHandler
+      Runtime: dotnetcore2.1
+      Timeout: 60
+      MemorySize: 256
+      Policies: AWSLambdaFullAccess
+      Environment:
+        Variables:
+          EPSAGON_DEBUG: TRUE
+          EPSAGON_TEST: TRUE
+          EPSAGON_APP_NAME: serverless-test
+          EPSAGON_TOKEN: 99355685-e472-4513-a81f-2586b07d02d4
+
+  S3Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: serverless-test::serverless_test.S3Function::EpsagonEnabledHandler
+      Runtime: dotnetcore2.1
+      Timeout: 60
+      MemorySize: 256
+      Policies: AWSLambdaFullAccess
+      Environment:
+        Variables:
+          EPSAGON_DEBUG: TRUE
+          EPSAGON_TEST: TRUE
+          EPSAGON_APP_NAME: serverless-test
+          EPSAGON_TOKEN: 99355685-e472-4513-a81f-2586b07d02d4
+    Events:
+      NewObject:
+        Type: S3
+        Properties:
+          Bucket: TestBucket
+          Events: s3:ObjectCreated:*
+

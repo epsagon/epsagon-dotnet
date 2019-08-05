@@ -6,6 +6,8 @@ using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Core.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using OpenTracing.Tag;
+using Newtonsoft.Json;
 
 namespace Epsagon.Dotnet.Tracing.Legacy
 {
@@ -31,26 +33,38 @@ namespace Epsagon.Dotnet.Tracing.Legacy
             epsagonEvent.Id = tags.GetValue<string>("event.id");
             epsagonEvent.Origin = tags.GetValue<string>("event.origin");
 
-            epsagonEvent.Exception = new EpsagonException();
-            epsagonEvent.Exception.Message = tags.GetValue<string>("error.message");
-            epsagonEvent.Exception.Traceback = tags.GetValue<string>("error.stack_trace");
-            epsagonEvent.Exception.Type = tags.GetValue<string>("error.type");
-            epsagonEvent.Exception.Time = tags.GetValue<double>("error.time");
+            if (tags.GetValue<bool>(Tags.Error.Key))
+            {
+                epsagonEvent.Exception = new EpsagonException();
+                epsagonEvent.Exception.Message = tags.GetValue<string>("error.message");
+                epsagonEvent.Exception.Traceback = tags.GetValue<string>("error.stack_trace");
+                epsagonEvent.Exception.Type = tags.GetValue<string>("error.type");
+                epsagonEvent.Exception.Time = tags.GetValue<double>("error.time");
+            }
 
             epsagonEvent.Resource = new EpsagonResource();
             epsagonEvent.Resource.Name = tags.GetValue<string>("resource.name");
             epsagonEvent.Resource.Type = tags.GetValue<string>("resource.type");
             epsagonEvent.Resource.Operation = tags.GetValue<string>("aws.operation");
 
-            epsagonEvent.Resource.Metadata = new EpsagonMetadata();
-            epsagonEvent.Resource.Metadata.Region = tags.GetValue<string>("aws.region");
-            epsagonEvent.Resource.Metadata.AwsAccount = tags.GetValue<string>("aws.account");
-            epsagonEvent.Resource.Metadata.Memory = tags.GetValue<string>("aws.lambda.memory");
-            epsagonEvent.Resource.Metadata.ColdStart = tags.GetValue<bool>("aws.lambda.cold_start");
-            epsagonEvent.Resource.Metadata.ReturnValue = tags.GetValue<string>("aws.lambda.return_value");
-            epsagonEvent.Resource.Metadata.LogGroupName = tags.GetValue<string>("aws.lambda.log_group_name");
-            epsagonEvent.Resource.Metadata.LogStreamName = tags.GetValue<string>("aws.lambda.log_stream_name");
-            epsagonEvent.Resource.Metadata.FunctionVersion = tags.GetValue<string>("aws.lambda.function_version");
+            var metadata = new Dictionary<string, object>();
+            metadata.Add("Region", tags.GetValue<string>("aws.region"));
+            metadata.Add("AwsAccount", tags.GetValue<string>("aws.account"));
+            metadata.Add("Memory", tags.GetValue<string>("aws.lambda.memory"));
+            metadata.Add("ColdStart", tags.GetValue<bool>("aws.lambda.cold_start"));
+            metadata.Add("ReturnValue", tags.GetValue<string>("aws.lambda.return_value"));
+            metadata.Add("LogGroupName", tags.GetValue<string>("aws.lambda.log_group_name"));
+            metadata.Add("LogStreamName", tags.GetValue<string>("aws.lambda.log_stream_name"));
+            metadata.Add("FunctionVersion", tags.GetValue<string>("aws.lambda.function_version"));
+
+            Log.Debug("meta: {@meta}", metadata);
+            var newMeta = JsonConvert.DeserializeObject<Dictionary<string, object>>(tags.GetValue<string>("resource.metadata") ?? "{}");
+            Log.Debug("new: {@new}", newMeta);
+
+            newMeta.ToList().ForEach(x => metadata[x.Key] = x.Value);
+            epsagonEvent.Resource.Metadata = metadata
+                .Where(x => !IsNullOrDefault(x.Value))
+                .ToDictionary(x => x.Key, x => x.Value);
 
             return epsagonEvent;
         }
@@ -70,5 +84,25 @@ namespace Epsagon.Dotnet.Tracing.Legacy
                 Exceptions = new List<Exception>()
             };
         }
+
+        public static bool IsNullOrDefault<T>(T argument)
+        {
+            if (argument is ValueType || argument != null)
+            {
+                return object.Equals(argument, GetDefault(argument.GetType()));
+            }
+            return true;
+        }
+
+
+        public static object GetDefault(Type type)
+        {
+            if (type.IsValueType)
+            {
+                return Activator.CreateInstance(type);
+            }
+            return null;
+        }
+
     }
 }

@@ -35,7 +35,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
                 metadata.Add("headers", JsonConvert.SerializeObject(input.Headers));
             }
 
-            scope.Span.SetTag("resource.metadata", Utils.SerializeObject(metadata));
+            scope.Span.SetTag("resource.metadata", JsonConvert.SerializeObject(metadata));
         }
     }
 }

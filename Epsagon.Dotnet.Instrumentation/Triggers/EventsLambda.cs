@@ -2,6 +2,7 @@ using System.Linq;
 using Amazon.Lambda.CloudWatchEvents.ScheduledEvents;
 using Amazon.Lambda.Core;
 using Epsagon.Dotnet.Core;
+using Newtonsoft.Json;
 using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.Triggers
@@ -19,9 +20,9 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("resource.type", "events");
             scope.Span.SetTag("resource.name", input.Resources.First().Split('/').Last());
             scope.Span.SetTag("aws.operation", input.DetailType);
-            scope.Span.SetTag("resource.metadata", Utils.SerializeObject(new {
+            scope.Span.SetTag("resource.metadata", JsonConvert.SerializeObject(new {
                 Region = input.Region,
-                Detail = input.Detail,
+                Detail = input.Detail.ToString(),
                 Account = input.Account
             }));
         }
