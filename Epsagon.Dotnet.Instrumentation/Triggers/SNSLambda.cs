@@ -14,6 +14,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
         public override void Handle(ILambdaContext context, IScope scope)
         {
+            base.Handle(context, scope);
             var operationSplit = input.Records.First().EventSubscriptionArn.Split(':');
             var operation = operationSplit[operationSplit.Length - 2];
             var message = input.Records.First().Sns.Message;

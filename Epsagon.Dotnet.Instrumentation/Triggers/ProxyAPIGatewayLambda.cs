@@ -13,6 +13,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
         public override void Handle(ILambdaContext context, IScope scope)
         {
+            base.Handle(context, scope);
             scope.Span.SetTag("event.id", input.RequestContext.RequestId);
             scope.Span.SetTag("resource.name", input.Headers.ContainsKey("Host") ? input.Headers["Host"] : input.RequestContext.ApiId);
             scope.Span.SetTag("resource.operation", input.HttpMethod);

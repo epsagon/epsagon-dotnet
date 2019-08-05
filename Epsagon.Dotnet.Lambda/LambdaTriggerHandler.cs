@@ -41,7 +41,7 @@ namespace Epsagon.Dotnet.Lambda
             this.scope.Span.SetTag("aws.service", "lambda");
             this.scope.Span.SetTag("aws.operation", "invoke");
             this.scope.Span.SetTag("aws.region", Environment.GetEnvironmentVariable("AWS_REGION"));
-            this.scope.Span.SetTag("aws.lambda.error_code", 0); // OK
+            this.scope.Span.SetTag("event.error_code", 0); // OK
             this.scope.Span.SetTag("aws.account", this.context.InvokedFunctionArn.Split(':')[AWS_ACCOUNT_INDEX]);
             this.scope.Span.SetTag("aws.operation", "invoke");
             this.scope.Span.SetTag("aws.lambda.memory", this.context.MemoryLimitInMB.ToString());

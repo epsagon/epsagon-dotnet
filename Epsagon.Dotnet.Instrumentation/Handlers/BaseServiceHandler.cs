@@ -92,7 +92,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
             span.SetTag("aws.operation", operationName);
             span.SetTag("aws.endpoint", endpoint);
             span.SetTag("aws.region", envRegion ?? region);
-            span.SetTag("aws.lambda.error_code", 0); // OK
+            span.SetTag("event.error_code", 0); // OK
         }
     }
 }

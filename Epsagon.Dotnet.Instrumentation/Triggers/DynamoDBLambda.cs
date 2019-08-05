@@ -14,6 +14,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
         public override void Handle(ILambdaContext context, IScope scope)
         {
+            base.Handle(context, scope);
             var eventSourceSplit = input.Records.First().EventSourceArn.Split('/');
             var resourceName = eventSourceSplit[eventSourceSplit.Length - 3];
 

@@ -14,6 +14,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
         public override void Handle(ILambdaContext context, IScope scope)
         {
+            base.Handle(context, scope);
             scope.Span.SetTag("event.id", input.Id);
             scope.Span.SetTag("resource.name", input.Resources.First().Split('/').Last());
             scope.Span.SetTag("resource.operation", input.DetailType);

@@ -14,6 +14,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
         public override void Handle(ILambdaContext context, IScope scope)
         {
+            base.Handle(context, scope);
             scope.Span.SetTag("event.id", input.Records.First().EventId);
             scope.Span.SetTag("resource.name", input.Records.First().EventSourceARN.Split('/').Last());
             scope.Span.SetTag("resource.operation", input.Records.First().EventName.Replace("aws:kinesis", ""));

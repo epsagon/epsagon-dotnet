@@ -16,9 +16,10 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
         public override void Handle(ILambdaContext context, IScope scope)
         {
+            base.Handle(context, scope);
             scope.Span.SetTag("resource.name", $"trigger-{context.FunctionName}");
-            scope.Span.SetTag("event.id", $"trigger-{Guid.NewGuid().ToString()}");
             scope.Span.SetTag("resource.operation", "json");
+            scope.Span.SetTag("event.id", $"trigger-{Guid.NewGuid().ToString()}");
             scope.Span.SetDataIfNeeded("resource.metadata.data", input);
         }
     }

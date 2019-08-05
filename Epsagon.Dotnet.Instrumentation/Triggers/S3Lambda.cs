@@ -14,6 +14,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
         public override void Handle(ILambdaContext context, IScope scope)
         {
+            base.Handle(context, scope);
             var requestId = input.Records.First().ResponseElements.XAmzRequestId;
             scope.Span.SetTag("event.id", $"s3-trigger-{requestId}");
             scope.Span.SetTag("resource.name", input.Records.First().S3.Bucket.Name);

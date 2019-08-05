@@ -16,6 +16,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
         public override void Handle(ILambdaContext context, IScope scope)
         {
+            base.Handle(context, scope);
             var config = Utils.CurrentConfig;
 
             scope.Span.SetTag("event.id", $"elb-{Guid.NewGuid().ToString()}");

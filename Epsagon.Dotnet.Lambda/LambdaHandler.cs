@@ -4,6 +4,7 @@ using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
 using Serilog;
 using OpenTracing.Util;
 using Epsagon.Dotnet.Instrumentation;
+using System;
 
 namespace Epsagon.Dotnet.Lambda
 {
@@ -36,6 +37,7 @@ namespace Epsagon.Dotnet.Lambda
             Log.Debug("entered epsagon lambda handler");
 
             var returnValue = default(TRes);
+            Exception exception = null;
 
             // handle trigger event
             using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
@@ -48,7 +50,10 @@ namespace Epsagon.Dotnet.Lambda
             using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context))
             {
                 handler.HandleBefore();
-                returnValue = this.HandlerFunction(input, context);
+
+                try { returnValue = this.HandlerFunction(input, context); }
+                catch (Exception e) { exception = e; }
+
                 handler.HandleAfter(returnValue);
             }
 
@@ -57,6 +62,8 @@ namespace Epsagon.Dotnet.Lambda
             JaegerTracer.Clear();
 
             Log.Debug("finishing epsagon lambda handler");
+
+            if (exception != null) throw exception;
 
             return default(TRes);
         }
