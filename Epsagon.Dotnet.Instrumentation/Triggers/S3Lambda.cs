@@ -20,7 +20,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("event.id", $"s3-trigger-{requestId}");
             scope.Span.SetTag("resource.type", "s3");
             scope.Span.SetTag("resource.name", input.Records.First().S3.Bucket.Name);
-            scope.Span.SetTag("resource.operations", input.Records.First().EventName);
+            scope.Span.SetTag("aws.operation", input.Records.First().EventName);
             scope.Span.SetTag("resource.metadata", JsonConvert.SerializeObject(new
             {
                 Region = input.Records.First().AwsRegion,

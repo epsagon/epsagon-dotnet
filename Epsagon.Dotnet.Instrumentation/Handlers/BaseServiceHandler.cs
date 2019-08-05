@@ -33,7 +33,11 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
 
                 base.InvokeSync(executionContext);
 
-                try { HandleAfter(executionContext, scope); }
+                try
+                {
+                    HandleAfter(executionContext, scope);
+                    scope.Span.SetTag("event.id", executionContext.ResponseContext.Response.ResponseMetadata.RequestId);
+                }
                 catch (Exception e) { scope.Span.AddException(e); }
             }
         }
@@ -52,7 +56,11 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
 
                 var result = base.InvokeAsync<T>(executionContext).Result;
 
-                try { HandleAfter(executionContext, scope); }
+                try
+                {
+                    HandleAfter(executionContext, scope);
+                    scope.Span.SetTag("event.id", executionContext.ResponseContext.Response.ResponseMetadata.RequestId);
+                }
                 catch (Exception e) { scope.Span.AddException(e); }
 
                 return Task.FromResult(result);
@@ -69,6 +77,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
             var region = context?.RequestContext?.ClientConfig?.RegionEndpoint?.SystemName;
             var envRegion = Environment.GetEnvironmentVariable("AWS_REGION");
 
+            span.SetTag("event.start_time", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0);
             span.SetTag("resource.type", resoureType.ToLower());
             span.SetTag("event.origin", "aws-sdk");
             span.SetTag("aws.agentVersion", ">1.11.0");

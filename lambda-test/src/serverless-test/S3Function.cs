@@ -17,7 +17,7 @@ namespace serverless_test
             var request = new PublishRequest(TopicARN, message);
 
             var response = client.PublishAsync(request).Result;
-            return response.MessageId;
+            return input.Records.First().S3.Object.Key;
         }
     }
 }
