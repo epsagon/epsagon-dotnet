@@ -2,6 +2,7 @@ using System;
 using Epsagon.Dotnet.Core.Configuration;
 using Newtonsoft.Json;
 using OpenTracing;
+using OpenTracing.Tag;
 using Serilog;
 
 namespace Epsagon.Dotnet.Core
@@ -28,7 +29,16 @@ namespace Epsagon.Dotnet.Core
             }
         }
 
-        public static void RegisterConfiguration(IEpsagonConfiguration configuration) {
+        public static void AddException(this ISpan span, Exception e)
+        {
+            Tags.Error.Set(span, true);
+            span.SetTag("event.error_code", 2); // exception
+            span.SetTag("error.message", e.Message);
+            span.SetTag("error.stack_trace", e.StackTrace);
+        }
+
+        public static void RegisterConfiguration(IEpsagonConfiguration configuration)
+        {
             _config = configuration;
         }
     }

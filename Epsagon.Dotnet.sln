@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lambda-test", "lambda-test\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsagon.Dotnet.Tracing.Legacy", "Epsagon.Dotnet.Tracing.Legacy\Epsagon.Dotnet.Tracing.Legacy.csproj", "{9EC3DC69-2C2D-46BD-AC2A-97799F3C14D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "serverless-test", "lambda-test\src\serverless-test\serverless-test.csproj", "{4FD8EC76-F925-4B0A-8F91-0C5D2E5C1E13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,9 +55,14 @@ Global
 		{9EC3DC69-2C2D-46BD-AC2A-97799F3C14D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EC3DC69-2C2D-46BD-AC2A-97799F3C14D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EC3DC69-2C2D-46BD-AC2A-97799F3C14D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FD8EC76-F925-4B0A-8F91-0C5D2E5C1E13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FD8EC76-F925-4B0A-8F91-0C5D2E5C1E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FD8EC76-F925-4B0A-8F91-0C5D2E5C1E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FD8EC76-F925-4B0A-8F91-0C5D2E5C1E13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1E6F76FF-1B5A-4C4F-95EE-922BEC13D787} = {3ECA0A1D-DE96-42DC-A8AB-81D72CA4F73A}
 		{00FFB8CF-134A-4E9A-8C23-3B5D1CA07D07} = {1E6F76FF-1B5A-4C4F-95EE-922BEC13D787}
+		{4FD8EC76-F925-4B0A-8F91-0C5D2E5C1E13} = {1E6F76FF-1B5A-4C4F-95EE-922BEC13D787}
 	EndGlobalSection
 EndGlobal

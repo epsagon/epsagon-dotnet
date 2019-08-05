@@ -20,8 +20,9 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             var config = Utils.CurrentConfig;
 
             scope.Span.SetTag("event.id", $"elb-{Guid.NewGuid().ToString()}");
+            scope.Span.SetTag("resource.type", "elastic_load_balancer");
             scope.Span.SetTag("resource.name", input.Path);
-            scope.Span.SetTag("resource.operation", input.HttpMethod);
+            scope.Span.SetTag("aws.operation", input.HttpMethod);
 
             var metadata = new Dictionary<string, string>() {
                 { "query_string_parameters", JsonConvert.SerializeObject(input.QueryStringParameters) },

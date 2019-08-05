@@ -17,14 +17,8 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.SNS.Operations
             var request = context.RequestContext.OriginalRequest as PublishRequest;
             var topicName = "Invalid Topic ARN";
 
-            try
-            {
-                topicName = request.TopicArn.Split(':')[5];
-            }
-            catch
-            {
-                scope.Span.SetTag("aws.sns.topic.arn", request.TopicArn);
-            }
+            try { topicName = request.TopicArn.Split(':')[5]; }
+            catch { scope.Span.SetTag("aws.sns.topic.arn", request.TopicArn); }
 
             scope.Span.SetTag("resource.name", topicName);
             scope.Span.SetTag("aws.sns.message", request.Message);

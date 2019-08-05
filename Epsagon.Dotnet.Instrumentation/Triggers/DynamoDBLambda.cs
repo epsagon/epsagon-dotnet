@@ -20,7 +20,8 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
             scope.Span.SetTag("event.id", input.Records.First().EventID);
             scope.Span.SetTag("resource.name", resourceName);
-            scope.Span.SetTag("resource.operation", input.Records.First().EventName);
+            scope.Span.SetTag("resource.type", "dynamodb");
+            scope.Span.SetTag("aws.operation", input.Records.First().EventName);
             scope.Span.SetTag("resource.metadata", Utils.SerializeObject(new {
                 Region = input.Records.First().AwsRegion,
                 SequenceNumber = input.Records.First().Dynamodb.SequenceNumber,

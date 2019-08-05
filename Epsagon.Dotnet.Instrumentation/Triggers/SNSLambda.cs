@@ -20,7 +20,8 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             var message = input.Records.First().Sns.Message;
 
             scope.Span.SetTag("event.id", input.Records.First().Sns.MessageId);
-            scope.Span.SetTag("resource.operation", operation);
+            scope.Span.SetTag("resource.type", "sns");
+            scope.Span.SetTag("aws.operation", operation);
             scope.Span.SetTag("resource.metadata", "{ \"Notification Subject\": \"" + input.Records.First().Sns.Subject + "\" }");
 
             if (!Utils.CurrentConfig.MetadataOnly)

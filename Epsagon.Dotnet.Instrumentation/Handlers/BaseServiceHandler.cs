@@ -29,20 +29,12 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
                 BuildSpan(executionContext, scope.Span);
 
                 try { HandleBefore(executionContext, scope); }
-                catch (Exception e)
-                {
-                    scope.Span.SetTag("error.message", e.ToString());
-                    Tags.Error.Set(scope.Span, true);
-                }
+                catch (Exception e) { scope.Span.AddException(e); }
 
                 base.InvokeSync(executionContext);
 
                 try { HandleAfter(executionContext, scope); }
-                catch (Exception e)
-                {
-                    scope.Span.SetTag("error.message", e.ToString());
-                    Tags.Error.Set(scope.Span, true);
-                }
+                catch (Exception e) { scope.Span.AddException(e); }
             }
         }
 
@@ -56,20 +48,12 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
                 BuildSpan(executionContext, scope.Span);
 
                 try { HandleBefore(executionContext, scope); }
-                catch (Exception e)
-                {
-                    scope.Span.SetTag("error.message", e.ToString());
-                    Tags.Error.Set(scope.Span, true);
-                }
+                catch (Exception e) { scope.Span.AddException(e); }
 
                 var result = base.InvokeAsync<T>(executionContext).Result;
 
                 try { HandleAfter(executionContext, scope); }
-                catch (Exception e)
-                {
-                    scope.Span.SetTag("error.message", e.ToString());
-                    Tags.Error.Set(scope.Span, true);
-                }
+                catch (Exception e) { scope.Span.AddException(e); }
 
                 return Task.FromResult(result);
             }

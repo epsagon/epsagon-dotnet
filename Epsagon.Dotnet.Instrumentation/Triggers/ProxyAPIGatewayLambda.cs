@@ -15,8 +15,9 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
         {
             base.Handle(context, scope);
             scope.Span.SetTag("event.id", input.RequestContext.RequestId);
+            scope.Span.SetTag("resource.type", "api_gateway");
             scope.Span.SetTag("resource.name", input.Headers.ContainsKey("Host") ? input.Headers["Host"] : input.RequestContext.ApiId);
-            scope.Span.SetTag("resource.operation", input.HttpMethod);
+            scope.Span.SetTag("aws.operation", input.HttpMethod);
             scope.Span.SetTag("resource.metadata", Utils.SerializeObject(new
             {
                 Stage = input.RequestContext.Stage,

@@ -26,7 +26,7 @@ namespace Epsagon.Dotnet.Tracing.Legacy
             double duration = tags.GetValue<double>("event.duration");
 
             epsagonEvent.StartTime = startTime != 0 ? startTime : (double?)null;
-            epsagonEvent.Duration = duration != 0 ? duration : (double?)null;
+            epsagonEvent.Duration = duration;
             epsagonEvent.ErrorCode = tags.GetValue<int>("event.error_code");
             epsagonEvent.Id = tags.GetValue<string>("event.id");
             epsagonEvent.Origin = tags.GetValue<string>("event.origin");
@@ -59,7 +59,7 @@ namespace Epsagon.Dotnet.Tracing.Legacy
                 AppName = config.AppName,
                 Token = config.Token,
                 Platform = $".NET {System.Environment.Version.Major}.{System.Environment.Version.Minor}",
-                Version = "0.0.2",
+                Version = "1.0.0",
                 Events = spans.Select(span => span.ToEvent()),
                 Exceptions = new List<Exception>()
             };

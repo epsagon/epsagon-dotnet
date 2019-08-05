@@ -5,6 +5,7 @@ using Serilog;
 using OpenTracing.Util;
 using Epsagon.Dotnet.Instrumentation;
 using System;
+using Epsagon.Dotnet.Core;
 
 namespace Epsagon.Dotnet.Lambda
 {
@@ -47,12 +48,17 @@ namespace Epsagon.Dotnet.Lambda
             }
 
             // handle invocation event
-            using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context))
+            using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
+            using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context, scope))
             {
                 handler.HandleBefore();
 
                 try { returnValue = this.HandlerFunction(input, context); }
-                catch (Exception e) { exception = e; }
+                catch (Exception e)
+                {
+                    scope.Span.AddException(e);
+                    exception = e;
+                }
 
                 handler.HandleAfter(returnValue);
             }
@@ -65,7 +71,7 @@ namespace Epsagon.Dotnet.Lambda
 
             if (exception != null) throw exception;
 
-            return default(TRes);
+            return returnValue;
         }
 
     }

@@ -16,8 +16,9 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
         {
             base.Handle(context, scope);
             scope.Span.SetTag("event.id", input.Id);
+            scope.Span.SetTag("resource.type", "events");
             scope.Span.SetTag("resource.name", input.Resources.First().Split('/').Last());
-            scope.Span.SetTag("resource.operation", input.DetailType);
+            scope.Span.SetTag("aws.operation", input.DetailType);
             scope.Span.SetTag("resource.metadata", Utils.SerializeObject(new {
                 Region = input.Region,
                 Detail = input.Detail,

@@ -1,0 +1,32 @@
+{
+	"AWSTemplateFormatVersion" : "2010-09-09",
+	"Transform" : "AWS::Serverless-2016-10-31",
+	"Description" : "An AWS Serverless Application.",
+
+	"Resources" : {
+        "FailingFunction": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "Handler": "serverless-test::serverless_test.FailedFunction.EpsagonEnabledHandler",
+				"Runtime": "dotnetcore2.1",
+				"CodeUri": "",
+				"MemorySize": 256,
+				"Timeout": 30,
+				"Role": null,
+				"Policies": [ "AWSLambdaFullAccess" ]
+            }
+        },
+        "S3Function": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "Handler": "serverless-test::serverless_test.S3Function.EpsagonEnabledHandler",
+				"Runtime": "dotnetcore2.1",
+				"CodeUri": "",
+				"MemorySize": 256,
+				"Timeout": 30,
+				"Role": null,
+				"Policies": [ "AWSLambdaFullAccess" ]
+            }
+        }
+	}
+}

@@ -16,12 +16,10 @@ namespace Epsagon.Dotnet.Lambda
         private IScope scope;
         private Stopwatch timer;
 
-        public LambdaTriggerHandler(TEvent ev, ILambdaContext context)
+        public LambdaTriggerHandler(TEvent ev, ILambdaContext context, IScope scope)
         {
             this.context = context;
-            this.scope = GlobalTracer.Instance
-                .BuildSpan((typeof(TEvent).Name))
-                .StartActive(finishSpanOnDispose: true);
+            this.scope = scope;
         }
 
         public void HandleBefore()

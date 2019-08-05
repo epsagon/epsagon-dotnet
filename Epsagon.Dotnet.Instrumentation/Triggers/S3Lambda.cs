@@ -17,6 +17,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             base.Handle(context, scope);
             var requestId = input.Records.First().ResponseElements.XAmzRequestId;
             scope.Span.SetTag("event.id", $"s3-trigger-{requestId}");
+            scope.Span.SetTag("resource.type", "s3");
             scope.Span.SetTag("resource.name", input.Records.First().S3.Bucket.Name);
             scope.Span.SetTag("resource.operations", input.Records.First().EventName);
             scope.Span.SetTag("resource.metadata", Utils.SerializeObject(new
