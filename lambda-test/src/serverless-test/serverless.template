@@ -7,7 +7,7 @@
         "FailingFunction": {
             "Type": "AWS::Serverless::Function",
             "Properties": {
-                "Handler": "serverless-test::serverless_test.FailedFunction.EpsagonEnabledHandler",
+                "Handler": "serverless-test::serverless_test.FailedFunction::EpsagonEnabledHandler",
 				"Runtime": "dotnetcore2.1",
 				"CodeUri": "",
 				"MemorySize": 256,
@@ -19,7 +19,7 @@
         "S3Function": {
             "Type": "AWS::Serverless::Function",
             "Properties": {
-                "Handler": "serverless-test::serverless_test.S3Function.EpsagonEnabledHandler",
+                "Handler": "serverless-test::serverless_test.S3Function::EpsagonEnabledHandler",
 				"Runtime": "dotnetcore2.1",
 				"CodeUri": "",
 				"MemorySize": 256,

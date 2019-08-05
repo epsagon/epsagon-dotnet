@@ -31,6 +31,12 @@ namespace Epsagon.Dotnet.Tracing.Legacy
             epsagonEvent.Id = tags.GetValue<string>("event.id");
             epsagonEvent.Origin = tags.GetValue<string>("event.origin");
 
+            epsagonEvent.Exception = new EpsagonException();
+            epsagonEvent.Exception.Message = tags.GetValue<string>("error.message");
+            epsagonEvent.Exception.Traceback = tags.GetValue<string>("error.stack_trace");
+            epsagonEvent.Exception.Type = tags.GetValue<string>("error.type");
+            epsagonEvent.Exception.Time = tags.GetValue<double>("error.time");
+
             epsagonEvent.Resource = new EpsagonResource();
             epsagonEvent.Resource.Name = tags.GetValue<string>("resource.name");
             epsagonEvent.Resource.Type = tags.GetValue<string>("resource.type");

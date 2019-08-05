@@ -14,5 +14,7 @@
   "framework": "netcoreapp2.1",
   "s3-prefix": "serverless-test/",
   "template": "serverless.template",
-  "template-parameters": ""
+  "template-parameters": "",
+  "s3-bucket": "tal-dotnet-test-bucket",
+  "stack-name": "dotnet-test-cf"
 }

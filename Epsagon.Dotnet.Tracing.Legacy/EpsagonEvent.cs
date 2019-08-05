@@ -10,5 +10,6 @@ namespace Epsagon.Dotnet.Tracing.Legacy
         public string Id { get; set; }
         public string Origin { get; set; }
         public EpsagonResource Resource { get; set; }
+        public EpsagonException Exception { get; set; }
     }
 }

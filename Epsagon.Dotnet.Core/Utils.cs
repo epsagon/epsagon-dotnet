@@ -35,6 +35,8 @@ namespace Epsagon.Dotnet.Core
             span.SetTag("event.error_code", 2); // exception
             span.SetTag("error.message", e.Message);
             span.SetTag("error.stack_trace", e.StackTrace);
+            span.SetTag("error.type", e.GetType().Name);
+            span.SetTag("error.time", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0);
         }
 
         public static void RegisterConfiguration(IEpsagonConfiguration configuration)
