@@ -30,7 +30,6 @@ namespace Epsagon.Dotnet.Lambda
 
             this.scope.Span.SetTag("event.id", Guid.NewGuid().ToString());
             this.scope.Span.SetTag("event.origin", "runner");
-            this.scope.Span.SetTag("event.start_time", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0);
             this.scope.Span.SetTag("resource.type", "lambda");
             this.scope.Span.SetTag("resource.name", this.context.FunctionName);
             this.scope.Span.SetTag("aws.agent", "aws-sdk");
@@ -46,16 +45,11 @@ namespace Epsagon.Dotnet.Lambda
             this.scope.Span.SetTag("aws.lambda.log_group_name", this.context.LogGroupName);
             this.scope.Span.SetTag("aws.lambda.log_stream_name", this.context.LogStreamName);
             this.scope.Span.SetTag("aws.lambda.cold_start", coldStart);
-
-            this.timer = Stopwatch.StartNew();
         }
 
         public void HandleAfter(TRes returnValue)
         {
-            this.timer.Stop();
-            this.scope.Span.SetTag("event.duration", this.timer.Elapsed.TotalSeconds);
             this.scope.Span.SetTag("aws.lambda.return_value", JsonConvert.SerializeObject(returnValue));
-
             Log.Debug("lambda invoke event - FINISHED");
         }
 

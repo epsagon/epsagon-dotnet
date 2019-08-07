@@ -77,7 +77,6 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
             span.SetTag("resource.type", resoureType.ToLower());
             span.SetTag("event.origin", "aws-sdk");
             span.SetTag("event.error_code", 0); // OK
-            span.SetTag("event.start_time", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0);
             span.SetTag("aws.agentVersion", ">1.11.0");
             span.SetTag("aws.service", serviceName);
             span.SetTag("aws.operation", operationName);
