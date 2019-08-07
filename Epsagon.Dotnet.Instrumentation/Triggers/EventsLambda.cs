@@ -19,11 +19,9 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("resource.type", "events");
             scope.Span.SetTag("resource.name", input.Resources.First().Split('/').Last());
             scope.Span.SetTag("aws.operation", input.DetailType);
-            scope.Span.SetTag("resource.metadata", JsonConvert.SerializeObject(new {
-                Region = input.Region,
-                Detail = input.Detail.ToString(),
-                Account = input.Account
-            }));
+            scope.Span.SetTag("aws.events.region", input.Region);
+            scope.Span.SetTag("aws.events.detail", input.Detail.ToString());
+            scope.Span.SetTag("aws.events.account", input.Account);
         }
     }
 }

@@ -31,9 +31,20 @@ namespace Epsagon.Dotnet.Core
 
         public static void SetDataIfNeeded(this ISpan span, string tagName, object input)
         {
+            SetDataIfNeeded(span, tagName, JsonConvert.SerializeObject(input));
+        }
+
+        public static void SetDataIfNeeded(this ISpan span, string tagName, string input) {
             if (!Utils.CurrentConfig.MetadataOnly)
             {
-                span.SetTag(tagName, JsonConvert.SerializeObject(input));
+                span.SetTag(tagName, input);
+            }
+        }
+
+        public static void SetDataIfNeeded(this ISpan span, string tagName, int input) {
+            if (!Utils.CurrentConfig.MetadataOnly)
+            {
+                span.SetTag(tagName, input);
             }
         }
 
@@ -50,6 +61,27 @@ namespace Epsagon.Dotnet.Core
         public static void RegisterConfiguration(IEpsagonConfiguration configuration)
         {
             _config = configuration;
+        }
+
+        public static bool IsNullOrDefault<T>(T argument)
+        {
+            if (argument is ValueType || argument != null)
+            {
+                return object.Equals(argument, GetDefault(argument.GetType()));
+            }
+            return true;
+        }
+        private static object GetDefault(Type type)
+        {
+            if (type.IsValueType)
+            {
+                return Activator.CreateInstance(type);
+            }
+            return null;
+        }
+
+        public static double ToUnixTime(this DateTime dateTime) {
+            return new DateTimeOffset(dateTime).ToUnixTimeMilliseconds() / 1000.0;
         }
     }
 }

@@ -23,19 +23,14 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("resource.type", "elastic_load_balancer");
             scope.Span.SetTag("resource.name", input.Path);
             scope.Span.SetTag("aws.operation", input.HttpMethod);
-
-            var metadata = new Dictionary<string, string>() {
-                { "query_string_parameters", JsonConvert.SerializeObject(input.QueryStringParameters) },
-                { "target_group_arn", input.RequestContext.Elb.TargetGroupArn }
-            };
+            scope.Span.SetTag("aws.elb.query_string_parameters", JsonConvert.SerializeObject(input.QueryStringParameters));
+            scope.Span.SetTag("aws.elb.target_group_arn", input.RequestContext.Elb.TargetGroupArn);
 
             if (!config.MetadataOnly)
             {
-                metadata.Add("body", input.Body);
-                metadata.Add("headers", JsonConvert.SerializeObject(input.Headers));
+                scope.Span.SetTag("aws.elb.body", input.Body);
+                scope.Span.SetTag("aws.elb.headers", JsonConvert.SerializeObject(input.Headers));
             }
-
-            scope.Span.SetTag("resource.metadata", JsonConvert.SerializeObject(metadata));
         }
     }
 }

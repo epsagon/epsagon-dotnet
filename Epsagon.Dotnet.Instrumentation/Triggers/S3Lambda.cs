@@ -20,17 +20,14 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("resource.type", "s3");
             scope.Span.SetTag("resource.name", input.Records.First().S3.Bucket.Name);
             scope.Span.SetTag("aws.operation", input.Records.First().EventName);
-            scope.Span.SetTag("resource.metadata", JsonConvert.SerializeObject(new
-            {
-                Region = input.Records.First().AwsRegion,
-                RequestParameters = input.Records.First().RequestParameters.ToString(),
-                UserIdentity = input.Records.First().UserIdentity.ToString(),
-                ObjectKey = input.Records.First().S3.Object.Key,
-                ObjectSize = input.Records.First().S3.Object.Size,
-                ObjectEtag = input.Records.First().S3.Object.ETag,
-                ObjectSequencer = input.Records.First().S3.Object.Sequencer,
-                XAmzRequestId = input.Records.First().ResponseElements.XAmzRequestId
-            }));
+            scope.Span.SetTag("aws.s3.region", input.Records.First().AwsRegion);
+            scope.Span.SetTag("aws.s3.request_parameters", input.Records.First().RequestParameters.ToString());
+            scope.Span.SetTag("aws.s3.user_identity", input.Records.First().UserIdentity.ToString());
+            scope.Span.SetTag("aws.s3.object_key", input.Records.First().S3.Object.Key);
+            scope.Span.SetTag("aws.s3.object_size", input.Records.First().S3.Object.Size);
+            scope.Span.SetTag("aws.s3.object_etag", input.Records.First().S3.Object.ETag);
+            scope.Span.SetTag("aws.s3.object_sequencer", input.Records.First().S3.Object.Sequencer);
+            scope.Span.SetTag("aws.s3.x_amz_request_id", input.Records.First().ResponseElements.XAmzRequestId);
         }
     }
 }

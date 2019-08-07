@@ -16,6 +16,21 @@ namespace Epsagon.Dotnet.Tracing.Legacy
         public string Token { get; set; }
         public string Version { get; set; }
 
+        public EpsagonTrace(
+            string appName,
+            string platform,
+            string token,
+            string version,
+            IEnumerable<EpsagonEvent> events,
+            IEnumerable<Exception> exceptions
+        ) {
+            this.AppName = appName;
+            this.Platform = platform;
+            this.Token = token;
+            this.Version = version;
+            this.Events = events;
+            this.Exceptions = exceptions;
+        }
         public static void SendTrace(EpsagonTrace trace, string region)
         {
             var config = Utils.CurrentConfig;

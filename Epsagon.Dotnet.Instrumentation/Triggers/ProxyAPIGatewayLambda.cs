@@ -19,17 +19,13 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("resource.type", "api_gateway");
             scope.Span.SetTag("resource.name", input.Headers.ContainsKey("Host") ? input.Headers["Host"] : input.RequestContext.ApiId);
             scope.Span.SetTag("aws.operation", input.HttpMethod);
-            scope.Span.SetTag("resource.metadata", JsonConvert.SerializeObject(new
-            {
-                Stage = input.RequestContext.Stage,
-                QueryStringParameters = input.QueryStringParameters,
-                Resource = input.Resource,
-                Path = input.Path,
-                PathParameters = input.PathParameters
-            }));
-
-            scope.Span.SetDataIfNeeded("resource.metadata.body", input.Body);
-            scope.Span.SetDataIfNeeded("resource.metadata.headers", input.Headers);
+            scope.Span.SetTag("aws.api_gateway.stage", input.RequestContext.Stage);
+            scope.Span.SetTag("aws.api_gateway.query_string_parameters", JsonConvert.SerializeObject(input.QueryStringParameters));
+            scope.Span.SetTag("aws.api_gateway.resource", input.Resource);
+            scope.Span.SetTag("aws.api_gateway.path", input.Path);
+            scope.Span.SetTag("aws.api_gateway.path_parameters", JsonConvert.SerializeObject(input.PathParameters));
+            scope.Span.SetDataIfNeeded("aws.api_gateway.body", input.Body);
+            scope.Span.SetDataIfNeeded("aws.api_gateway.headers", input.Headers);
         }
     }
 }

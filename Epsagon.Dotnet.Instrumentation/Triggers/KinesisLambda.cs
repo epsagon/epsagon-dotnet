@@ -19,13 +19,10 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("resource.type", "kinesis");
             scope.Span.SetTag("resource.name", input.Records.First().EventSourceARN.Split('/').Last());
             scope.Span.SetTag("aws.operation", input.Records.First().EventName.Replace("aws:kinesis", ""));
-            scope.Span.SetTag("resource.metadata", JsonConvert.SerializeObject(new
-            {
-                Region = input.Records.First().AwsRegion,
-                InvokeIdentity = input.Records.First().InvokeIdentityArn,
-                SequenceNumber = input.Records.First().Kinesis.SequenceNumber,
-                PartitionKey = input.Records.First().Kinesis.PartitionKey
-            }));
+            scope.Span.SetTag("aws.kinesis.region", input.Records.First().AwsRegion);
+            scope.Span.SetTag("aws.kinesis.invoke_identity", input.Records.First().InvokeIdentityArn);
+            scope.Span.SetTag("aws.kinesis.sequence_number", input.Records.First().Kinesis.SequenceNumber);
+            scope.Span.SetTag("aws.kinesis.partition_key", input.Records.First().Kinesis.PartitionKey);
         }
     }
 }

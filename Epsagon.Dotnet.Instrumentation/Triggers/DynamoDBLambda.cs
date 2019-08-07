@@ -23,11 +23,9 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("resource.name", resourceName);
             scope.Span.SetTag("resource.type", "dynamodb");
             scope.Span.SetTag("aws.operation", input.Records.First().EventName);
-            scope.Span.SetTag("resource.metadata", JsonConvert.SerializeObject(new {
-                Region = input.Records.First().AwsRegion,
-                SequenceNumber = input.Records.First().Dynamodb.SequenceNumber,
-                ItemHash = "test" // same as epsagon-java
-            }));
+            scope.Span.SetTag("aws.dynamodb.region", input.Records.First().AwsRegion);
+            scope.Span.SetTag("aws.dynamodb.sequence_number", input.Records.First().Dynamodb.SequenceNumber);
+            scope.Span.SetTag("aws.dynamodb.item_hash", "test");
         }
     }
 }

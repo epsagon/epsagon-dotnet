@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using Jaeger;
 using System;
 using Epsagon.Dotnet.Core;
-using Serilog;
 using OpenTracing.Tag;
-using Newtonsoft.Json;
 
 namespace Epsagon.Dotnet.Tracing.Legacy
 {
@@ -20,16 +18,20 @@ namespace Epsagon.Dotnet.Tracing.Legacy
         public static EpsagonEvent ToEvent(this Span span)
         {
             var tags = span.GetTags();
-            var epsagonEvent = new EpsagonEvent();
+            string id = tags.GetValue<string>("event.id");
+            string origin = tags.GetValue<string>("event.origin");
+            int errorCode = tags.GetValue<int>("event.error_code");
+            double duration = span.FinishTimestampUtc
+                .GetValueOrDefault(span.StartTimestampUtc)
+                .Subtract(span.StartTimestampUtc)
+                .TotalSeconds;
+            double startTime = span.StartTimestampUtc.ToUnixTime();
+            string resourceName = tags.GetValue<string>("resource.name");
+            string resourceType = tags.GetValue<string>("resource.type");
+            string resourceOperation = tags.GetValue<string>("aws.operation");
 
-            double startTime = tags.GetValue<double>("event.start_time");
-            double duration = tags.GetValue<double>("event.duration");
-
-            epsagonEvent.StartTime = startTime != 0 ? startTime : (double?)null;
-            epsagonEvent.Duration = duration;
-            epsagonEvent.ErrorCode = tags.GetValue<int>("event.error_code");
-            epsagonEvent.Id = tags.GetValue<string>("event.id");
-            epsagonEvent.Origin = tags.GetValue<string>("event.origin");
+            var resource = new EpsagonResource(resourceName, resourceOperation, resourceType, span.GenerateMetadata());
+            var epsagonEvent = new EpsagonEvent(startTime, duration, errorCode, id, origin, resource);
 
             if (tags.GetValue<bool>(Tags.Error.Key))
             {
@@ -40,67 +42,35 @@ namespace Epsagon.Dotnet.Tracing.Legacy
                 epsagonEvent.Exception.Time = tags.GetValue<double>("error.time");
             }
 
-            epsagonEvent.Resource = new EpsagonResource();
-            epsagonEvent.Resource.Name = tags.GetValue<string>("resource.name");
-            epsagonEvent.Resource.Type = tags.GetValue<string>("resource.type");
-            epsagonEvent.Resource.Operation = tags.GetValue<string>("aws.operation");
-
-            var metadata = new Dictionary<string, object>();
-            metadata.Add("Region", tags.GetValue<string>("aws.region"));
-            metadata.Add("AwsAccount", tags.GetValue<string>("aws.account"));
-            metadata.Add("Memory", tags.GetValue<string>("aws.lambda.memory"));
-            metadata.Add("ColdStart", tags.GetValue<bool>("aws.lambda.cold_start"));
-            metadata.Add("ReturnValue", tags.GetValue<string>("aws.lambda.return_value"));
-            metadata.Add("LogGroupName", tags.GetValue<string>("aws.lambda.log_group_name"));
-            metadata.Add("LogStreamName", tags.GetValue<string>("aws.lambda.log_stream_name"));
-            metadata.Add("FunctionVersion", tags.GetValue<string>("aws.lambda.function_version"));
-
-            Log.Debug("meta: {@meta}", metadata);
-            var newMeta = JsonConvert.DeserializeObject<Dictionary<string, object>>(tags.GetValue<string>("resource.metadata") ?? "{}");
-            Log.Debug("new: {@new}", newMeta);
-
-            newMeta.ToList().ForEach(x => metadata[x.Key] = x.Value);
-            epsagonEvent.Resource.Metadata = metadata
-                .Where(x => !IsNullOrDefault(x.Value))
-                .ToDictionary(x => x.Key, x => x.Value);
-
             return epsagonEvent;
         }
 
         public static EpsagonTrace CreateTrace(IEnumerable<Span> spans)
         {
-            Log.Debug("creating trace, spans: {@spans}", spans);
             var config = Utils.CurrentConfig;
 
-            return new EpsagonTrace
-            {
-                AppName = config.AppName,
-                Token = config.Token,
-                Platform = $".NET {System.Environment.Version.Major}.{System.Environment.Version.Minor}",
-                Version = "1.0.0",
-                Events = spans.Select(span => span.ToEvent()),
-                Exceptions = new List<Exception>()
-            };
+            return new EpsagonTrace(
+                version: "1.0.0",
+                token: config.Token,
+                appName: config.AppName,
+                exceptions: new List<Exception>(),
+                events: spans.Select(span => span.ToEvent()),
+                platform: $".NET {System.Environment.Version.Major}.{System.Environment.Version.Minor}"
+            );
         }
 
-        public static bool IsNullOrDefault<T>(T argument)
+        public static IDictionary<string, object> GenerateMetadata(this Span span)
         {
-            if (argument is ValueType || argument != null)
-            {
-                return object.Equals(argument, GetDefault(argument.GetType()));
-            }
-            return true;
+            var tags = span.GetTags();
+            var metadata = tags
+                .Select(x => new { Key = x.Key.Split('.'), Value = x.Value })
+                .Where(x => x.Key.Length == 3)
+                .Where(x => !Utils.IsNullOrDefault(x.Value))
+                .ToDictionary(x => x.Key.Last(), x => x.Value);
+            metadata["region"] = tags.GetValue<string>("aws.region");
+            metadata["aws_account"] = tags.GetValue<string>("aws.account");
+
+            return metadata;
         }
-
-
-        public static object GetDefault(Type type)
-        {
-            if (type.IsValueType)
-            {
-                return Activator.CreateInstance(type);
-            }
-            return null;
-        }
-
     }
 }
