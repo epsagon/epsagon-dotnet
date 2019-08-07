@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using Amazon.Lambda.Core;
 using Newtonsoft.Json;
 using OpenTracing;
@@ -13,7 +12,6 @@ namespace Epsagon.Dotnet.Lambda
         private static bool _coldStart = true;
         private ILambdaContext context;
         private IScope scope;
-        private Stopwatch timer;
 
         public LambdaTriggerHandler(TEvent ev, ILambdaContext context, IScope scope)
         {
