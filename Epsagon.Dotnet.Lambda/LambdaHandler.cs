@@ -6,6 +6,7 @@ using OpenTracing.Util;
 using Epsagon.Dotnet.Instrumentation;
 using System;
 using Epsagon.Dotnet.Core;
+using System.Threading.Tasks;
 
 namespace Epsagon.Dotnet.Lambda
 {
@@ -24,7 +25,7 @@ namespace Epsagon.Dotnet.Lambda
         /// <param name="input"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public abstract TRes HandlerFunction(TEvent input, ILambdaContext context);
+        public abstract Task<TRes> HandlerFunction(TEvent input, ILambdaContext context);
 
         /// <summary>
         /// Epsagon enabled lambda handler based on <see cref="HandlerFunction(TReq, ILambdaContext)"/>
@@ -53,7 +54,7 @@ namespace Epsagon.Dotnet.Lambda
             {
                 handler.HandleBefore();
 
-                try { returnValue = this.HandlerFunction(input, context); }
+                try { returnValue = this.HandlerFunction(input, context).Result; }
                 catch (Exception e)
                 {
                     scope.Span.AddException(e);
