@@ -5,7 +5,7 @@
     <PackageId>Epsagon.Dotnet.Lambda</PackageId>
     <Authors>Epsagon</Authors>
     <Company>Epsagon</Company>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Title>Epsagon Instrumentation for .NET</Title>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://epsagon-public-screenshots.s3.us-east-2.amazonaws.com/logo.png</PackageIconUrl>
