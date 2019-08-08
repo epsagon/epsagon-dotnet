@@ -13,7 +13,7 @@ namespace Epsagon.Dotnet.Core.Configuration
 
         public EpsagonConfiguration()
         {
-            if (Environment.GetEnvironmentVariable("EPSAGON_TEST").ToUpper() == "TRUE")
+            if ((Environment.GetEnvironmentVariable("EPSAGON_TEST") ?? "").ToUpper() == "TRUE")
             {
                 TraceCollectorURL = "http://dev.tc.epsagon.com";
             }
