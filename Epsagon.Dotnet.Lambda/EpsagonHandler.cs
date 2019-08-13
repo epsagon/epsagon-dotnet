@@ -61,6 +61,7 @@ namespace Epsagon.Dotnet.Lambda
             Exception exception = null;
 
             // handle trigger event
+            Log.Debug("handling trigger event");
             using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
             {
                 var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
@@ -68,11 +69,14 @@ namespace Epsagon.Dotnet.Lambda
             }
 
             // handle invocation event
+            Log.Debug("handling invocation event");
             using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
             using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context, scope))
             {
+                Log.Debug("handling before execution");
                 handler.HandleBefore();
 
+                Log.Debug("calling client handler");
                 try { returnValue = await handlerFn(); }
                 catch (Exception e)
                 {
@@ -80,9 +84,11 @@ namespace Epsagon.Dotnet.Lambda
                     exception = e;
                 }
 
+                Log.Debug("handling after execution");
                 handler.HandleAfter(returnValue);
             }
 
+            Log.Debug("creating trace");
             var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
             EpsagonTrace.SendTrace(trace, "us-east-1");
             JaegerTracer.Clear();
