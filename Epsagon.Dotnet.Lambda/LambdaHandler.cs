@@ -36,43 +36,7 @@ namespace Epsagon.Dotnet.Lambda
         /// <returns></returns>
         private TRes EpsagonEnabledHandler(TEvent input, ILambdaContext context)
         {
-            Log.Debug("entered epsagon lambda handler");
-
-            var returnValue = default(TRes);
-            Exception exception = null;
-
-            // handle trigger event
-            using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
-            {
-                var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
-                trigger.Handle(context, scope);
-            }
-
-            // handle invocation event
-            using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
-            using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context, scope))
-            {
-                handler.HandleBefore();
-
-                try { returnValue = this.HandlerFunction(input, context).Result; }
-                catch (Exception e)
-                {
-                    scope.Span.AddException(e);
-                    exception = e;
-                }
-
-                handler.HandleAfter(returnValue);
-            }
-
-            var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
-            EpsagonTrace.SendTrace(trace, "us-east-1");
-            JaegerTracer.Clear();
-
-            Log.Debug("finishing epsagon lambda handler");
-
-            if (exception != null) throw exception;
-
-            return returnValue;
+            return EpsagonHandler.Handle(input, context, () => this.HandlerFunction(input, context)).Result;
         }
 
     }
