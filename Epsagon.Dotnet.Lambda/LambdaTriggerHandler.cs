@@ -26,7 +26,7 @@ namespace Epsagon.Dotnet.Lambda
             var coldStart = _coldStart;
             _coldStart = false;
 
-            this.scope.Span.SetTag("event.id", Guid.NewGuid().ToString());
+            this.scope.Span.SetTag("event.id", context.AwsRequestId != "1234567890" ? context.AwsRequestId : $"local-{Guid.NewGuid().ToString()}");
             this.scope.Span.SetTag("event.origin", "runner");
             this.scope.Span.SetTag("resource.type", "lambda");
             this.scope.Span.SetTag("resource.name", this.context.FunctionName);
