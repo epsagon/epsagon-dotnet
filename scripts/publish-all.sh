@@ -9,7 +9,7 @@ sh $root_dir/scripts/clean.sh
 # version bump all projects
 dotnet sln list \
     | grep .csproj \
-    | xargs -n 1 -i python3 $root_dir/scripts/version-bump.py --type "$version_type" --proj {}
+    | xargs -n 1 python3 $root_dir/scripts/version-bump.py --type "$version_type" --proj
 
 # package all projects
 dotnet pack $root_dir/Epsagon.Dotnet.sln -c Release
