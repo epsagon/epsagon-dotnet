@@ -28,7 +28,7 @@ namespace Epsagon.Dotnet.Tracing.Legacy
             double startTime = span.StartTimestampUtc.ToUnixTime();
             string resourceName = tags.GetValue<string>("resource.name");
             string resourceType = tags.GetValue<string>("resource.type");
-            string resourceOperation = tags.GetValue<string>("aws.operation");
+            string resourceOperation = tags.GetValue<string>("resource.operation");
 
             var resource = new EpsagonResource(resourceName, resourceOperation, resourceType, span.GenerateMetadata());
             var epsagonEvent = new EpsagonEvent(startTime, duration, errorCode, id, origin, resource);

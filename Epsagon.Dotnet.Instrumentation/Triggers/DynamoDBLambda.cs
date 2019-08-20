@@ -22,7 +22,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("event.id", input.Records.First().EventID);
             scope.Span.SetTag("resource.name", resourceName);
             scope.Span.SetTag("resource.type", "dynamodb");
-            scope.Span.SetTag("aws.operation", input.Records.First().EventName);
+            scope.Span.SetTag("resource.operation", input.Records.First().EventName);
             scope.Span.SetTag("aws.dynamodb.region", input.Records.First().AwsRegion);
             scope.Span.SetTag("aws.dynamodb.sequence_number", input.Records.First().Dynamodb.SequenceNumber);
             scope.Span.SetTag("aws.dynamodb.item_hash", "test");

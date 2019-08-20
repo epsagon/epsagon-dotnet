@@ -19,7 +19,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("event.id", $"s3-trigger-{requestId}");
             scope.Span.SetTag("resource.type", "s3");
             scope.Span.SetTag("resource.name", input.Records.First().S3.Bucket.Name);
-            scope.Span.SetTag("aws.operation", input.Records.First().EventName);
+            scope.Span.SetTag("resource.operation", input.Records.First().EventName);
             scope.Span.SetTag("aws.s3.region", input.Records.First().AwsRegion);
             scope.Span.SetTag("aws.s3.request_parameters", input.Records.First().RequestParameters.ToString());
             scope.Span.SetTag("aws.s3.user_identity", input.Records.First().UserIdentity.ToString());

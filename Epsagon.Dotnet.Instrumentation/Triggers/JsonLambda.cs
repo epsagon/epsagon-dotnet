@@ -19,7 +19,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             base.Handle(context, scope);
             scope.Span.SetTag("resource.type", "json");
             scope.Span.SetTag("resource.name", $"trigger-{context.FunctionName}");
-            scope.Span.SetTag("aws.operation", "json");
+            scope.Span.SetTag("resource.operation", "json");
             scope.Span.SetTag("event.id", $"trigger-{Guid.NewGuid().ToString()}");
             scope.Span.SetDataIfNeeded("aws.json.data", input);
         }

@@ -4,6 +4,7 @@ using Epsagon.Dotnet.Instrumentation.Handlers;
 using Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB;
 using Epsagon.Dotnet.Instrumentation.Handlers.Empty;
 using Epsagon.Dotnet.Instrumentation.Handlers.Kinesis;
+using Epsagon.Dotnet.Instrumentation.Handlers.Lambda;
 using Epsagon.Dotnet.Instrumentation.Handlers.S3;
 using Epsagon.Dotnet.Instrumentation.Handlers.SES;
 using Epsagon.Dotnet.Instrumentation.Handlers.SNS;
@@ -22,7 +23,8 @@ namespace Epsagon.Dotnet.Instrumentation
             { typeof(Amazon.DynamoDBv2.AmazonDynamoDBClient), () => new SimpleServiceHandler<DynamoDBOperationsFactory>() },
             { typeof(Amazon.SimpleNotificationService.AmazonSimpleNotificationServiceClient), () => new SimpleServiceHandler<SNSOperationsFactory>() },
             { typeof(Amazon.SimpleEmail.AmazonSimpleEmailServiceClient), () => new SESServiceHandler() },
-            { typeof(Amazon.SQS.AmazonSQSClient), () => new SimpleServiceHandler<SQSOperationsFactory>() }
+            { typeof(Amazon.SQS.AmazonSQSClient), () => new SimpleServiceHandler<SQSOperationsFactory>() },
+            { typeof(Amazon.Lambda.AmazonLambdaClient), () => new SimpleServiceHandler<LambdaOperationsFactory>() }
         };
     }
 }

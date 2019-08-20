@@ -22,7 +22,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("event.id", $"elb-{Guid.NewGuid().ToString()}");
             scope.Span.SetTag("resource.type", "elastic_load_balancer");
             scope.Span.SetTag("resource.name", input.Path);
-            scope.Span.SetTag("aws.operation", input.HttpMethod);
+            scope.Span.SetTag("resource.operation", input.HttpMethod);
             scope.Span.SetTag("aws.elb.query_string_parameters", JsonConvert.SerializeObject(input.QueryStringParameters));
             scope.Span.SetTag("aws.elb.target_group_arn", input.RequestContext.Elb.TargetGroupArn);
 

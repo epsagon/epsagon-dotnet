@@ -402,4 +402,7 @@ ASALocalRun/
 .mfractor/
 
 # Local History for Visual Studio
-.localhistory/.env
+.localhistory/
+.env
+test-lambda/
+scripts/setup-test-project.sh

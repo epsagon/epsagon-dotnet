@@ -21,7 +21,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             var hostKey = input?.Headers?.ContainsKey("Host");
 
             scope.Span.SetTag("resource.name", hostKey.HasValue && hostKey.Value ? input?.Headers["Host"] : input?.RequestContext?.ApiId);
-            scope.Span.SetTag("aws.operation", input?.HttpMethod);
+            scope.Span.SetTag("resource.operation", input?.HttpMethod);
             scope.Span.SetTag("aws.api_gateway.stage", input?.RequestContext?.Stage);
             scope.Span.SetTag("aws.api_gateway.query_string_parameters", JsonConvert.SerializeObject(input?.QueryStringParameters));
             scope.Span.SetTag("aws.api_gateway.resource", input?.Resource);

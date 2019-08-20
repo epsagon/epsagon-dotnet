@@ -21,7 +21,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
             scope.Span.SetTag("event.id", input.Records.First().Sns.MessageId);
             scope.Span.SetTag("resource.type", "sns");
-            scope.Span.SetTag("aws.operation", operation);
+            scope.Span.SetTag("resource.operation", operation);
             scope.Span.SetTag("aws.sns.Notification Subject", input.Records.First().Sns.Subject);
             scope.Span.SetDataIfNeeded("aws.sns.Notification Message", input.Records.First().Sns.Message);
         }
