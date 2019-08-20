@@ -28,7 +28,7 @@ namespace Epsagon.Dotnet.Lambda
                 .WriteTo.Console()
                 .CreateLogger();
 
-            if ((Environment.GetEnvironmentVariable("EPSAGON_DISABLE") ?? "").ToUpper() != "TRUE")
+            if ((Environment.GetEnvironmentVariable("DISABLE_EPSAGON") ?? "").ToUpper() != "TRUE")
             {
                 JaegerTracer.CreateTracer();
                 CustomizePipeline();
