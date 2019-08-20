@@ -22,19 +22,6 @@
                 "reveal": "silent",
             },
             "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "deploy",
-            "command": "dotnet lambda deploy-serverless",
-            "type": "shell",
-            "group": "build",
-            "options": { "cwd": "lambda-test/src/serverless-test" },
-            "presentation": {
-                "reveal": "silent",
-                "panel": "new",
-                "clear": true
-            },
-            "problemMatcher": "$msCompile"
         }
     ]
 }
