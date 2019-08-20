@@ -64,11 +64,9 @@ namespace Epsagon.Dotnet.Tracing.Legacy
             var tags = span.GetTags();
             var metadata = tags
                 .Select(x => new { Key = x.Key.Split('.'), Value = x.Value })
-                .Where(x => x.Key.Length == 3)
+                .Where(x => x.Key.First().ToLower() == "aws")
                 .Where(x => !Utils.IsNullOrDefault(x.Value))
                 .ToDictionary(x => x.Key.Last(), x => x.Value);
-            metadata["region"] = tags.GetValue<string>("aws.region");
-            metadata["aws_account"] = tags.GetValue<string>("aws.account");
 
             return metadata;
         }

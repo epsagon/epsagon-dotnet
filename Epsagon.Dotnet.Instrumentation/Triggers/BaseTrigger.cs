@@ -16,6 +16,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
         public virtual void Handle(ILambdaContext context, IScope scope) {
             scope.Span.SetTag("event.origin", "trigger");
             scope.Span.SetTag("event.error_code", 0);
+            scope.Span.SetTag("aws.base.region", Environment.GetEnvironmentVariable("AWS_REGION"));
         }
     }
 }

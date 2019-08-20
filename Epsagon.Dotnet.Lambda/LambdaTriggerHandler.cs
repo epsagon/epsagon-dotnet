@@ -28,16 +28,15 @@ namespace Epsagon.Dotnet.Lambda
 
             this.scope.Span.SetTag("event.id", context.AwsRequestId != "1234567890" ? context.AwsRequestId : $"local-{Guid.NewGuid().ToString()}");
             this.scope.Span.SetTag("event.origin", "runner");
+            this.scope.Span.SetTag("event.error_code", 0); // OK
             this.scope.Span.SetTag("resource.type", "lambda");
             this.scope.Span.SetTag("resource.name", this.context.FunctionName);
             this.scope.Span.SetTag("aws.agent", "aws-sdk");
             this.scope.Span.SetTag("aws.agentVersion", ">1.11.0");
             this.scope.Span.SetTag("aws.service", "lambda");
             this.scope.Span.SetTag("aws.operation", "invoke");
-            this.scope.Span.SetTag("aws.region", Environment.GetEnvironmentVariable("AWS_REGION"));
-            this.scope.Span.SetTag("event.error_code", 0); // OK
             this.scope.Span.SetTag("aws.account", this.context.InvokedFunctionArn.Split(':')[AWS_ACCOUNT_INDEX]);
-            this.scope.Span.SetTag("aws.operation", "invoke");
+            this.scope.Span.SetTag("aws.lambda.region", Environment.GetEnvironmentVariable("AWS_REGION"));
             this.scope.Span.SetTag("aws.lambda.memory", this.context.MemoryLimitInMB.ToString());
             this.scope.Span.SetTag("aws.lambda.function_version", this.context.FunctionVersion);
             this.scope.Span.SetTag("aws.lambda.log_group_name", this.context.LogGroupName);

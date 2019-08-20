@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Reflection;
 using Epsagon.Dotnet.Core.Configuration;
 using Newtonsoft.Json;
 using OpenTracing;
@@ -23,10 +25,19 @@ namespace Epsagon.Dotnet.Core
 
         public static Dictionary<string, string> DeserializeObject(string str)
         {
-            return JsonConvert.DeserializeObject<Dictionary<string, string>>(str, new JsonSerializerSettings {
+            return JsonConvert.DeserializeObject<Dictionary<string, string>>(str, new JsonSerializerSettings
+            {
                 ContractResolver = new JsonLowerCaseUnderscoreContractResolver(),
                 NullValueHandling = NullValueHandling.Ignore
             });
+        }
+
+        public static Dictionary<string, object> ToDictionary(this object obj)
+        {
+            return obj
+                .GetType()
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .ToDictionary(prop => prop.Name, prop => prop.GetValue(obj, null));
         }
 
         public static void SetDataIfNeeded(this ISpan span, string tagName, object input)
@@ -34,14 +45,16 @@ namespace Epsagon.Dotnet.Core
             SetDataIfNeeded(span, tagName, JsonConvert.SerializeObject(input));
         }
 
-        public static void SetDataIfNeeded(this ISpan span, string tagName, string input) {
+        public static void SetDataIfNeeded(this ISpan span, string tagName, string input)
+        {
             if (!Utils.CurrentConfig.MetadataOnly)
             {
                 span.SetTag(tagName, input);
             }
         }
 
-        public static void SetDataIfNeeded(this ISpan span, string tagName, int input) {
+        public static void SetDataIfNeeded(this ISpan span, string tagName, int input)
+        {
             if (!Utils.CurrentConfig.MetadataOnly)
             {
                 span.SetTag(tagName, input);
@@ -80,7 +93,8 @@ namespace Epsagon.Dotnet.Core
             return null;
         }
 
-        public static double ToUnixTime(this DateTime dateTime) {
+        public static double ToUnixTime(this DateTime dateTime)
+        {
             return new DateTimeOffset(dateTime).ToUnixTimeMilliseconds() / 1000.0;
         }
     }
