@@ -3,6 +3,9 @@
 version_type=$1
 root_dir=`git rev-parse --show-toplevel`
 
+# load env vars
+. $root_dir/.env
+
 # clean current files
 sh $root_dir/scripts/clean.sh
 
@@ -16,4 +19,4 @@ dotnet pack $root_dir/Epsagon.Dotnet.sln -c Release
 
 # publish
 find $root_dir -type f -name "*.nupkg" -exec \
-    dotnet nuget push {} -k oy2kiexdmmonahnlwo3apjpavd7oexlufkmzpksc6hw3uu -s https://api.nuget.org/v3/index.json \;
+    dotnet nuget push {} -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json \;
