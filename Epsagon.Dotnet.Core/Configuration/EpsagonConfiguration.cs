@@ -9,7 +9,7 @@ namespace Epsagon.Dotnet.Core.Configuration
         public bool MetadataOnly { get; set; } = (Environment.GetEnvironmentVariable("EPSAGON_METADATA") ?? "").ToUpper() == "TRUE";
         public bool UseSSL { get; set; }
         public string TraceCollectorURL { get; set; }
-        public bool IsEpsagonDisabled { get; set; } = (Environment.GetEnvironmentVariable("DISABLE_EPSAGOND") ?? "").ToUpper() == "TRUE";
+        public bool IsEpsagonDisabled { get; set; } = (Environment.GetEnvironmentVariable("DISABLE_EPSAGON") ?? "").ToUpper() == "TRUE";
 
         public EpsagonConfiguration()
         {
