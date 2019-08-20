@@ -14,6 +14,10 @@ namespace Epsagon.Dotnet.Lambda
     {
         public static TRes Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<TRes> handlerFn)
         {
+            if (Utils.CurrentConfig.IsEpsagonDisabled) {
+                return handlerFn();
+            }
+
             Log.Debug("entered epsagon lambda handler");
 
             var returnValue = default(TRes);
@@ -55,6 +59,10 @@ namespace Epsagon.Dotnet.Lambda
 
         public static async Task<TRes> Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<Task<TRes>> handlerFn)
         {
+            if (Utils.CurrentConfig.IsEpsagonDisabled) {
+                return await handlerFn();
+            }
+
             Log.Debug("entered epsagon lambda handler");
 
             var returnValue = default(TRes);

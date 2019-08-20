@@ -1,3 +1,4 @@
+using System;
 using Amazon.Runtime.Internal;
 using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Core.Configuration;
@@ -27,11 +28,14 @@ namespace Epsagon.Dotnet.Lambda
                 .WriteTo.Console()
                 .CreateLogger();
 
-            JaegerTracer.CreateTracer();
-            CustomizePipeline();
-            Utils.RegisterConfiguration(LoadConfiguration());
+            if ((Environment.GetEnvironmentVariable("EPSAGON_DISABLE") ?? "").ToUpper() != "TRUE")
+            {
+                JaegerTracer.CreateTracer();
+                CustomizePipeline();
+                Utils.RegisterConfiguration(LoadConfiguration());
 
-            Log.Debug("finished bootstraping epsagon");
+                Log.Debug("finished bootstraping epsagon");
+            }
         }
 
         private static void CustomizePipeline()
