@@ -14,98 +14,142 @@ namespace Epsagon.Dotnet.Lambda
     {
         public static TRes Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<TRes> handlerFn)
         {
-            if (Utils.CurrentConfig.IsEpsagonDisabled) {
-                return handlerFn();
-            }
-
-            Log.Debug("entered epsagon lambda handler");
-
+            var clientCodeExecuted = false;
             var returnValue = default(TRes);
             Exception exception = null;
 
-            // handle trigger event
-            using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
+            try
             {
-                var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
-                trigger.Handle(context, scope);
-            }
-
-            // handle invocation event
-            using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
-            using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context, scope))
-            {
-                handler.HandleBefore();
-
-                try { returnValue = handlerFn(); }
-                catch (Exception e)
+                if (Utils.CurrentConfig.IsEpsagonDisabled)
                 {
-                    scope.Span.AddException(e);
-                    exception = e;
+                    return handlerFn();
                 }
 
-                handler.HandleAfter(returnValue);
+                Log.Debug("entered epsagon lambda handler");
+
+
+                // handle trigger event
+                using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
+                {
+                    var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
+                    trigger.Handle(context, scope);
+                }
+
+                // handle invocation event
+                using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
+                using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context, scope))
+                {
+                    handler.HandleBefore();
+
+                    try
+                    {
+                        clientCodeExecuted = true;
+                        returnValue = handlerFn();
+                    }
+                    catch (Exception e)
+                    {
+                        scope.Span.AddException(e);
+                        exception = e;
+                    }
+
+                    handler.HandleAfter(returnValue);
+                }
+
+                var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
+                EpsagonTrace.SendTrace(trace, "us-east-1");
+                JaegerTracer.Clear();
+
+                Log.Debug("finishing epsagon lambda handler");
+
+                if (exception != null) throw exception;
             }
-
-            var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
-            EpsagonTrace.SendTrace(trace, "us-east-1");
-            JaegerTracer.Clear();
-
-            Log.Debug("finishing epsagon lambda handler");
-
-            if (exception != null) throw exception;
+            catch (Exception ex)
+            {
+                HandleInstrumentationError(ex);
+            }
+            finally
+            {
+                if (!clientCodeExecuted)
+                {
+                    returnValue = handlerFn();
+                }
+            }
 
             return returnValue;
         }
 
         public static async Task<TRes> Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<Task<TRes>> handlerFn)
         {
-            if (Utils.CurrentConfig.IsEpsagonDisabled) {
-                return await handlerFn();
-            }
-
-            Log.Debug("entered epsagon lambda handler");
-
+            var clientCodeExecuted = false;
             var returnValue = default(TRes);
             Exception exception = null;
 
-            // handle trigger event
-            Log.Debug("handling trigger event");
-            using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
+            try
             {
-                var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
-                trigger.Handle(context, scope);
-            }
-
-            // handle invocation event
-            Log.Debug("handling invocation event");
-            using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
-            using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context, scope))
-            {
-                Log.Debug("handling before execution");
-                handler.HandleBefore();
-
-                Log.Debug("calling client handler");
-                try { returnValue = await handlerFn(); }
-                catch (Exception e)
+                if (Utils.CurrentConfig.IsEpsagonDisabled)
                 {
-                    scope.Span.AddException(e);
-                    exception = e;
+                    return await handlerFn();
                 }
 
-                Log.Debug("handling after execution");
-                handler.HandleAfter(returnValue);
+                Log.Debug("entered epsagon lambda handler");
+                Log.Debug("handling trigger event");
+                using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
+                {
+                    var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
+                    trigger.Handle(context, scope);
+                }
+
+                // handle invocation event
+                Log.Debug("handling invocation event");
+                using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
+                using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context, scope))
+                {
+                    Log.Debug("handling before execution");
+                    handler.HandleBefore();
+
+                    Log.Debug("calling client handler");
+                    try
+                    {
+                        clientCodeExecuted = true;
+                        returnValue = await handlerFn();
+                    }
+                    catch (Exception e)
+                    {
+                        scope.Span.AddException(e);
+                        exception = e;
+                    }
+
+                    Log.Debug("handling after execution");
+                    handler.HandleAfter(returnValue);
+                }
+
+                Log.Debug("creating trace");
+                var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
+                EpsagonTrace.SendTrace(trace, "us-east-1");
+                JaegerTracer.Clear();
+
+                Log.Debug("finishing epsagon lambda handler");
+
+                if (exception != null) throw exception;
+
+                return returnValue;
+            }
+            catch (Exception ex) { HandleInstrumentationError(ex); }
+            finally
+            {
+                if (!clientCodeExecuted)
+                {
+                    returnValue = await handlerFn();
+                }
             }
 
-            Log.Debug("creating trace");
-            var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
-            EpsagonTrace.SendTrace(trace, "us-east-1");
-            JaegerTracer.Clear();
-
-            Log.Debug("finishing epsagon lambda handler");
-
-            if (exception != null) throw exception;
-
             return returnValue;
+        }
+
+        private static void HandleInstrumentationError(Exception ex)
+        {
+            Log.Debug("Exception thrown during instrumentation code");
+            Log.Debug("Exception: {@ex}", ex);
         }
     }
 }
