@@ -150,6 +150,8 @@ namespace Epsagon.Dotnet.Lambda
         {
             Log.Debug("Exception thrown during instrumentation code");
             Log.Debug("Exception: {@ex}", ex);
+
+            InstumentationExceptionsCollector.Exceptions.Add(ex);
         }
     }
 }
