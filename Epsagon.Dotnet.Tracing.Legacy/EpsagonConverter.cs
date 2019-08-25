@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using Jaeger;
-using System;
 using Epsagon.Dotnet.Core;
 using OpenTracing.Tag;
 
@@ -53,7 +52,7 @@ namespace Epsagon.Dotnet.Tracing.Legacy
                 version: "1.0.0",
                 token: config.Token,
                 appName: config.AppName,
-                exceptions: new List<Exception>(),
+                exceptions: InstumentationExceptionsCollector.Exceptions,
                 events: spans.Select(span => span.ToEvent()),
                 platform: $".NET {System.Environment.Version.Major}.{System.Environment.Version.Minor}"
             );

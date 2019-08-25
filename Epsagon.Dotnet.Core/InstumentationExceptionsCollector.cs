@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Epsagon.Dotnet.Instrumentation
+namespace Epsagon.Dotnet.Core
 {
     public static class InstumentationExceptionsCollector
     {
