@@ -2,16 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>Epsagon.Dotnet.Tracing.OpenTracingJaeger</PackageId>
+    <PackageId>Epsagon.Dotnet.Tracing.Legacy</PackageId>
     <Authors>Epsagon</Authors>
     <Company>Epsagon</Company>
-    <Version>1.0.14</Version>
+    <Version>1.0.13</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://epsagon-public-screenshots.s3.us-east-2.amazonaws.com/logo.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Epsagon.Dotnet.Core\Epsagon.Dotnet.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Jaeger" Version="0.3.4" />
     <PackageReference Include="OpenTracing" Version="0.12.0" />
-  </ItemGroup>
+    <PackageReference Include="RestSharp" Version="106.6.10" />
+   </ItemGroup>
+
 </Project>

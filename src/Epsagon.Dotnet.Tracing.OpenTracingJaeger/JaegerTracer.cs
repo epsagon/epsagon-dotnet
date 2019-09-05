@@ -19,7 +19,11 @@ namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
                 .WithSampler(sampler)
                 .Build();
 
-            GlobalTracer.Register(tracer);
+            if (!GlobalTracer.IsRegistered())
+            {
+                GlobalTracer.Register(tracer);
+            }
+
             return tracer;
         }
 
