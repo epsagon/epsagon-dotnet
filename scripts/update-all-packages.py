@@ -11,9 +11,8 @@ args = parser.parse_args()
 
 
 def find_version(package_name):
-    return subprocess.getoutput(f"dotnet search {package_name} --take 1 "
-                                f"| grep {package_name} "
-                                f"| awk -F '[[:space:]][[:space:]]+' '{{ print $4 }}'").strip()
+    return subprocess.getoutput(f"dotnet search {package_name}"
+                                f"| awk -F '[[:space:]][[:space:]]+' '$1 == \"{package_name}\" {{ print $4 }}'").strip()
 
 def backup_file(filename):
     shutil.copyfile(filename, filename + "_backup")

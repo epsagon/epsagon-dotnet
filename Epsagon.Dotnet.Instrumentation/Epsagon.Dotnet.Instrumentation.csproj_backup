@@ -14,8 +14,8 @@
     <PackageReference Include="AWSSDK.Lambda" Version="3.3.103.1" />
     <PackageReference Include="AWSSDK.Kinesis" Version="3.3.100.69" />
     <PackageReference Include="AWSSDK.SQS" Version="3.3.102.1" />
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="2.0.1" />
-    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="1.0.2" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="" />
     <PackageReference Include="AWSSDK.SimpleEmail" Version="3.3.101.39" />
     <PackageReference Include="Amazon.Lambda.Core" Version="1.1.0" />
     <PackageReference Include="Amazon.Lambda.S3Events" Version="1.1.0" />
