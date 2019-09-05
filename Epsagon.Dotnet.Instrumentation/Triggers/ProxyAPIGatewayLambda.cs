@@ -24,8 +24,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             scope.Span.SetTag("resource.operation", input?.HttpMethod);
             scope.Span.SetTag("aws.api_gateway.stage", input?.RequestContext?.Stage);
             scope.Span.SetTag("aws.api_gateway.query_string_parameters", JsonConvert.SerializeObject(input?.QueryStringParameters));
-            scope.Span.SetTag("aws.api_gateway.resource", input?.Resource);
-            scope.Span.SetTag("aws.api_gateway.path", input?.Path);
+            scope.Span.SetTag("aws.api_gateway.path", input?.Resource);
             scope.Span.SetTag("aws.api_gateway.path_parameters", JsonConvert.SerializeObject(input?.PathParameters));
             scope.Span.SetDataIfNeeded("aws.api_gateway.body", input?.Body);
             scope.Span.SetDataIfNeeded("aws.api_gateway.headers", input?.Headers);
