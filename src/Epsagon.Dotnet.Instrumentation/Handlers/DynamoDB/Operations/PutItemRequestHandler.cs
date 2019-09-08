@@ -17,7 +17,9 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
         public void HandleOperationBefore(IExecutionContext context, IScope scope)
         {
             var request = context.RequestContext.OriginalRequest as PutItemRequest;
-            var item = JsonConvert.SerializeObject(request.Item);
+            var item = JsonConvert.SerializeObject(request.Item, new JsonSerializerSettings() {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
 
             scope.Span.SetTag("resource.name", request.TableName);
             scope.Span.SetTag("aws.dynamodb.item", item);

@@ -18,7 +18,9 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
                 data.Remove("LastEvaluatedKey");
             }
 
-            scope.Span.SetTag("aws.dynamodb.Response", JsonConvert.SerializeObject(data));
+            scope.Span.SetTag("aws.dynamodb.Response", JsonConvert.SerializeObject(data, new JsonSerializerSettings() {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
         }
 
         public void HandleOperationBefore(IExecutionContext context, IScope scope)
@@ -38,7 +40,9 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
             }
 
             scope.Span.SetTag("resource.name", request.TableName);
-            scope.Span.SetTag("aws.dynamodb.Parameters", JsonConvert.SerializeObject(data));
+            scope.Span.SetTag("aws.dynamodb.Parameters", JsonConvert.SerializeObject(data, new JsonSerializerSettings() {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
         }
     }
 }

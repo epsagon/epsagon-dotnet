@@ -17,8 +17,12 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.SES.Operations
         {
             var request = context.RequestContext.OriginalRequest as SendEmailRequest;
             scope.Span.SetTag("aws.ses.source", request.Source);
-            scope.Span.SetTag("aws.ses.body", JsonConvert.SerializeObject(request.Message.Body));
-            scope.Span.SetTag("aws.ses.destination", JsonConvert.SerializeObject(request.Destination));
+            scope.Span.SetTag("aws.ses.body", JsonConvert.SerializeObject(request.Message.Body, new JsonSerializerSettings() {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
+            scope.Span.SetTag("aws.ses.destination", JsonConvert.SerializeObject(request.Destination, new JsonSerializerSettings() {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
             scope.Span.SetTag("aws.ses.subject", request.Message.Subject.Data);
         }
     }

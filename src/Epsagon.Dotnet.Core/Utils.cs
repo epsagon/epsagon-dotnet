@@ -19,7 +19,8 @@ namespace Epsagon.Dotnet.Core
             return JsonConvert.SerializeObject(obj, new JsonSerializerSettings
             {
                 ContractResolver = new JsonLowerCaseUnderscoreContractResolver(),
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             });
         }
 
@@ -28,7 +29,8 @@ namespace Epsagon.Dotnet.Core
             return JsonConvert.DeserializeObject<Dictionary<string, string>>(str, new JsonSerializerSettings
             {
                 ContractResolver = new JsonLowerCaseUnderscoreContractResolver(),
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             });
         }
 
@@ -42,7 +44,10 @@ namespace Epsagon.Dotnet.Core
 
         public static void SetDataIfNeeded(this ISpan span, string tagName, object input)
         {
-            SetDataIfNeeded(span, tagName, JsonConvert.SerializeObject(input));
+            SetDataIfNeeded(span, tagName, JsonConvert.SerializeObject(input, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
         }
 
         public static void SetDataIfNeeded(this ISpan span, string tagName, string input)

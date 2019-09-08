@@ -11,7 +11,9 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.S3.Operations
         public void HandleOperationAfter(IExecutionContext context, IScope scope)
         {
             var response = context.ResponseContext as ListObjectsResponse;
-            var summeries = JsonConvert.SerializeObject(response.S3Objects.Select(o => o.Key).ToArray());
+            var summeries = JsonConvert.SerializeObject(response.S3Objects.Select(o => o.Key).ToArray(), new JsonSerializerSettings() {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
             scope.Span.SetTag("aws.s3.keys", summeries);
         }
 

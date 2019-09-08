@@ -17,14 +17,22 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
             var request = context.RequestContext.OriginalRequest as UpdateItemRequest;
             var updateParams = new Dictionary<string, string>();
 
-            updateParams.Add("Key", JsonConvert.SerializeObject(request.Key));
-            updateParams.Add("Expression Attribute Names", JsonConvert.SerializeObject(request.ExpressionAttributeNames));
-            updateParams.Add("Expression Attribute Values", JsonConvert.SerializeObject(request.ExpressionAttributeValues));
+            updateParams.Add("Key", JsonConvert.SerializeObject(request.Key, new JsonSerializerSettings() {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
+            updateParams.Add("Expression Attribute Names", JsonConvert.SerializeObject(request.ExpressionAttributeNames, new JsonSerializerSettings() {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
+            updateParams.Add("Expression Attribute Values", JsonConvert.SerializeObject(request.ExpressionAttributeValues, new JsonSerializerSettings() {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
             updateParams.Add("Update Expression", request.UpdateExpression);
             updateParams.Add("Condition Expression", request.ConditionExpression);
 
             scope.Span.SetTag("resource.name", request.TableName);
-            scope.Span.SetTag("aws.dynamodb.update_parameters", JsonConvert.SerializeObject(updateParams));
+            scope.Span.SetTag("aws.dynamodb.update_parameters", JsonConvert.SerializeObject(updateParams, new JsonSerializerSettings() {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
         }
     }
 }

@@ -45,7 +45,9 @@ namespace Epsagon.Dotnet.Lambda
 
         public void HandleAfter(TRes returnValue)
         {
-            this.scope.Span.SetTag("aws.lambda.return_value", JsonConvert.SerializeObject(returnValue));
+            this.scope.Span.SetTag("aws.lambda.return_value", JsonConvert.SerializeObject(returnValue, new JsonSerializerSettings() {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
             Log.Debug("lambda invoke event - FINISHED");
         }
 

@@ -15,7 +15,10 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
         {
             var request = context.RequestContext.OriginalRequest as DeleteItemRequest;
             scope.Span.SetTag("resource.name", request.TableName);
-            scope.Span.SetTag("aws.dynamodb.key", JsonConvert.SerializeObject(request.Key));
+            scope.Span.SetTag("aws.dynamodb.key", JsonConvert.SerializeObject(request.Key, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
         }
     }
 }
