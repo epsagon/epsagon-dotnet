@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "EditorConfig.EditorConfig",
+        "eamodio.gitlens",
+        "jchannon.csharpextensions",
+        "ms-vscode.csharp",
+    ]
+}

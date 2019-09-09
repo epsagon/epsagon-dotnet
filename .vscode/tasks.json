@@ -19,9 +19,42 @@
             "type": "shell",
             "group": "build",
             "presentation": {
-                "reveal": "silent",
+                "reveal": "silent"
             },
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish-patch",
+            "command": "scripts/publish-all.sh",
+            "args": ["patch"],
+            "type": "shell",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "publish-minor",
+            "command": "scripts/publish-all.sh",
+            "args": ["minor"],
+            "type": "shell",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "publish-major",
+            "command": "scripts/publish-all.sh",
+            "args": ["major"],
+            "type": "shell",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
         }
     ]
 }
