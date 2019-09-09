@@ -13,9 +13,7 @@ $ dotnet add package Epsagon.Dotnet.Lambda
 
 Using [PackageReference](https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files) in a `*.csproj` file:
 
-```xml
-<PackageReference Include="Epsagon.Dotnet.Lambda" Version="*">
-```
+Follow instructions [here](https://www.nuget.org/packages/Epsagon.Dotnet.Lambda/).
 
 ## Getting Started
 
