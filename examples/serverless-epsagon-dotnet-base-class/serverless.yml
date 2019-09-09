@@ -1,0 +1,17 @@
+service: serverless-epsagon-dotnet-base-class
+
+provider:
+  name: aws
+  runtime: dotnetcore2.1
+
+package:
+  individually: true
+
+functions:
+  hello:
+    handler: CsharpHandlers::AwsDotnetCsharp.Handler::EpsagonEnabledHandler
+    package:
+      artifact: bin/release/netcoreapp2.1/hello.zip
+    environment:
+      EPSAGON_TOKEN: ''
+      EPSAGON_APP_NAME: serverless-epsagon-dotnet-base-class
