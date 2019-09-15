@@ -6,6 +6,8 @@ using Epsagon.Dotnet.Core.Configuration;
 using Newtonsoft.Json;
 using OpenTracing;
 using OpenTracing.Tag;
+using System.Diagnostics;
+using Serilog;
 
 namespace Epsagon.Dotnet.Core
 {
@@ -101,6 +103,36 @@ namespace Epsagon.Dotnet.Core
         public static double ToUnixTime(this DateTime dateTime)
         {
             return new DateTimeOffset(dateTime).ToUnixTimeMilliseconds() / 1000.0;
+        }
+
+        public static T TimeExecution<T>(Func<T> func, string fname = "")
+        {
+            var stopWatch = new Stopwatch();
+            try
+            {
+                stopWatch.Start();
+                return func();
+            }
+            finally
+            {
+                stopWatch.Stop();
+                Log.Debug("Execution time: {time}ms, Function: {name}", stopWatch.ElapsedMilliseconds, fname);
+            }
+        }
+
+        public static void TimeExecution(Action func, string fname = "")
+        {
+            var stopWatch = new Stopwatch();
+            try
+            {
+                stopWatch.Start();
+                func();
+            }
+            finally
+            {
+                stopWatch.Stop();
+                Log.Debug("Execution time: {time}ms, Function: {name}", stopWatch.ElapsedMilliseconds, fname);
+            }
         }
     }
 }
