@@ -1,8 +1,11 @@
+using System;
 using System.Linq;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SNSEvents;
 using Epsagon.Dotnet.Core;
 using OpenTracing;
+using Serilog;
+using static Amazon.Lambda.SNSEvents.SNSEvent;
 
 namespace Epsagon.Dotnet.Instrumentation.Triggers
 {
@@ -14,16 +17,38 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
         public override void Handle(ILambdaContext context, IScope scope)
         {
-            base.Handle(context, scope);
-            var operationSplit = input.Records.First().EventSubscriptionArn.Split(':');
-            var operation = operationSplit[operationSplit.Length - 2];
-            var message = input.Records.First().Sns.Message;
+            SNSRecord first = null;
+            string[] operationSplit = null;
+            string operation = "";
+            string message = "";
 
-            scope.Span.SetTag("event.id", input.Records.First().Sns.MessageId);
-            scope.Span.SetTag("resource.type", "sns");
-            scope.Span.SetTag("resource.operation", operation);
-            scope.Span.SetTag("aws.sns.Notification Subject", input.Records.First().Sns.Subject);
-            scope.Span.SetDataIfNeeded("aws.sns.Notification Message", input.Records.First().Sns.Message);
+            try
+            {
+                base.Handle(context, scope);
+
+                first = input?.Records?.FirstOrDefault();
+                operationSplit = first.EventSubscriptionArn?.Split(':');
+                operation = operationSplit[operationSplit.Length - 2];
+                message = first.Sns?.Message;
+
+                scope.Span.SetTag("event.id", first.Sns?.MessageId);
+                scope.Span.SetTag("resource.type", "sns");
+                scope.Span.SetTag("resource.operation", operation);
+                scope.Span.SetTag("aws.sns.Notification Subject", first.Sns?.Subject);
+                scope.Span.SetDataIfNeeded("aws.sns.Notification Message", first.Sns?.Message);
+            }
+            catch (NullReferenceException e)
+            {
+                Log.Debug("null reference, locals: {@locals}", new
+                {
+                    Context = context,
+                    scope = scope,
+                    First = first,
+                    OperationSplit = operationSplit,
+                    Operation = operation,
+                    Message = message
+                });
+            }
         }
     }
 }
