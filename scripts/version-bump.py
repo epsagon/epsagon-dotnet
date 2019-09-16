@@ -16,8 +16,11 @@ major, minor, patch = [int(x) for x in version.text.split('.')]
 
 if args.type == 'major':
     major += 1
+    minor = 0
+    patch = 0
 elif args.type == 'minor':
     minor += 1
+    patch = 0
 elif args.type == 'patch':
     patch += 1
 
