@@ -8,5 +8,6 @@ namespace Epsagon.Dotnet.Core.Configuration
         bool UseSSL { get; }
         string TraceCollectorURL { get; }
         bool IsEpsagonDisabled { get; }
+        bool UseLogsTransport { get; }
     }
 }

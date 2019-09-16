@@ -35,7 +35,11 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
                     HandleAfter(executionContext, scope);
                     scope.Span.SetTag("event.id", executionContext.ResponseContext.Response.ResponseMetadata.RequestId);
                 }
-                catch (Exception e) { scope.Span.AddException(e); }
+                catch (Exception e)
+                {
+                    scope.Span.SetTag("event.id", executionContext.ResponseContext.Response.ResponseMetadata.RequestId);
+                    scope.Span.AddException(e);
+                }
             }
         }
 
@@ -58,7 +62,11 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
                     HandleAfter(executionContext, scope);
                     scope.Span.SetTag("event.id", executionContext.ResponseContext.Response.ResponseMetadata.RequestId);
                 }
-                catch (Exception e) { scope.Span.AddException(e); }
+                catch (Exception e)
+                {
+                    scope.Span.SetTag("event.id", executionContext.ResponseContext.Response.ResponseMetadata.RequestId);
+                    scope.Span.AddException(e);
+                }
 
                 return Task.FromResult(result);
             }

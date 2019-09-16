@@ -37,7 +37,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
                 scope.Span.SetTag("aws.sns.Notification Subject", first.Sns?.Subject);
                 scope.Span.SetDataIfNeeded("aws.sns.Notification Message", first.Sns?.Message);
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 Log.Debug("null reference, locals: {@locals}", new
                 {

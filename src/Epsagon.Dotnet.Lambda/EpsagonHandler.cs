@@ -56,7 +56,7 @@ namespace Epsagon.Dotnet.Lambda
                 }
 
                 var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
-                EpsagonTrace.SendTrace(trace, "us-east-1");
+                EpsagonTrace.SendTrace(trace);
                 JaegerTracer.Clear();
 
                 Log.Debug("finishing epsagon lambda handler");
@@ -125,7 +125,7 @@ namespace Epsagon.Dotnet.Lambda
 
                 Log.Debug("creating trace");
                 var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
-                EpsagonTrace.SendTrace(trace, "us-east-1");
+                EpsagonTrace.SendTrace(trace);
                 JaegerTracer.Clear();
 
                 Log.Debug("finishing epsagon lambda handler");
