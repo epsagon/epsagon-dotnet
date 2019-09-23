@@ -146,6 +146,70 @@ namespace Epsagon.Dotnet.Lambda
             return returnValue;
         }
 
+        public static async Task Handle<TEvent>(TEvent input, ILambdaContext context, Func<Task> handlerFn)
+        {
+            var clientCodeExecuted = false;
+            Exception exception = null;
+
+            try
+            {
+                if (Utils.CurrentConfig.IsEpsagonDisabled)
+                {
+                    await handlerFn();
+                }
+
+                Log.Debug("entered epsagon lambda handler");
+                Log.Debug("handling trigger event");
+                using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
+                {
+                    var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
+                    trigger.Handle(context, scope);
+                }
+
+                // handle invocation event
+                Log.Debug("handling invocation event");
+                using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
+                using (var handler = new LambdaTriggerHandler<TEvent, string>(input, context, scope))
+                {
+                    Log.Debug("handling before execution");
+                    handler.HandleBefore();
+
+                    Log.Debug("calling client handler");
+                    try
+                    {
+                        clientCodeExecuted = true;
+                        await handlerFn();
+                    }
+                    catch (Exception e)
+                    {
+                        scope.Span.AddException(e);
+                        exception = e;
+                    }
+
+                    Log.Debug("handling after execution");
+                    handler.HandleAfter("");
+                }
+
+                Log.Debug("creating trace");
+                var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
+                EpsagonTrace.SendTrace(trace);
+                JaegerTracer.Clear();
+
+                Log.Debug("finishing epsagon lambda handler");
+
+                if (exception != null) throw exception;
+            }
+            catch (Exception ex) { HandleInstrumentationError(ex); }
+            finally
+            {
+                if (!clientCodeExecuted)
+                {
+                    await handlerFn();
+                }
+            }
+        }
+
+
         private static void HandleInstrumentationError(Exception ex)
         {
             Log.Debug("Exception thrown during instrumentation code");
