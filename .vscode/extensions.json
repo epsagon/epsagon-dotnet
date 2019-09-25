@@ -4,5 +4,6 @@
         "eamodio.gitlens",
         "jchannon.csharpextensions",
         "ms-vscode.csharp",
+        "fernandoescolar.vscode-solution-explorer"
     ]
 }
