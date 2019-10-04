@@ -28,7 +28,12 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
                 first = input?.Records?.FirstOrDefault();
                 operationSplit = first.EventSubscriptionArn?.Split(':');
-                operation = operationSplit[operationSplit.Length - 2];
+
+                if (operationSplit != null)
+                {
+                    operation = operationSplit[operationSplit.Length - 2];
+                }
+
                 message = first.Sns?.Message;
 
                 scope.Span.SetTag("event.id", first.Sns?.MessageId);
