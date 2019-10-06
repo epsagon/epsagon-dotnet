@@ -21,7 +21,10 @@ namespace Epsagon.Dotnet.Lambda
 
         public void HandleBefore()
         {
-            Log.Debug("lambda invoke event - START");
+            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+            {
+                Log.Debug("lambda invoke event - START");
+            }
 
             var coldStart = _coldStart;
             _coldStart = false;
@@ -45,10 +48,15 @@ namespace Epsagon.Dotnet.Lambda
 
         public void HandleAfter(TRes returnValue)
         {
-            this.scope.Span.SetTag("aws.lambda.return_value", JsonConvert.SerializeObject(returnValue, new JsonSerializerSettings() {
+            this.scope.Span.SetTag("aws.lambda.return_value", JsonConvert.SerializeObject(returnValue, new JsonSerializerSettings()
+            {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
-            Log.Debug("lambda invoke event - FINISHED");
+
+            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+            {
+                Log.Debug("lambda invoke event - FINISHED");
+            }
         }
 
         public void Dispose() => this.scope.Dispose();

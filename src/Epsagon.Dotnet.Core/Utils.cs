@@ -116,7 +116,11 @@ namespace Epsagon.Dotnet.Core
             finally
             {
                 stopWatch.Stop();
-                Log.Debug("Execution time: {time}ms, Function: {name}", stopWatch.ElapsedMilliseconds, fname);
+
+                if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+                {
+                    Log.Debug("Execution time: {time}ms, Function: {name}", stopWatch.ElapsedMilliseconds, fname);
+                }
             }
         }
 
@@ -131,7 +135,10 @@ namespace Epsagon.Dotnet.Core
             finally
             {
                 stopWatch.Stop();
-                Log.Debug("Execution time: {time}ms, Function: {name}", stopWatch.ElapsedMilliseconds, fname);
+                if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+                {
+                    Log.Debug("Execution time: {time}ms, Function: {name}", stopWatch.ElapsedMilliseconds, fname);
+                }
             }
         }
     }

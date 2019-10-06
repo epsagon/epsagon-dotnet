@@ -44,15 +44,18 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             }
             catch (NullReferenceException)
             {
-                Log.Debug("null reference, locals: {@locals}", new
+                if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
                 {
-                    Context = context,
-                    scope = scope,
-                    First = first,
-                    OperationSplit = operationSplit,
-                    Operation = operation,
-                    Message = message
-                });
+                    Log.Debug("null reference, locals: {@locals}", new
+                    {
+                        Context = context,
+                        scope = scope,
+                        First = first,
+                        OperationSplit = operationSplit,
+                        Operation = operation,
+                        Message = message
+                    });
+                }
             }
         }
     }

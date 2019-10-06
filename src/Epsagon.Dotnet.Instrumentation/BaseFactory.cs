@@ -19,7 +19,10 @@ namespace Epsagon.Dotnet.Instrumentation
 
         public TVal GetInstace(TKey key)
         {
-            Log.Debug("Creating instance for key: {key}", key);
+            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+            {
+                Log.Debug("Creating instance for key: {key}", key);
+            }
 
             if (this.Operations.ContainsKey(key)) return this.Operations[key]();
             return this.Default;

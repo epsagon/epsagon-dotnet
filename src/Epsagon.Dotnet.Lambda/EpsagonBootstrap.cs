@@ -34,23 +34,41 @@ namespace Epsagon.Dotnet.Lambda
                 CustomizePipeline();
                 Utils.RegisterConfiguration(LoadConfiguration());
 
-                Log.Debug("finished bootstraping epsagon");
+                if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+                {
+                    Log.Debug("finished bootstraping epsagon");
+                }
             }
         }
 
         private static void CustomizePipeline()
         {
-            Log.Debug("customizing AWSSDK pipeline - START");
+            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+            {
+                Log.Debug("customizing AWSSDK pipeline - START");
+            }
+
             RuntimePipelineCustomizerRegistry.Instance.Register(new EpsagonPipelineCustomizer());
-            Log.Debug("customizing AWSSDK pipeline - FINISHED");
+
+            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+            {
+                Log.Debug("customizing AWSSDK pipeline - FINISHED");
+            }
         }
 
         private static IEpsagonConfiguration LoadConfiguration()
         {
-            Log.Debug("loading epsagon configuration - START");
+            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+            {
+                Log.Debug("loading epsagon configuration - START");
+            }
             var config = configurationService.GetConfig();
-            Log.Debug("loading epsagon configuration - FINISHED");
-            Log.Debug("loaded configuration: {@config}", config);
+
+            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+            {
+                Log.Debug("loading epsagon configuration - FINISHED");
+                Log.Debug("loaded configuration: {@config}", config);
+            }
 
             return config;
         }
