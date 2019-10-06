@@ -60,8 +60,6 @@ namespace Epsagon.Dotnet.Lambda
                 JaegerTracer.Clear();
 
                 Log.Debug("finishing epsagon lambda handler");
-
-                if (exception != null) throw exception;
             }
             catch (Exception ex)
             {
@@ -73,6 +71,7 @@ namespace Epsagon.Dotnet.Lambda
                 {
                     returnValue = handlerFn();
                 }
+                if (exception != null) throw exception;
             }
 
             return returnValue;
@@ -129,9 +128,6 @@ namespace Epsagon.Dotnet.Lambda
                 JaegerTracer.Clear();
 
                 Log.Debug("finishing epsagon lambda handler");
-
-                if (exception != null) throw exception;
-
                 return returnValue;
             }
             catch (Exception ex) { HandleInstrumentationError(ex); }
@@ -141,6 +137,7 @@ namespace Epsagon.Dotnet.Lambda
                 {
                     returnValue = await handlerFn();
                 }
+                if (exception != null) throw exception;
             }
 
             return returnValue;
@@ -196,8 +193,6 @@ namespace Epsagon.Dotnet.Lambda
                 JaegerTracer.Clear();
 
                 Log.Debug("finishing epsagon lambda handler");
-
-                if (exception != null) throw exception;
             }
             catch (Exception ex) { HandleInstrumentationError(ex); }
             finally
@@ -206,9 +201,9 @@ namespace Epsagon.Dotnet.Lambda
                 {
                     await handlerFn();
                 }
+                if (exception != null) throw exception;
             }
         }
-
 
         private static void HandleInstrumentationError(Exception ex)
         {
