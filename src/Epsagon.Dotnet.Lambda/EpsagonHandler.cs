@@ -15,16 +15,17 @@ namespace Epsagon.Dotnet.Lambda
     {
         public static TRes Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<TRes> handlerFn)
         {
+            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled)
+            {
+                return handlerFn();
+            }
+
             var clientCodeExecuted = false;
             var returnValue = default(TRes);
             Exception exception = null;
 
             try
             {
-                if (Utils.CurrentConfig.IsEpsagonDisabled)
-                {
-                    return handlerFn();
-                }
 
                 if (Log.IsEnabled(LogEventLevel.Debug))
                 {
@@ -74,11 +75,15 @@ namespace Epsagon.Dotnet.Lambda
             }
             finally
             {
+                if (exception != null)
+                {
+                    throw exception;
+                }
+
                 if (!clientCodeExecuted)
                 {
                     returnValue = handlerFn();
                 }
-                if (exception != null) throw exception;
             }
 
             return returnValue;
@@ -86,17 +91,17 @@ namespace Epsagon.Dotnet.Lambda
 
         public static async Task<TRes> Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<Task<TRes>> handlerFn)
         {
+            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled)
+            {
+                return await handlerFn();
+            }
+
             var clientCodeExecuted = false;
             var returnValue = default(TRes);
             Exception exception = null;
 
             try
             {
-                if (Utils.CurrentConfig.IsEpsagonDisabled)
-                {
-                    return await handlerFn();
-                }
-
                 if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
                 {
                     Log.Debug("entered epsagon lambda handler");
@@ -162,11 +167,15 @@ namespace Epsagon.Dotnet.Lambda
             catch (Exception ex) { HandleInstrumentationError(ex); }
             finally
             {
+                if (exception != null)
+                {
+                    throw exception;
+                }
+
                 if (!clientCodeExecuted)
                 {
                     returnValue = await handlerFn();
                 }
-                if (exception != null) throw exception;
             }
 
             return returnValue;
@@ -174,21 +183,23 @@ namespace Epsagon.Dotnet.Lambda
 
         public static async Task Handle<TEvent>(TEvent input, ILambdaContext context, Func<Task> handlerFn)
         {
+            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled)
+            {
+                await handlerFn();
+                return;
+            }
+
             var clientCodeExecuted = false;
             Exception exception = null;
 
             try
             {
-                if (Utils.CurrentConfig.IsEpsagonDisabled)
-                {
-                    await handlerFn();
-                }
-
                 if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
                 {
                     Log.Debug("entered epsagon lambda handler");
                     Log.Debug("handling trigger event");
                 }
+
                 using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
                 {
                     var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
@@ -200,6 +211,7 @@ namespace Epsagon.Dotnet.Lambda
                 {
                     Log.Debug("handling invocation event");
                 }
+
                 using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
                 using (var handler = new LambdaTriggerHandler<TEvent, string>(input, context, scope))
                 {
@@ -207,12 +219,14 @@ namespace Epsagon.Dotnet.Lambda
                     {
                         Log.Debug("handling before execution");
                     }
+
                     handler.HandleBefore();
 
                     if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
                     {
                         Log.Debug("calling client handler");
                     }
+
                     try
                     {
                         clientCodeExecuted = true;
@@ -228,6 +242,7 @@ namespace Epsagon.Dotnet.Lambda
                     {
                         Log.Debug("handling after execution");
                     }
+
                     handler.HandleAfter("");
                 }
 
@@ -235,6 +250,7 @@ namespace Epsagon.Dotnet.Lambda
                 {
                     Log.Debug("creating trace");
                 }
+
                 var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
                 EpsagonTrace.SendTrace(trace);
                 JaegerTracer.Clear();
@@ -244,14 +260,21 @@ namespace Epsagon.Dotnet.Lambda
                     Log.Debug("finishing epsagon lambda handler");
                 }
             }
-            catch (Exception ex) { HandleInstrumentationError(ex); }
+            catch (Exception ex)
+            {
+                HandleInstrumentationError(ex);
+            }
             finally
             {
+                if (exception != null)
+                {
+                    throw exception;
+                }
+
                 if (!clientCodeExecuted)
                 {
                     await handlerFn();
                 }
-                if (exception != null) throw exception;
             }
         }
 
