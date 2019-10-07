@@ -5,7 +5,7 @@
         [
             "@semantic-release/exec",
             {
-                "publishCmd": "scripts/publis-all.sh ${nextRelease.version}"
+                "publishCmd": "scripts/publish-all.sh ${nextRelease.version}"
             }
         ]
     ]
