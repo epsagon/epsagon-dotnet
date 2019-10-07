@@ -33,43 +33,24 @@ namespace Epsagon.Dotnet.Lambda
                 JaegerTracer.CreateTracer();
                 CustomizePipeline();
                 Utils.RegisterConfiguration(LoadConfiguration());
-
-                if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-                {
-                    Log.Debug("finished bootstraping epsagon");
-                }
+                Utils.DebugLogIfEnabled("finished bootstraping epsagon");
             }
         }
 
         private static void CustomizePipeline()
         {
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("customizing AWSSDK pipeline - START");
-            }
-
+            Utils.DebugLogIfEnabled("customizing AWSSDK pipeline - START");
             RuntimePipelineCustomizerRegistry.Instance.Register(new EpsagonPipelineCustomizer());
-
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("customizing AWSSDK pipeline - FINISHED");
-            }
+            Utils.DebugLogIfEnabled("customizing AWSSDK pipeline - FINISHED");
         }
 
         private static IEpsagonConfiguration LoadConfiguration()
         {
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("loading epsagon configuration - START");
-            }
+            Utils.DebugLogIfEnabled("loading epsagon configuration - START");
             var config = configurationService.GetConfig();
 
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("loading epsagon configuration - FINISHED");
-                Log.Debug("loaded configuration: {@config}", config);
-            }
-
+            Utils.DebugLogIfEnabled("loading epsagon configuration - FINISHED");
+            Utils.DebugLogIfEnabled("loaded configuration: {@config}", config);
             return config;
         }
     }

@@ -18,10 +18,7 @@ namespace Epsagon.Dotnet.Tracing.Legacy.TraceSenders
 
         public void SendTrace(EpsagonTrace trace)
         {
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("sending trace, url: {url}", this.CollectorUrl);
-            }
+            Utils.DebugLogIfEnabled("sending trace, url: {url}", this.CollectorUrl);
 
             var client = new RestClient(this.CollectorUrl) { Timeout = 5000 };
             var request = new RestRequest(Method.POST);
@@ -33,12 +30,9 @@ namespace Epsagon.Dotnet.Tracing.Legacy.TraceSenders
 
             var res = client.Execute(request);
 
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("sent trace, {trace}", Utils.SerializeObject(trace));
-                Log.Debug("request: {@request}", request);
-                Log.Debug("response: {@response}", res);
-            }
+            Utils.DebugLogIfEnabled("sent trace, {trace}", Utils.SerializeObject(trace));
+            Utils.DebugLogIfEnabled("request: {@request}", request);
+            Utils.DebugLogIfEnabled("response: {@response}", res);
 
             JaegerTracer.Clear();
         }

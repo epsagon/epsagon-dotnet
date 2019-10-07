@@ -105,6 +105,11 @@ namespace Epsagon.Dotnet.Core
             return new DateTimeOffset(dateTime).ToUnixTimeMilliseconds() / 1000.0;
         }
 
+        public static void DebugLogIfEnabled(string format, params object[] args)
+        {
+            DebugLogIfEnabled(format, args);
+        }
+
         public static T TimeExecution<T>(Func<T> func, string fname = "")
         {
             var stopWatch = new Stopwatch();
@@ -116,11 +121,7 @@ namespace Epsagon.Dotnet.Core
             finally
             {
                 stopWatch.Stop();
-
-                if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-                {
-                    Log.Debug("Execution time: {time}ms, Function: {name}", stopWatch.ElapsedMilliseconds, fname);
-                }
+                DebugLogIfEnabled("Execution time: {time}ms, Function: {name}", stopWatch.ElapsedMilliseconds, fname);
             }
         }
 
@@ -135,10 +136,7 @@ namespace Epsagon.Dotnet.Core
             finally
             {
                 stopWatch.Stop();
-                if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-                {
-                    Log.Debug("Execution time: {time}ms, Function: {name}", stopWatch.ElapsedMilliseconds, fname);
-                }
+                DebugLogIfEnabled("Execution time: {time}ms, Function: {name}", stopWatch.ElapsedMilliseconds, fname);
             }
         }
     }
