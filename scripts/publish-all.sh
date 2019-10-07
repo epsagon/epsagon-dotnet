@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version_type=$1
+version=$1
 root_dir=`git rev-parse --show-toplevel`
 
 # load env vars
@@ -17,7 +17,7 @@ dotnet sln list \
 # version bump all projects
 dotnet sln list \
     | grep .csproj \
-    | xargs -n 1 python3 $root_dir/scripts/version-bump.py --type "$version_type" --proj
+    | xargs -n 1 python3 $root_dir/scripts/version-bump.py --set-version "$version" --proj
 
 # package all projects
 dotnet pack $root_dir/Epsagon.Dotnet.sln -c Release
