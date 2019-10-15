@@ -15,16 +15,17 @@ namespace Epsagon.Dotnet.Lambda
     {
         public static TRes Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<TRes> handlerFn)
         {
+            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled)
+            {
+                return handlerFn();
+            }
+
             var clientCodeExecuted = false;
             var returnValue = default(TRes);
             Exception exception = null;
 
             try
             {
-                if (Utils.CurrentConfig.IsEpsagonDisabled)
-                {
-                    return handlerFn();
-                }
 
                 Utils.DebugLogIfEnabled("entered epsagon lambda handler");
 
@@ -67,11 +68,15 @@ namespace Epsagon.Dotnet.Lambda
             }
             finally
             {
+                if (exception != null)
+                {
+                    throw exception;
+                }
+
                 if (!clientCodeExecuted)
                 {
                     returnValue = handlerFn();
                 }
-                if (exception != null) throw exception;
             }
 
             return returnValue;
@@ -79,6 +84,11 @@ namespace Epsagon.Dotnet.Lambda
 
         public static async Task<TRes> Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<Task<TRes>> handlerFn)
         {
+            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled)
+            {
+                return await handlerFn();
+            }
+
             var clientCodeExecuted = false;
             var returnValue = default(TRes);
             Exception exception = null;
@@ -92,6 +102,7 @@ namespace Epsagon.Dotnet.Lambda
 
                 Utils.DebugLogIfEnabled("entered epsagon lambda handler");
                 Utils.DebugLogIfEnabled("handling trigger event");
+
                 using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
                 {
                     var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
@@ -134,11 +145,15 @@ namespace Epsagon.Dotnet.Lambda
             catch (Exception ex) { HandleInstrumentationError(ex); }
             finally
             {
+                if (exception != null)
+                {
+                    throw exception;
+                }
+
                 if (!clientCodeExecuted)
                 {
                     returnValue = await handlerFn();
                 }
-                if (exception != null) throw exception;
             }
 
             return returnValue;
@@ -146,11 +161,18 @@ namespace Epsagon.Dotnet.Lambda
 
         public static async Task Handle<TEvent>(TEvent input, ILambdaContext context, Func<Task> handlerFn)
         {
+            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled)
+            {
+                await handlerFn();
+                return;
+            }
+
             var clientCodeExecuted = false;
             Exception exception = null;
 
             try
             {
+
                 if (Utils.CurrentConfig.IsEpsagonDisabled)
                 {
                     await handlerFn();
@@ -158,6 +180,7 @@ namespace Epsagon.Dotnet.Lambda
 
                 Utils.DebugLogIfEnabled("entered epsagon lambda handler");
                 Utils.DebugLogIfEnabled("handling trigger event");
+
                 using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
                 {
                     var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
@@ -184,6 +207,7 @@ namespace Epsagon.Dotnet.Lambda
                         exception = e;
                     }
 
+
                     Utils.DebugLogIfEnabled("handling after execution");
                     handler.HandleAfter("");
                 }
@@ -195,14 +219,21 @@ namespace Epsagon.Dotnet.Lambda
 
                 Utils.DebugLogIfEnabled("finishing epsagon lambda handler");
             }
-            catch (Exception ex) { HandleInstrumentationError(ex); }
+            catch (Exception ex)
+            {
+                HandleInstrumentationError(ex);
+            }
             finally
             {
+                if (exception != null)
+                {
+                    throw exception;
+                }
+
                 if (!clientCodeExecuted)
                 {
                     await handlerFn();
                 }
-                if (exception != null) throw exception;
             }
         }
 
