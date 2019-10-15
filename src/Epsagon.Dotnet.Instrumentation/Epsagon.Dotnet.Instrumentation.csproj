@@ -4,19 +4,19 @@
     <PackageId>Epsagon.Dotnet.Instrumentation</PackageId>
     <Authors>Epsagon</Authors>
     <Company>Epsagon</Company>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://epsagon-public-screenshots.s3.us-east-2.amazonaws.com/logo.png</PackageIconUrl>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Core" Version="3.3.103.45" />
-    <PackageReference Include="AWSSDK.S3" Version="3.3.104.33" />
-    <PackageReference Include="AWSSDK.Lambda" Version="3.3.103.13" />
-    <PackageReference Include="AWSSDK.Kinesis" Version="3.3.100.81" />
-    <PackageReference Include="AWSSDK.SQS" Version="3.3.102.13" />
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.101.72" />
-    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.3.101.70" />
-    <PackageReference Include="AWSSDK.SimpleEmail" Version="3.3.101.52" />
+    <PackageReference Include="AWSSDK.Core" Version="3.3.103.48" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.104.36" />
+    <PackageReference Include="AWSSDK.Lambda" Version="3.3.103.16" />
+    <PackageReference Include="AWSSDK.Kinesis" Version="3.3.100.84" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.3.102.16" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.101.75" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.3.101.73" />
+    <PackageReference Include="AWSSDK.SimpleEmail" Version="3.3.101.55" />
     <PackageReference Include="Amazon.Lambda.Core" Version="1.1.0" />
     <PackageReference Include="Amazon.Lambda.S3Events" Version="1.1.0" />
     <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="1.2.0" />
