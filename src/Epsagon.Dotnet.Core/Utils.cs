@@ -107,7 +107,10 @@ namespace Epsagon.Dotnet.Core
 
         public static void DebugLogIfEnabled(string format, params object[] args)
         {
-            DebugLogIfEnabled(format, args);
+            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+            {
+                DebugLogIfEnabled(format, args);
+            }
         }
 
         public static T TimeExecution<T>(Func<T> func, string fname = "")
