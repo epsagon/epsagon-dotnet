@@ -1,11 +1,4 @@
 ﻿using Amazon.Lambda.Core;
-using Epsagon.Dotnet.Tracing.Legacy;
-using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
-using Serilog;
-using OpenTracing.Util;
-using Epsagon.Dotnet.Instrumentation;
-using System;
-using Epsagon.Dotnet.Core;
 using System.Threading.Tasks;
 
 namespace Epsagon.Dotnet.Lambda

@@ -19,10 +19,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
         public override void InvokeSync(IExecutionContext executionContext)
         {
             var name = executionContext.RequestContext.RequestName;
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("AWSSDK request invoked, {name}", name);
-            }
+            Utils.DebugLogIfEnabled("AWSSDK request invoked, {name}", name);
 
             using (var scope = tracer.BuildSpan(name).StartActive(finishSpanOnDispose: true))
             {
@@ -49,11 +46,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
         public override Task<T> InvokeAsync<T>(IExecutionContext executionContext)
         {
             var name = executionContext.RequestContext.RequestName;
-
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("AWSSDK request invoked, {name}", name);
-            }
+            Utils.DebugLogIfEnabled("AWSSDK request invoked, {name}", name);
 
             using (var scope = tracer.BuildSpan(name).StartActive(finishSpanOnDispose: true))
             {

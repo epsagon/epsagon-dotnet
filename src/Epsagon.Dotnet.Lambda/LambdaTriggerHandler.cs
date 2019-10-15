@@ -1,5 +1,6 @@
 using System;
 using Amazon.Lambda.Core;
+using Epsagon.Dotnet.Core;
 using Newtonsoft.Json;
 using OpenTracing;
 using Serilog;
@@ -21,10 +22,7 @@ namespace Epsagon.Dotnet.Lambda
 
         public void HandleBefore()
         {
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("lambda invoke event - START");
-            }
+            Utils.DebugLogIfEnabled("lambda invoke event - START");
 
             var coldStart = _coldStart;
             _coldStart = false;
@@ -53,10 +51,7 @@ namespace Epsagon.Dotnet.Lambda
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
 
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("lambda invoke event - FINISHED");
-            }
+            Utils.DebugLogIfEnabled("lambda invoke event - FINISHED");
         }
 
         public void Dispose() => this.scope.Dispose();

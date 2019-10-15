@@ -17,7 +17,8 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
         public void HandleOperationBefore(IExecutionContext context, IScope scope)
         {
             var request = context.RequestContext.OriginalRequest as PutItemRequest;
-            var item = JsonConvert.SerializeObject(request.Item, new JsonSerializerSettings() {
+            var item = JsonConvert.SerializeObject(request.Item, new JsonSerializerSettings()
+            {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             });
 
@@ -32,7 +33,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
             {
                 var inputBytes = Encoding.ASCII.GetBytes(input);
                 var hashBytes = md5.ComputeHash(inputBytes);
-                return BitConverter.ToString(hashBytes);
+                return Convert.ToBase64String(hashBytes);
             }
         }
     }

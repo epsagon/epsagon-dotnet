@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Epsagon.Dotnet.Core;
 using Serilog;
 
 namespace Epsagon.Dotnet.Instrumentation
@@ -19,10 +20,7 @@ namespace Epsagon.Dotnet.Instrumentation
 
         public TVal GetInstace(TKey key)
         {
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("Creating instance for key: {key}", key);
-            }
+            Utils.DebugLogIfEnabled("Creating instance for key: {key}", key);
 
             if (this.Operations.ContainsKey(key)) return this.Operations[key]();
             return this.Default;

@@ -10,19 +10,13 @@ namespace Epsagon.Dotnet.Tracing.Legacy.TraceSenders
     {
         public void SendTrace(EpsagonTrace trace)
         {
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("sending trace, url: {url}");
-            }
+            Utils.DebugLogIfEnabled("sending trace, url: {url}");
 
             var traceJsonString = Convert.ToBase64String(Encoding.UTF8.GetBytes(Utils.SerializeObject(trace)));
             System.Console.WriteLine("EPSAGON_TRACE: {0}", traceJsonString);
 
-            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-            {
-                Log.Debug("sent trace, {trace}", Utils.SerializeObject(trace));
-                Log.Debug("trace base64, {trace}", traceJsonString);
-            }
+            Utils.DebugLogIfEnabled("sent trace, {trace}", Utils.SerializeObject(trace));
+            Utils.DebugLogIfEnabled("trace base64, {trace}", traceJsonString);
 
             JaegerTracer.Clear();
         }
