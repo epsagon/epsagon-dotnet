@@ -15,7 +15,7 @@ namespace AwsDotnetCsharp
 
         public Response Hello(Request request, ILambdaContext context)
         {
-            EpsagonHandler.Handle(request, context, () =>
+            return EpsagonHandler.Handle(request, context, () =>
             {
                 return new Response("Go Serverless v1.0! Your function executed successfully!", request);
             });
