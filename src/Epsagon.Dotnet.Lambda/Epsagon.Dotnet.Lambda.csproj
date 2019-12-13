@@ -5,7 +5,7 @@
     <PackageId>Epsagon.Dotnet.Lambda</PackageId>
     <Authors>Epsagon</Authors>
     <Company>Epsagon</Company>
-    <Version>1.2.1</Version>
+    <Version>1.4.0</Version>
     <Title>Epsagon Instrumentation for .NET</Title>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://epsagon-public-screenshots.s3.us-east-2.amazonaws.com/logo.png</PackageIconUrl>
@@ -17,6 +17,6 @@
     <ProjectReference Include="..\Epsagon.Dotnet.Tracing.Legacy\Epsagon.Dotnet.Tracing.Legacy.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Amazon.Lambda.Core" Version="1.1.0" />
+    <PackageReference Include="Amazon.Lambda.Core" Version="No executable found matching command &quot;dotnet-search&quot;" />
   </ItemGroup>
 </Project>
