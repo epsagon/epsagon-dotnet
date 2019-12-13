@@ -5,13 +5,13 @@
     <PackageId>Epsagon.Dotnet.Tracing.OpenTracingJaeger</PackageId>
     <Authors>Epsagon</Authors>
     <Company>Epsagon</Company>
-    <Version>1.4.0</Version>
+    <Version>1.2.1</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://epsagon-public-screenshots.s3.us-east-2.amazonaws.com/logo.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Jaeger" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="OpenTracing" Version="No executable found matching command &quot;dotnet-search&quot;" />
+    <PackageReference Include="Jaeger" Version="0.3.6" />
+    <PackageReference Include="OpenTracing" Version="0.12.1" />
   </ItemGroup>
 </Project>

@@ -4,28 +4,28 @@
     <PackageId>Epsagon.Dotnet.Instrumentation</PackageId>
     <Authors>Epsagon</Authors>
     <Company>Epsagon</Company>
-    <Version>1.4.0</Version>
+    <Version>1.2.1</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://epsagon-public-screenshots.s3.us-east-2.amazonaws.com/logo.png</PackageIconUrl>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Core" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="AWSSDK.S3" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="AWSSDK.Lambda" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="AWSSDK.Kinesis" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="AWSSDK.SQS" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="AWSSDK.SimpleEmail" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="Amazon.Lambda.Core" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="Amazon.Lambda.S3Events" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="Amazon.Lambda.SNSEvents" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="Amazon.Lambda.SQSEvents" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="Amazon.Lambda.KinesisEvents" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="Amazon.Lambda.DynamoDBEvents" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="Amazon.Lambda.CloudWatchEvents" Version="No executable found matching command &quot;dotnet-search&quot;" />
-    <PackageReference Include="Amazon.Lambda.ApplicationLoadBalancerEvents" Version="No executable found matching command &quot;dotnet-search&quot;" />
+    <PackageReference Include="AWSSDK.Core" Version="3.3.103.52" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.104.40" />
+    <PackageReference Include="AWSSDK.Lambda" Version="3.3.103.19" />
+    <PackageReference Include="AWSSDK.Kinesis" Version="3.3.100.87" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.3.102.19" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.101.78" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.3.101.76" />
+    <PackageReference Include="AWSSDK.SimpleEmail" Version="3.3.101.58" />
+    <PackageReference Include="Amazon.Lambda.Core" Version="1.1.0" />
+    <PackageReference Include="Amazon.Lambda.S3Events" Version="1.1.0" />
+    <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="1.2.0" />
+    <PackageReference Include="Amazon.Lambda.SNSEvents" Version="1.1.0" />
+    <PackageReference Include="Amazon.Lambda.SQSEvents" Version="1.1.0" />
+    <PackageReference Include="Amazon.Lambda.KinesisEvents" Version="1.1.0" />
+    <PackageReference Include="Amazon.Lambda.DynamoDBEvents" Version="1.1.0" />
+    <PackageReference Include="Amazon.Lambda.CloudWatchEvents" Version="1.0.0" />
+    <PackageReference Include="Amazon.Lambda.ApplicationLoadBalancerEvents" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Handlers\" />
