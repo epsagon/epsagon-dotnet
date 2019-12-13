@@ -51,6 +51,7 @@ namespace Epsagon.Dotnet.Lambda
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
             EpsagonLabels.Set();
+            EpsagonLabels.Clear();
             Utils.DebugLogIfEnabled("lambda invoke event - FINISHED");
         }
 
