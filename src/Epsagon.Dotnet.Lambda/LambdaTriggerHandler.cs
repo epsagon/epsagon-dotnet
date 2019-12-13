@@ -23,7 +23,7 @@ namespace Epsagon.Dotnet.Lambda
         public void HandleBefore()
         {
             Utils.DebugLogIfEnabled("lambda invoke event - START");
-
+            EpsagonLabels.Clear();
             var coldStart = _coldStart;
             _coldStart = false;
 
@@ -50,7 +50,8 @@ namespace Epsagon.Dotnet.Lambda
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
-
+            EpsagonLabels.Set();
+            EpsagonLabels.Clear();
             Utils.DebugLogIfEnabled("lambda invoke event - FINISHED");
         }
 
