@@ -10,7 +10,6 @@ namespace Epsagon.Dotnet.Lambda
         public static Dictionary<string, string> labels = new Dictionary<string, string>();
 
         public static void Add(string key, string value) {
-            OpenTracing.ITracer tracer =  GlobalTracer.Instance;
             EpsagonLabels.labels.Add(key, value);
         }
 
