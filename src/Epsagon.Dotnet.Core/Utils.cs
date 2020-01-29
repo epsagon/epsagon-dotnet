@@ -109,7 +109,7 @@ namespace Epsagon.Dotnet.Core
         {
             if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
             {
-                DebugLogIfEnabled(format, args);
+                Log.Debug(format, args);
             }
         }
 
