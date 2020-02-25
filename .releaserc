@@ -6,7 +6,7 @@
             "@semantic-release/exec",
             {
                 "publishCmd": "scripts/publish-all.sh ${nextRelease.version}",
-		"successCmd": "git add . && git push -m \"patch(version): version bump\""
+                "successCmd": "git add . && git commit -m \"patch(version): version bump\""
             }
         ]
     ]
