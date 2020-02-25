@@ -75,14 +75,14 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
         private void BuildSpan(IExecutionContext context, ISpan span)
         {
             var resoureType = context?.RequestContext?.ServiceMetaData.ServiceId;
-            var serviceName = context.RequestContext?.ServiceMetaData.ServiceId;
+            var serviceName = context?.RequestContext?.ServiceMetaData.ServiceId;
             var operationName = context?.RequestContext?.RequestName;
 
             var endpoint = context?.RequestContext?.Request?.Endpoint?.ToString();
             var region = context?.RequestContext?.ClientConfig?.RegionEndpoint?.SystemName;
             var envRegion = Environment.GetEnvironmentVariable("AWS_REGION");
 
-            span.SetTag("resource.type", resoureType.ToLower());
+            span.SetTag("resource.type", resoureType?.ToLower());
             span.SetTag("event.origin", "aws-sdk");
             span.SetTag("event.error_code", 0); // OK
             span.SetTag("aws.service", serviceName);
