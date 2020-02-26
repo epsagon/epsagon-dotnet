@@ -19,8 +19,9 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.Empty
 
         public override void HandleBefore(IExecutionContext executionContext, IScope scope)
         {
-            scope.Span.SetTag("resource.name", this._serviceName);
-            scope.Span.SetTag("resource.type", this._serviceName);
+            var serviceId = executionContext?.RequestContext?.ServiceMetaData?.ServiceId;
+            scope.Span.SetTag("resource.name", string.IsNullOrEmpty(serviceId) ? this._serviceName : serviceId);
+            scope.Span.SetTag("resource.type", string.IsNullOrEmpty(serviceId) ? this._serviceName : serviceId);
         }
     }
 }
