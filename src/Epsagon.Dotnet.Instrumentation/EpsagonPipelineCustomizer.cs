@@ -9,7 +9,7 @@ namespace Epsagon.Dotnet.Instrumentation
 
         public void Customize(Type type, RuntimePipeline pipeline)
         {
-            var handler = new HandlerFactory().GetInstace(type);
+            var handler = new HandlerFactory(type.Name).GetInstace(type);
             pipeline.AddHandler(handler);
         }
     }

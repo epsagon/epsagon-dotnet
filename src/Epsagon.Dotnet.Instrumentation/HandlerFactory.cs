@@ -14,7 +14,7 @@ namespace Epsagon.Dotnet.Instrumentation
 {
     public class HandlerFactory : BaseFactory<Type, IServiceHandler>
     {
-        public HandlerFactory() : base(new EmptyHandler()) { }
+        public HandlerFactory(string serviceName) : base(new EmptyHandler(serviceName = "empty")) { }
 
         protected override Dictionary<Type, Func<IServiceHandler>> Operations => new Dictionary<Type, Func<IServiceHandler>>
         {
