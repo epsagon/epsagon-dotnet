@@ -22,7 +22,8 @@ namespace Epsagon.Dotnet.Core
             {
                 ContractResolver = new JsonLowerCaseUnderscoreContractResolver(),
                 NullValueHandling = NullValueHandling.Ignore,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                Formatting = Formatting.Indented
             });
         }
 

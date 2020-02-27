@@ -19,6 +19,7 @@ namespace Epsagon.Dotnet.Instrumentation.MongoDB
         public MongoDBEventsSubscriber()
         {
             this.eventSubscriber = new ReflectionEventSubscriber(this);
+            this.scopes = new Dictionary<int, IScope>();
         }
 
         public bool TryGetEventHandler<TEvent>(out Action<TEvent> handler)
@@ -39,14 +40,15 @@ namespace Epsagon.Dotnet.Instrumentation.MongoDB
             scope.Span.SetTag("event.id", $"mongo-{Guid.NewGuid()}");
             scope.Span.SetTag("resource.name", startedEvent.DatabaseNamespace.DatabaseName);
             scope.Span.SetTag("resource.operation", commandName);
-            scope.Span.SetTag("database.mongodb.DB URL", GetEndpointUrl(startedEvent.ConnectionId.ServerId.EndPoint));
-            scope.Span.SetTag("database.mongodb.DB Name", startedEvent.DatabaseNamespace.DatabaseName);
-            scope.Span.SetTag("database.mongodb.Collection Name", startedEvent.Command.GetValue("insert").AsString);
-            scope.Span.SetTag("database.mongodb.inserted_ids", Utils.SerializeObject(ids));
-            scope.Span.SetDataIfNeeded("database.mongodb.Items", BsonTypeMapper.MapToDotNetValue(documents));
+            scope.Span.SetTag("meta.mongodb.db_url", GetEndpointUrl(startedEvent.ConnectionId.ServerId.EndPoint));
+            scope.Span.SetTag("meta.mongodb.db_name", startedEvent.DatabaseNamespace.DatabaseName);
+            scope.Span.SetTag("meta.mongodb.collection_name", startedEvent.Command.GetValue("insert").AsString);
+            scope.Span.SetTag("meta.mongodb.inserted_ids", Utils.SerializeObject(ids));
+            scope.Span.SetDataIfNeeded("meta.mongodb.items", BsonTypeMapper.MapToDotNetValue(documents));
 
             // store the scope to finish when the command is finished
             this.scopes.Add(startedEvent.RequestId, scope);
+            Utils.DebugLogIfEnabled("MongoDb event");
         }
 
         public void Handle(CommandSucceededEvent succeededEvent)
