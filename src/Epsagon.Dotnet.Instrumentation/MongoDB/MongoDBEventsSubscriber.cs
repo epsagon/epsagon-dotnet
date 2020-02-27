@@ -33,7 +33,7 @@ namespace Epsagon.Dotnet.Instrumentation.MongoDB
             if (commandName != "insert") return;
 
             var tracer = GlobalTracer.Instance;
-            var scope = tracer.BuildSpan($"{commandName}-{startedEvent.RequestId}").StartActive(finishSpanOnDispose: true);
+            var scope = tracer.BuildSpan(commandName).StartActive(finishSpanOnDispose: true);
             var documents = startedEvent.Command.GetValue("documents").AsBsonArray;
             var ids = documents.Select(doc => doc.AsBsonDocument.GetValue("_id").ToString());
 
