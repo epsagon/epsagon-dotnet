@@ -17,12 +17,13 @@ namespace Epsagon.Dotnet.Core.Configuration
             {
                 TraceCollectorURL = "http://dev.tc.epsagon.com";
             }
-            else if ((Environment.GetEnvironmentVariable("EPSAGON_META") ?? "").ToUpper() == "TRUE") {
+            else if ((Environment.GetEnvironmentVariable("EPSAGON_META") ?? "").ToUpper() == "TRUE")
+            {
                 TraceCollectorURL = "https://meta.tc.epsagon.com";
             }
             else
             {
-                var region = Environment.GetEnvironmentVariable("AWS_REGION");
+                var region = Environment.GetEnvironmentVariable("AWS_REGION") ?? "us-east-1";
                 TraceCollectorURL = $"https://{region}.tc.epsagon.com";
             }
         }
