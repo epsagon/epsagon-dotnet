@@ -71,10 +71,9 @@ namespace Epsagon.Dotnet.Tracing.Legacy
                 var tags = span.GetTags();
                 var metadata = tags
                     .Select(x => new { Key = x.Key.Split('.'), Value = x.Value })
-                    .Where(x => x.Key.First().ToLower() != "resource" && x.Key.First().ToLower() != "event")
+                    .Where(x => x.Key.First().ToLower().StartsWith("aws") || x.Key.First().ToLower().StartsWith("meta"))
                     .Where(x => !Utils.IsNullOrDefault(x.Value))
                     .ToDictionary(x => x.Key.Last(), x => x.Value);
-
                 return metadata;
             }, "GenerateMetadata");
         }
