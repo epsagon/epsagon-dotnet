@@ -14,7 +14,7 @@ namespace Epsagon.Dotnet.Lambda
     {
         private static readonly IConfigurationService configurationService = new ConfigurationService();
 
-        public static void Bootstrap()
+        public static void Bootstrap(bool useOpenTracingCollector = false)
         {
             var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Error);
             if ((System.Environment.GetEnvironmentVariable("EPSAGON_DEBUG") ?? "").ToLower() == "true")
@@ -30,7 +30,10 @@ namespace Epsagon.Dotnet.Lambda
 
             if ((Environment.GetEnvironmentVariable("DISABLE_EPSAGON") ?? "").ToUpper() != "TRUE")
             {
-                JaegerTracer.CreateTracer();
+                // Use either legacy tracer or opentracing tracer
+                if (useOpenTracingCollector) JaegerTracer.CreateRemoteTracer();
+                else JaegerTracer.CreateTracer();
+
                 CustomizePipeline();
                 Utils.RegisterConfiguration(LoadConfiguration());
                 Utils.DebugLogIfEnabled("finished bootstraping epsagon");
