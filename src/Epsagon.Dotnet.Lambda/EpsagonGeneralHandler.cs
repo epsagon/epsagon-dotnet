@@ -20,14 +20,10 @@ namespace Epsagon.Dotnet.Lambda
                 return;
             }
 
-            try
+            using (var scope = CreateRunner(methodName))
             {
-                using (var scope = CreateRunner(methodName))
-                {
-                    ExecuteClientCode(clientFn, scope);
-                }
+                ExecuteClientCode(clientFn, scope);
             }
-            finally { CreateTraceAndSend(); }
         }
 
         public static T Handle<T>(Func<T> clientFn, [CallerMemberName] string methodName = "")
@@ -35,15 +31,12 @@ namespace Epsagon.Dotnet.Lambda
             if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled) return clientFn();
 
             T result;
-            try
+            using (var scope = CreateRunner(methodName))
             {
-                using (var scope = CreateRunner(methodName))
-                {
-                    result = ExecuteClientCode(clientFn, scope);
-                    scope.Span.SetDataIfNeeded("aws.lambda.return_value", result);
-                }
+                result = ExecuteClientCode(clientFn, scope);
+                scope.Span.SetDataIfNeeded("aws.lambda.return_value", result);
             }
-            finally { CreateTraceAndSend(); }
+
             return result;
         }
 
@@ -51,15 +44,12 @@ namespace Epsagon.Dotnet.Lambda
         {
             if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled) return await clientFn();
             T result;
-            try
+            using (var scope = CreateRunner(methodName))
             {
-                using (var scope = CreateRunner(methodName))
-                {
-                    result = await ExecuteClientCode(clientFn, scope);
-                    scope.Span.SetDataIfNeeded("aws.lambda.return_value", result);
-                }
+                result = await ExecuteClientCode(clientFn, scope);
+                scope.Span.SetDataIfNeeded("aws.lambda.return_value", result);
             }
-            finally { CreateTraceAndSend(); }
+
             return result;
         }
 
@@ -85,11 +75,13 @@ namespace Epsagon.Dotnet.Lambda
             try
             {
                 T result = clientFn();
-                if (result is Task t) return result;
-                else
+                if (result is Task t)
                 {
+                    t.ContinueWith(task => scope.Span.AddException(task.Exception), TaskContinuationOptions.OnlyOnFaulted);
                     return result;
                 }
+
+                return result;
             }
             catch (Exception e)
             {

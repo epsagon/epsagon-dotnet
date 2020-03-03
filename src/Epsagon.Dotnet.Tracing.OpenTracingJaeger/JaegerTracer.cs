@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using Jaeger;
 using Jaeger.Reporters;
+using Jaeger.Senders;
 using Jaeger.Samplers;
 using OpenTracing.Util;
+using Epsagon.Dotnet.Core;
 
 namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
 {
@@ -11,11 +13,11 @@ namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
         public static InMemoryReporter memoryReporter = new InMemoryReporter();
         public static Tracer tracer;
 
-        public static Tracer CreateTracer()
+        private static Tracer CreateTracer(IReporter reporter)
         {
             var sampler = new ConstSampler(true);
             tracer = new Tracer.Builder("epsagon-tracer")
-                .WithReporter(new CompositeReporter(memoryReporter))
+                .WithReporter(new CompositeReporter(reporter))
                 .WithSampler(sampler)
                 .Build();
 
@@ -25,6 +27,18 @@ namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
             }
 
             return tracer;
+        }
+
+        public static Tracer CreateTracer()
+        {
+            return CreateTracer(memoryReporter);
+        }
+
+        public static Tracer CreateRemoteTracer()
+        {
+            var sender = new HttpSender(Utils.CurrentConfig.OpenTracingCollectorURL);
+            var reporter = new RemoteReporter.Builder().WithSender(sender);
+            return CreateTracer(reporter.Build());
         }
 
         public static void Clear()
