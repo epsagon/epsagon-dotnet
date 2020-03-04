@@ -36,7 +36,10 @@ namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
 
         public static Tracer CreateRemoteTracer()
         {
-            var sender = new HttpSender(Utils.CurrentConfig.OpenTracingCollectorURL);
+            var sender = new HttpSender
+                .Builder(Utils.CurrentConfig.OpenTracingCollectorURL)
+                .WithAuth(Utils.CurrentConfig.Token)
+                .Build();
             var reporter = new RemoteReporter.Builder().WithSender(sender);
             return CreateTracer(reporter.Build());
         }
