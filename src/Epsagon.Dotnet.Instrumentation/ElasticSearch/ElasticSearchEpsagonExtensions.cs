@@ -1,4 +1,7 @@
+using System;
+using Jaeger;
 using Nest;
+using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.ElasticSearch
 {

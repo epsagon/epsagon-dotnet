@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Elasticsearch.Net;
 using Epsagon.Dotnet.Core;
+using Jaeger;
 using OpenTracing.Tag;
 using OpenTracing.Util;
 
@@ -12,7 +14,10 @@ namespace Epsagon.Dotnet.Instrumentation.ElasticSearch
     {
         public static void HandleRequestCompleted(IApiCallDetails details)
         {
-            using (var scope = GlobalTracer.Instance.BuildSpan(details.HttpMethod.ToString()).StartActive(finishSpanOnDispose: true))
+            using (var scope = GlobalTracer.Instance
+                .BuildSpan(details.HttpMethod.ToString())
+                .WithStartTimestamp(new DateTimeOffset(details.AuditTrail.First().Started))
+                .StartActive(finishSpanOnDispose: true))
             {
                 var uri = details.Uri;
                 var requestBody = details.RequestBodyInBytes ?? new byte[] { };
@@ -48,7 +53,6 @@ namespace Epsagon.Dotnet.Instrumentation.ElasticSearch
 
         public static void HandleRequestDataCreated(RequestData request)
         {
-
         }
     }
 }
