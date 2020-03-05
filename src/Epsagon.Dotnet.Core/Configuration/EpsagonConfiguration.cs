@@ -17,18 +17,18 @@ namespace Epsagon.Dotnet.Core.Configuration
             if ((Environment.GetEnvironmentVariable("EPSAGON_TEST") ?? "").ToUpper() == "TRUE")
             {
                 TraceCollectorURL = "http://dev.tc.epsagon.com";
-                OpenTracingCollectorURL = "https://dev.otc.epsagon.com";
+                OpenTracingCollectorURL = "https://dev.otc.epsagon.com/api/traces";
             }
             else if ((Environment.GetEnvironmentVariable("EPSAGON_META") ?? "").ToUpper() == "TRUE")
             {
                 TraceCollectorURL = "https://meta.tc.epsagon.com";
-                OpenTracingCollectorURL = "https://meta.otc.epsagon.com";
+                OpenTracingCollectorURL = "https://meta.otc.epsagon.com/api/traces";
             }
             else
             {
                 var region = Environment.GetEnvironmentVariable("AWS_REGION") ?? "us-east-1";
                 TraceCollectorURL = $"https://{region}.tc.epsagon.com";
-                OpenTracingCollectorURL = $"https://{region}.otc.epsagon.com";
+                OpenTracingCollectorURL = $"https://{region}.otc.epsagon.com/api/traces";
             }
         }
     }

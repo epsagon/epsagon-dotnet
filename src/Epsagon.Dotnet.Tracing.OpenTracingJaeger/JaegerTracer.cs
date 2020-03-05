@@ -5,6 +5,7 @@ using Jaeger.Senders;
 using Jaeger.Samplers;
 using OpenTracing.Util;
 using Epsagon.Dotnet.Core;
+using System.Reflection;
 
 namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
 {
@@ -16,13 +17,16 @@ namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
         private static Tracer CreateTracer(IReporter reporter)
         {
             var sampler = new ConstSampler(true);
-            tracer = new Tracer.Builder("epsagon-tracer")
+            tracer = new Tracer.Builder(Utils.CurrentConfig.AppName)
                 .WithReporter(new CompositeReporter(reporter))
                 .WithSampler(sampler)
+                .WithTag("library.version", Assembly.GetAssembly(typeof(Epsagon.Dotnet.Core.Utils)).GetName().Version.ToString())
+                .WithTag("library.platform", $".NET {System.Environment.Version.Major}.{System.Environment.Version.Minor}")
                 .Build();
 
             if (!GlobalTracer.IsRegistered())
             {
+                Utils.DebugLogIfEnabled("register type: {t}", reporter.GetType());
                 GlobalTracer.Register(tracer);
             }
 
