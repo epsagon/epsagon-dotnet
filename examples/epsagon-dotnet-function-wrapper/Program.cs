@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Epsagon.Dotnet.Lambda;
 
 namespace EpsagonDotnetFunction
@@ -7,7 +8,7 @@ namespace EpsagonDotnetFunction
     {
         static void Main(string[] args)
         {
-            EpsagonBootstrap.Bootstrap();
+            EpsagonBootstrap.Bootstrap(useOpenTracingCollector: true);
 
             var invoker = new LambdaInvoker();
             var responseTask = invoker.InvokeLambda(args[0]);
