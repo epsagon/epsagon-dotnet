@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Jaeger" Version="0.3.7" />
+    <PackageReference Include="Jaeger" Version="0.3.6" />
     <PackageReference Include="OpenTracing" Version="0.12.1" />
   </ItemGroup>
 
