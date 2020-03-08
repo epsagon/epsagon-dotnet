@@ -1,3 +1,4 @@
+using System;
 using Amazon.Runtime;
 using Amazon.SQS.Model;
 using OpenTracing;
@@ -26,6 +27,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.SQS.Operations
                     try { queueName = request.QueueUrl.Split('/')[4]; }
                     catch { queueName = "Invalid Queue Name"; }
 
+                    messageScope.Span.SetTag("event.id", Guid.NewGuid().ToString());
                     messageScope.Span.SetTag("resource.name", queueName);
                     messageScope.Span.SetTag("resource.type", "sqs");
                     messageScope.Span.SetTag("event.origin", "aws-sdk");

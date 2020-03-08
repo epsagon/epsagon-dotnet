@@ -18,7 +18,7 @@ namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
         {
             var sampler = new ConstSampler(true);
             tracer = new Tracer.Builder(Utils.CurrentConfig.AppName)
-                .WithReporter(new CompositeReporter(reporter))
+                .WithReporter(new CompositeReporter(reporter, new DebugReporter()))
                 .WithSampler(sampler)
                 .WithTag("library.version", Assembly.GetAssembly(typeof(Epsagon.Dotnet.Core.Utils)).GetName().Version.ToString())
                 .WithTag("library.platform", $".NET {System.Environment.Version.Major}.{System.Environment.Version.Minor}")
