@@ -3,7 +3,7 @@
         "EditorConfig.EditorConfig",
         "eamodio.gitlens",
         "jchannon.csharpextensions",
-        "ms-vscode.csharp",
+        "ms-dotnettools.csharp",
         "fernandoescolar.vscode-solution-explorer"
     ]
 }

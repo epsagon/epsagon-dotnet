@@ -12,14 +12,13 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.SQS.Operations
         public void HandleOperationAfter(IExecutionContext context, IScope scope)
         {
             var response = context.ResponseContext.Response as ReceiveMessageResponse;
-            var queueName = "";
             var messages = response.Messages;
 
             foreach (var message in messages)
             {
                 using (var messageScope = GlobalTracer.Instance.BuildSpan("ReceiveMessage").StartActive(finishSpanOnDispose: true))
                 {
-                    messageScope.Span.SetTag("resource.name", queueName);
+                    messageScope.Span.SetTag("resource.name", QueueName);
                     messageScope.Span.SetTag("resource.type", "sqs");
                     messageScope.Span.SetTag("aws.sqs.message_body", message.Body);
                     messageScope.Span.SetTag("aws.sqs.message_id", message.MessageId);
