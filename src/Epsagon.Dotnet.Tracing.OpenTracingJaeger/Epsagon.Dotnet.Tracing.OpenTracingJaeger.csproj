@@ -14,4 +14,8 @@
     <PackageReference Include="Jaeger" Version="0.3.6" />
     <PackageReference Include="OpenTracing" Version="0.12.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Epsagon.Dotnet.Core\Epsagon.Dotnet.Core.csproj" />
+  </ItemGroup>
 </Project>
