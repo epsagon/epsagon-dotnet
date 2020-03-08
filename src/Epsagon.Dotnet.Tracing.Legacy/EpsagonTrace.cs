@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Epsagon.Dotnet.Core;
-using RestSharp;
-using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
-using Serilog;
 using Epsagon.Dotnet.Tracing.Legacy.TraceSenders;
 
 namespace Epsagon.Dotnet.Tracing.Legacy

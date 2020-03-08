@@ -7,6 +7,7 @@ namespace Epsagon.Dotnet.Core.Configuration
         bool MetadataOnly { get; }
         bool UseSSL { get; }
         string TraceCollectorURL { get; }
+        string OpenTracingCollectorURL { get; }
         bool IsEpsagonDisabled { get; }
         bool UseLogsTransport { get; }
     }
