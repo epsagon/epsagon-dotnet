@@ -17,7 +17,8 @@ namespace Epsagon.Dotnet.Core.Configuration
             if ((Environment.GetEnvironmentVariable("EPSAGON_TEST") ?? "").ToUpper() == "TRUE")
             {
                 TraceCollectorURL = "http://dev.tc.epsagon.com";
-                OpenTracingCollectorURL = "https://dev.otc.epsagon.com/api/traces";
+                // OpenTracingCollectorURL = "https://dev.otc.epsagon.com/api/traces";
+                OpenTracingCollectorURL = "https://5ereq1d4ai.execute-api.us-east-1.amazonaws.com/dev/traces";
             }
             else if ((Environment.GetEnvironmentVariable("EPSAGON_META") ?? "").ToUpper() == "TRUE")
             {

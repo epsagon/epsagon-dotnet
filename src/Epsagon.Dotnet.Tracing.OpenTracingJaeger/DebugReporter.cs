@@ -17,15 +17,19 @@ namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
 
         public void Report(Span span)
         {
-            var tags = span.GetTags().Select(t => $"Tag(key={t.Key}, value={Truncate(t.Value.ToString(), 15)})");
+            var tags = span.GetTags()
+                .Where(t => t.Key != null && t.Value != null)
+                .Select(t => $"Tag(key={t.Key}, value={Truncate(t.Value.ToString(), 25)})");
+
             Utils.DebugLogIfEnabled(
-                "Reporting Span(OperationName={opname}, Tags=[{tags}])",
+                "Reporting Span(OperationName={opname}, Tags=[\n\t\t{tags}])",
                 span.OperationName,
-                string.Join(Environment.NewLine, tags));
+                string.Join($"{Environment.NewLine}\t\t", tags));
         }
 
         private string Truncate(string str, int length)
         {
+            str = str ?? "";
             if (str.Length <= length) return str;
             return str.Substring(0, length - 3) + "...";
         }

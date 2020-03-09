@@ -22,6 +22,7 @@ namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
                 .WithSampler(sampler)
                 .WithTag("library.version", Assembly.GetAssembly(typeof(Epsagon.Dotnet.Core.Utils)).GetName().Version.ToString())
                 .WithTag("library.platform", $".NET {System.Environment.Version.Major}.{System.Environment.Version.Minor}")
+                .WithTag("runtime", "opentracing-dotnet")
                 .Build();
 
             if (!GlobalTracer.IsRegistered())

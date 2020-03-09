@@ -87,6 +87,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
             span.SetTag("event.error_code", 0); // OK
             span.SetTag("aws.service", serviceName);
             span.SetTag("resource.operation", operationName);
+            span.SetTag("resource.name", serviceName);
             span.SetTag("aws.endpoint", endpoint);
             span.SetTag("aws.region", envRegion ?? region);
         }

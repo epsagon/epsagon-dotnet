@@ -39,6 +39,7 @@ namespace Epsagon.Dotnet.Instrumentation.MongoDB
 
             scope.Span.SetTag("event.id", $"mongo-{Guid.NewGuid()}");
             scope.Span.SetTag("resource.name", startedEvent.DatabaseNamespace.DatabaseName);
+            scope.Span.SetTag("resource.type", "mongodb");
             scope.Span.SetTag("resource.operation", commandName);
             scope.Span.SetTag("mongodb.db_url", GetEndpointUrl(startedEvent.ConnectionId.ServerId.EndPoint));
             scope.Span.SetTag("mongodb.db_name", startedEvent.DatabaseNamespace.DatabaseName);

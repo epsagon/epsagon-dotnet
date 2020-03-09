@@ -11,13 +11,23 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
         public override void HandleAfter(IExecutionContext executionContext, IScope scope)
         {
             var operation = executionContext.RequestContext.RequestName;
-            factory.GetInstace(operation).HandleOperationAfter(executionContext, scope);
+            var instance = factory.GetInstace(operation);
+
+            if (!(instance is null))
+            {
+                instance.HandleOperationAfter(executionContext, scope);
+            }
         }
 
         public override void HandleBefore(IExecutionContext executionContext, IScope scope)
         {
             var operation = executionContext.RequestContext.RequestName;
-            factory.GetInstace(operation).HandleOperationBefore(executionContext, scope);
+            var instance = factory.GetInstace(operation);
+
+            if (!(instance is null))
+            {
+                instance.HandleOperationBefore(executionContext, scope);
+            }
         }
     }
 }

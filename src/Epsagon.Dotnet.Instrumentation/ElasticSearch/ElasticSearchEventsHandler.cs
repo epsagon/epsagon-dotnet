@@ -26,17 +26,18 @@ namespace Epsagon.Dotnet.Instrumentation.ElasticSearch
                 scope.Span.SetTag("event.id", Guid.NewGuid().ToString());
                 scope.Span.SetTag("resource.name", $"{uri.Scheme}://{uri.Host}:{uri.Port}");
                 scope.Span.SetTag("resource.operation", details.HttpMethod.ToString());
-                scope.Span.SetTag("resource.type", "ElasticSearch");
+                scope.Span.SetTag("resource.type", "elasticsearch");
                 scope.Span.SetTag("elastic.request_uri", details.Uri.ToString());
 
                 if (!details.Success)
                 {
+                    object error = details?.OriginalException;
                     Tags.Error.Set(scope.Span, !details.Success);
                     scope.Span.Log(new Dictionary<string, object> {
-                        { OpenTracing.LogFields.ErrorObject, details.OriginalException },
-                        { OpenTracing.LogFields.ErrorKind, details.OriginalException.GetType().Name },
-                        { OpenTracing.LogFields.Stack, details.OriginalException.StackTrace },
-                        { OpenTracing.LogFields.Message, details.OriginalException.Message }
+                        { OpenTracing.LogFields.ErrorObject, error != null ? error : details?.ServerError?.Error },
+                        { OpenTracing.LogFields.ErrorKind, details?.OriginalException?.GetType()?.Name ?? details?.ServerError?.Error?.Type },
+                        { OpenTracing.LogFields.Stack, details?.OriginalException?.StackTrace ?? details?.ServerError?.Error?.Index },
+                        { OpenTracing.LogFields.Message, details?.OriginalException?.Message ?? details?.ServerError?.Error?.Reason }
                     });
                 }
 

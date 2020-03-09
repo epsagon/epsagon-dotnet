@@ -23,7 +23,7 @@ namespace Epsagon.Dotnet.Instrumentation
             { typeof(Amazon.DynamoDBv2.AmazonDynamoDBClient), () => new SimpleServiceHandler<DynamoDBOperationsFactory>() },
             { typeof(Amazon.SimpleNotificationService.AmazonSimpleNotificationServiceClient), () => new SimpleServiceHandler<SNSOperationsFactory>() },
             { typeof(Amazon.SimpleEmail.AmazonSimpleEmailServiceClient), () => new SESServiceHandler() },
-            { typeof(Amazon.SQS.AmazonSQSClient), () => new SimpleServiceHandler<SQSOperationsFactory>() },
+            { typeof(Amazon.SQS.AmazonSQSClient), () => new SQSServiceHandler() },
             { typeof(Amazon.Lambda.AmazonLambdaClient), () => new SimpleServiceHandler<LambdaOperationsFactory>() }
         };
     }
