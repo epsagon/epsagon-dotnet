@@ -98,9 +98,9 @@ Epsagon provides out-of-the-box instrumentation (tracing) for many popular frame
 
 |Library             |Supported Version          |
 |--------------------|---------------------------|
-|ElasticSearch       |`>=1.10.0`                 |
-|MongoDB             |`>=1.10.0`                 |
-|AWS             |`>=1.10.0`                 |
+|Elasticsearch       |`>=5.6`                    |
+|MongoDB.Driver      |`>=2.4`                    |
+|AWSSDK              |`>=3.0`                    |
 
 
 ## Configuration
@@ -110,11 +110,12 @@ Advanced options can be configured as a parameter to the `Config` struct to the 
 |Parameter             |Environment Variable          |Type   |Default      |Description                                                                        |
 |----------------------|------------------------------|-------|-------------|-----------------------------------------------------------------------------------|
 |Token                 |EPSAGON_TOKEN                 |String |-            |Epsagon account token                                                              |
-|ApplicationName       |-                             |String |-            |Application name that will be set for traces                                       |
-|MetadataOnly          |EPSAGON_METADATA              |Boolean|`true`       |Whether to send only the metadata (`True`) or also the payloads (`False`)          |
-|CollectorURL          |EPSAGON_COLLECTOR_URL         |String |-            |The address of the trace collector to send trace to                                |
-|Debug                 |EPSAGON_DEBUG                 |Boolean|`False`      |Enable debug prints for troubleshooting                                            |
-
+|ApplicationName       |EPSAGON_APP_NAME              |String |-            |Application name that will be set for traces                                       |
+|MetadataOnly          |EPSAGON_METADATA              |Boolean|`true`       |Whether to send only the metadata (`true`) or also the payloads (`false`)          |
+|TraceCollectorURL     |-                             |String |-            |The address of the trace collector to send trace to                                |
+|UseSSL                |                              |Boolean|`true`       |Whether to send the traces over HTTPS SSL or not                                   |
+|IsEpsagonDisabled     |DISABLE_EPSAGON               |Boolean|`false`      |A flag to completely disable Epsagon (can be used for tests or locally)            |
+|_                     |EPSAGON_DEBUG                 |Boolean|`false`      |Enable debug prints for troubleshooting                                            |
 
 
 ## Getting Help
