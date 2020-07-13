@@ -7,7 +7,7 @@
 
 # Epsagon Tracing for .NET
 
-This package provides tracing to .NET applications for the collection of distributed tracing and performance metrics in [Epsagon](https://dashboard.epsagon.com/?utm_source=github).
+This package provides tracing to .NET applications for the collection of distributed tracing and performance metrics in [Epsagon](https://app.epsagon.com/?utm_source=github).
 
 
 ## Contents
@@ -46,7 +46,7 @@ Tracing Lambda functions can be done in three methods:
 2. Passing a callback.
 
 - Set the following environment variables:
-  - `EPSAGON_TOKEN` - Epsagon's token, can be found in the [Dashboard](https://dashboard.epsagon.com/settings).
+  - `EPSAGON_TOKEN` - Epsagon's token, can be found in the [Dashboard](https://app.epsagon.com/settings).
   - `EPSAGON_APP_NAME` - Name for the application of this function (optional).
 - Generate a new AWS Lambda Function project ([For more info](https://github.com/aws/aws-lambda-dotnet#amazonlambdatools)).
 - Add `Epsagon.Dotnet.Lambda` package to your project.
