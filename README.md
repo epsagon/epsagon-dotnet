@@ -95,7 +95,14 @@ public class FunctionClass {
 
 To trace ASP.NET MVC, a few simple actions should be taken:
 - Add `Epsagon.Dotnet.Mvc` package to your project.
-- Add a call to `EpsagonBootstrap.Bootstrap()` in the constructor of your startup class.
+- Add a call to `EpsagonBootstrap.Bootstrap()` in the constructor of your startup class. for example:
+```csharp
+public Startup(IConfiguration configuration)
+{
+    EpsagonBootstrap.Bootstrap();
+    Configuration = configuration;
+}
+```
 - Add EpsagonMiddleware to your MVC project. for example:
 ```csharp
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

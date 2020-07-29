@@ -22,7 +22,6 @@ namespace Epsagon.Dotnet.Mvc
             using (var scope = CreateRunner(context))
             {
                 result = ExecuteClientCode(clientFn, scope);
-                // scope.Span.SetDataIfNeeded("aws.lambda.return_value", result);
             }
             var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
             EpsagonTrace.SendTrace(trace);
