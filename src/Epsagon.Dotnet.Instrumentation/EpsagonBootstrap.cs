@@ -3,14 +3,13 @@ using System.Threading;
 using Amazon.Runtime.Internal;
 using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Core.Configuration;
-using Epsagon.Dotnet.Instrumentation;
 using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
 using OpenTracing.Util;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace Epsagon.Dotnet.Lambda
+namespace Epsagon.Dotnet.Instrumentation
 {
     public static class EpsagonBootstrap
     {

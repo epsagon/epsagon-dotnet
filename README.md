@@ -91,7 +91,22 @@ public class FunctionClass {
     }
 }
 ```
+### ASP.NET MVC
 
+To trace ASP.NET MVC, a few simple actions should be taken:
+- Add `Epsagon.Dotnet.Mvc` package to your project.
+- Add a call to `EpsagonBootstrap.Bootstrap()` in the constructor of your startup class.
+- Add EpsagonMiddleware to your MVC project. for example:
+```csharp
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseEpsagon();
+}
+```
+- Set the following environment variables:
+  - `EPSAGON_TOKEN` - Epsagon's token, can be found in the [Dashboard](https://dashboard.epsagon.com/settings).
+  - `EPSAGON_APP_NAME` - Name for the application of this function (optional).
+  
 ## Integrations
 
 Epsagon provides out-of-the-box instrumentation (tracing) for many popular frameworks and libraries.
@@ -101,7 +116,7 @@ Epsagon provides out-of-the-box instrumentation (tracing) for many popular frame
 |Elasticsearch       |`>=5.6`                    |
 |MongoDB.Driver      |`>=2.4`                    |
 |AWSSDK              |`>=3.0`                    |
-
+|ASP.NET MVC         |`>=2.1`                    |
 
 ## Configuration
 

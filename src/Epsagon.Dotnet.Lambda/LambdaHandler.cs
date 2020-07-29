@@ -1,5 +1,6 @@
 ﻿using Amazon.Lambda.Core;
 using System.Threading.Tasks;
+using Epsagon.Dotnet.Instrumentation;
 
 namespace Epsagon.Dotnet.Lambda
 {
