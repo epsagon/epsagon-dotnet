@@ -5,6 +5,8 @@
   <br />
 </p>
 
+[![NuGet](https://img.shields.io/nuget/v/Epsagon.Dotnet.Core.svg)](https://www.nuget.org/packages/Epsagon.Dotnet.Core)
+
 # Epsagon Tracing for .NET
 
 This package provides tracing to .NET applications for the collection of distributed tracing and performance metrics in [Epsagon](https://app.epsagon.com/?utm_source=github).
@@ -34,9 +36,10 @@ Or, using [PackageReference](https://docs.microsoft.com/en-us/nuget/consume-pack
 
 The following frameworks are supported by Epsagon:
 
-|Framework                               |Supported Version          |Auto-tracing Supported                               |
-|----------------------------------------|---------------------------|-----------------------------------------------------|
-|[AWS Lambda](#aws-lambda)               |All                        |<ul><li>- [ ]</li></ul>                              |
+|Framework                               |Supported Version          |
+|----------------------------------------|---------------------------|
+|[ASP.NET MVC](#aspnet-mvc)              |`>=2.1`                    |
+|[AWS Lambda](#aws-lambda)               |All                        |
 
 
 ### AWS Lambda
