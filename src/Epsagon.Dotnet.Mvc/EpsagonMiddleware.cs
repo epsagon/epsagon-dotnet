@@ -14,13 +14,7 @@ namespace EpsagonMiddleware
         {
             _next = next;
         }
-        public async Task Invoke(HttpContext context)
-        {
-            await EpsagonMvcHandler.Handle(async () =>
-            {
-                await _next.Invoke(context);
-            }, context);
-        }
+                
         public async Task InvokeAsync(HttpContext context)
         {
             await EpsagonMvcHandler.Handle(async () =>
