@@ -18,6 +18,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
 
             var first = input.Records.First();
             scope.Span.SetTag("event.id", first.MessageId);
+            scope.Span.SetTag("resource.MessageId", first.MessageId);
             scope.Span.SetTag("resource.name", first.EventSourceArn);
             scope.Span.SetTag("resource.operation", "Receive Operation");
             scope.Span.SetTag("aws.sqs.MD5 Of Message Body", first.Md5OfBody);
