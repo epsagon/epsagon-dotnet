@@ -4,14 +4,15 @@ using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 using Amazon.Lambda.SNSEvents;
 using Amazon.Lambda.Core;
+using System.Threading.Tasks;
 
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
 namespace AwsDotnetCsharp
 {
     public class SNSSender : LambdaHandler<Request, Response>
     {
-        public override Response HandlerFunction(Request request, ILambdaContext context)
+        public override async Task<Response> HandlerFunction(Request request, ILambdaContext context)
         {
             string topicArn = System.Environment.GetEnvironmentVariable("CF_MyTopic");
             string message = "Hello at " + DateTime.Now.ToShortTimeString();
@@ -26,7 +27,7 @@ namespace AwsDotnetCsharp
 
             try
             {
-                var response = client.Publish(snsRequest);
+                var response = await client.PublishAsync(snsRequest);
 
                 Console.WriteLine("Message sent to topic:");
                 Console.WriteLine(message);
@@ -43,7 +44,7 @@ namespace AwsDotnetCsharp
 
     public class SNSReceiver : LambdaHandler<SNSEvent, string>
     {
-        public override string HandlerFunction(SNSEvent input, ILambdaContext context)
+        public override async Task<string> HandlerFunction(SNSEvent input, ILambdaContext context)
         {
             return "Go Serverless v1.0! Your function executed successfully!";
         }
@@ -51,7 +52,7 @@ namespace AwsDotnetCsharp
 
     public class SQSReceiver : LambdaHandler<SNSEvent, string>
     {
-        public override string HandlerFunction(SNSEvent input, ILambdaContext context)
+        public override async Task<string> HandlerFunction(SNSEvent input, ILambdaContext context)
         {
             return "Go Serverless v1.0! Your function executed successfully!";
         }

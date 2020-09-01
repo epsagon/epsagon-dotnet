@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -9,17 +9,17 @@
 
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.Core" Version="1.1.0" />
-    <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.3.0" />
-    <PackageReference Include="AWSSDK.Core" Version="3.5.1.1" />
-    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.5" />
-    <PackageReference Include="Epsagon.Dotnet.Lambda" Version="1.8.1" />
-    <PackageReference Include="Microsoft.Win32.Primitives" Version="4.3.0" />
-    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
-    <PackageReference Include="System.Net.Primitives" Version="4.3.1" />
+    <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.0.1" />
+    <PackageReference Include="AWSSDK.Core" Version="3.5.1.5" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.5.0.7" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Epsagon.Dotnet.Lambda\Epsagon.Dotnet.Lambda.csproj" />
   </ItemGroup>
 
 </Project>

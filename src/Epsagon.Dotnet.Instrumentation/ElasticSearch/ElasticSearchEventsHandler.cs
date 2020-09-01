@@ -34,10 +34,10 @@ namespace Epsagon.Dotnet.Instrumentation.ElasticSearch
                     object error = details?.OriginalException;
                     Tags.Error.Set(scope.Span, !details.Success);
                     scope.Span.Log(new Dictionary<string, object> {
-                        { OpenTracing.LogFields.ErrorObject, error != null ? error : details?.ServerError?.Error },
-                        { OpenTracing.LogFields.ErrorKind, details?.OriginalException?.GetType()?.Name ?? details?.ServerError?.Error?.Type },
-                        { OpenTracing.LogFields.Stack, details?.OriginalException?.StackTrace ?? details?.ServerError?.Error?.Index },
-                        { OpenTracing.LogFields.Message, details?.OriginalException?.Message ?? details?.ServerError?.Error?.Reason }
+                        { OpenTracing.LogFields.ErrorObject, error },
+                        { OpenTracing.LogFields.ErrorKind, details?.OriginalException?.GetType()?.Name },
+                        { OpenTracing.LogFields.Stack, details?.OriginalException?.StackTrace },
+                        { OpenTracing.LogFields.Message, details?.OriginalException?.Message }
                     });
                 }
 

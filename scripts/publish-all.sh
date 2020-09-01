@@ -11,9 +11,9 @@ root_dir=`git rev-parse --show-toplevel`
 sh $root_dir/scripts/clean.sh
 
 # update all dependencies
-# dotnet sln list \
-#     | grep .csproj \
-#     | xargs -n 1 python3 $root_dir/scripts/update-all-packages.py --proj
+dotnet sln list \
+    | grep .csproj \
+    | xargs -n 1 python3 $root_dir/scripts/update-all-packages.py --proj
 
 # version bump all projects
 dotnet sln list \

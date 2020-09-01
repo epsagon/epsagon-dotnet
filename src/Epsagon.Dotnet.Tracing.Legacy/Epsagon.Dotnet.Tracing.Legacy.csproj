@@ -15,9 +15,9 @@
     <ProjectReference Include="..\Epsagon.Dotnet.Tracing.OpenTracingJaeger\Epsagon.Dotnet.Tracing.OpenTracingJaeger.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Jaeger" Version="0.3.6" />
+    <PackageReference Include="Jaeger" Version="0.4.1" />
     <PackageReference Include="OpenTracing" Version="0.12.1" />
-    <PackageReference Include="RestSharp" Version="106.10.1" />
+    <PackageReference Include="RestSharp" Version="106.11.4" />
   </ItemGroup>
 
 </Project>
