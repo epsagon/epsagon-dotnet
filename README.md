@@ -60,7 +60,7 @@ Tracing Lambda functions can be done in three methods:
 ```csharp
 public class Function : LambdaHandler<S3Event, string> // LambdaHandler<TEvent, TRes>
 {
-    public override string HandlerFunction(S3Event input, ILambdaContext context)
+    public override async Task<string> HandlerFunction(S3Event input, ILambdaContext context)
     {
         return "Hello from Epsagon!";
     }
