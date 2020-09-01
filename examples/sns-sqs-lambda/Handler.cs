@@ -3,6 +3,7 @@ using Epsagon.Dotnet.Lambda;
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 using Amazon.Lambda.SNSEvents;
+using Amazon.Lambda.SQSEvents;
 using Amazon.Lambda.Core;
 using System.Threading.Tasks;
 
@@ -14,7 +15,9 @@ namespace AwsDotnetCsharp
     {
         public override async Task<Response> HandlerFunction(Request request, ILambdaContext context)
         {
-            string topicArn = System.Environment.GetEnvironmentVariable("CF_MyTopic");
+            string topicArn = System.Environment.GetEnvironmentVariable("TOPIC_ARN");
+            Console.WriteLine("topicArn = ");
+            Console.WriteLine(topicArn);
             string message = "Hello at " + DateTime.Now.ToShortTimeString();
 
             var client = new AmazonSimpleNotificationServiceClient(region: Amazon.RegionEndpoint.USEast1);
@@ -50,9 +53,9 @@ namespace AwsDotnetCsharp
         }
     }
 
-    public class SQSReceiver : LambdaHandler<SNSEvent, string>
+    public class SQSReceiver : LambdaHandler<SQSEvent, string>
     {
-        public override async Task<string> HandlerFunction(SNSEvent input, ILambdaContext context)
+        public override async Task<string> HandlerFunction(SQSEvent input, ILambdaContext context)
         {
             return "Go Serverless v1.0! Your function executed successfully!";
         }

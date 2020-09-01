@@ -51,6 +51,7 @@ provider:
         - Ref: ExampleSNSTopic
 
   environment:
+    EPSAGON_TEST: "TRUE"
     EPSAGON_TOKEN: ${env:EPSAGON_TOKEN, ""}
     EPSAGON_APP_NAME: sns-sqs-dotnet
     TOPIC_NAME: ${self:custom.topicName}
@@ -60,24 +61,24 @@ package:
 
 functions:
   sender:
-    handler: CsharpHandlers::AwsDotnetCsharp.SNSSender::EpsagonEnabledSNSSender
-    custom:
-      env-resources:
-        - ExampleSNSTopic
+    handler: CsharpHandlers::AwsDotnetCsharp.SNSSender::EpsagonEnabledHandler
+    environment:
+      TOPIC_ARN:
+        Ref: ExampleSNSTopic
     package:
       artifact: bin/release/netcoreapp3.1/sender.zip
 
-  receiver-sns:
-    handler: CsharpHandlers::AwsDotnetCsharp.SNSReceiver::EpsagonEnabledSNSReceiver
-    events:
-      - sns:
-          arn:
-            Ref: ExampleSNSTopic
-    package:
-      artifact: bin/release/netcoreapp3.1/receiver_sns.zip
+  # receiver-sns:
+  #   handler: CsharpHandlers::AwsDotnetCsharp.SNSReceiver::EpsagonEnabledHandler
+  #   events:
+  #     - sns:
+  #         arn:
+  #           Ref: ExampleSNSTopic
+  #   package:
+  #     artifact: bin/release/netcoreapp3.1/sender.zip
 
   receiver-sqs:
-    handler: CsharpHandlers::AwsDotnetCsharp.SNSReceiver::EpsagonEnabledSQSReceiver
+    handler: CsharpHandlers::AwsDotnetCsharp.SQSReceiver::EpsagonEnabledHandler
     events:
       - sqs:
           arn:
@@ -86,14 +87,14 @@ functions:
               - Arn
           batchSize: 1
     package:
-      artifact: bin/release/netcoreapp3.1/receiver_sqs.zip
+      artifact: bin/release/netcoreapp3.1/sender.zip
 
 resources:
   Resources:
     ExampleSNSTopic:
       Type: AWS::SNS::Topic
       Properties:
-        BucketName: ${self:custom.topicName}
+        TopicName: ${self:custom.topicName}
 
     ExampleTestQueue:
       Type: AWS::SQS::Queue
@@ -128,6 +129,3 @@ resources:
           - Arn
         Protocol: sqs
         RawMessageDelivery: 'true'
-
-plugins:
-  - serverless-resources-env
