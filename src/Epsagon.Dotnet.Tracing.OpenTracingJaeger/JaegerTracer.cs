@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Jaeger;
 using Jaeger.Reporters;
-using Jaeger.Senders;
 using Jaeger.Samplers;
 using OpenTracing.Util;
 using Epsagon.Dotnet.Core;
 using System.Reflection;
+using Jaeger.Senders.Thrift;
 
 namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
 {

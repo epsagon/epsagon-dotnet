@@ -7,6 +7,7 @@ using Amazon.Lambda.DynamoDBEvents;
 using Amazon.Lambda.KinesisEvents;
 using Amazon.Lambda.S3Events;
 using Amazon.Lambda.SNSEvents;
+using Amazon.Lambda.SQSEvents;
 using Epsagon.Dotnet.Instrumentation.Triggers;
 
 namespace Epsagon.Dotnet.Instrumentation
@@ -21,7 +22,8 @@ namespace Epsagon.Dotnet.Instrumentation
                 { typeof(ScheduledEvent), () => new EventsLambda(input as ScheduledEvent) },
                 { typeof(KinesisEvent), () => new KinesisLambda(input as KinesisEvent) },
                 { typeof(APIGatewayProxyRequest), () => new ProxyAPIGatewayLambda(input as APIGatewayProxyRequest) },
-                { typeof(SNSEvent), () => new SNSLambda(input as SNSEvent) }
+                { typeof(SNSEvent), () => new SNSLambda(input as SNSEvent) },
+                { typeof(SQSEvent), () => new SQSLambda(input as SQSEvent) },
             };
 
             if (dict.ContainsKey(eventType)) {
