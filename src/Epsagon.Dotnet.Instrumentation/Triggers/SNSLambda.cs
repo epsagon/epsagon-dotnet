@@ -18,8 +18,8 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
         public override void Handle(ILambdaContext context, IScope scope)
         {
             SNSRecord first = null;
-            string[] operationSplit = null;
-            string operation = "";
+            string[] topicArnSplit = null;
+            string topicName = "";
             string message = "";
 
             try
@@ -27,18 +27,19 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
                 base.Handle(context, scope);
 
                 first = input?.Records?.FirstOrDefault();
-                operationSplit = first.EventSubscriptionArn?.Split(':');
+                topicArnSplit = first.EventSubscriptionArn?.Split(':');
 
-                if (operationSplit != null)
+                if (topicArnSplit != null)
                 {
-                    operation = operationSplit[operationSplit.Length - 2];
+                    topicName = topicArnSplit[topicArnSplit.Length - 2];
                 }
 
                 message = first.Sns?.Message;
 
                 scope.Span.SetTag("event.id", first.Sns?.MessageId);
                 scope.Span.SetTag("resource.type", "sns");
-                scope.Span.SetTag("resource.operation", operation);
+                scope.Span.SetTag("resource.name", topicName);
+                scope.Span.SetTag("resource.operation", first.Sns?.Type);
                 scope.Span.SetTag("aws.sns.Notification Subject", first.Sns?.Subject);
                 scope.Span.SetDataIfNeeded("aws.sns.Notification Message", first.Sns?.Message);
             }
@@ -49,8 +50,8 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
                     Context = context,
                     scope = scope,
                     First = first,
-                    OperationSplit = operationSplit,
-                    Operation = operation,
+                    TopicArn = topicArnSplit,
+                    TopicName = topicName,
                     Message = message
                 });
             }
