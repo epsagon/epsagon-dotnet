@@ -52,6 +52,7 @@ provider:
 
   environment:
     EPSAGON_TEST: "TRUE"
+    EPSAGON_DEBUG: "TRUE"
     EPSAGON_TOKEN: ${env:EPSAGON_TOKEN, ""}
     EPSAGON_APP_NAME: sns-sqs-dotnet
     TOPIC_NAME: ${self:custom.topicName}
@@ -68,14 +69,14 @@ functions:
     package:
       artifact: bin/release/netcoreapp3.1/sender.zip
 
-  # receiver-sns:
-  #   handler: CsharpHandlers::AwsDotnetCsharp.SNSReceiver::EpsagonEnabledHandler
-  #   events:
-  #     - sns:
-  #         arn:
-  #           Ref: ExampleSNSTopic
-  #   package:
-  #     artifact: bin/release/netcoreapp3.1/sender.zip
+  receiver-sns:
+    handler: CsharpHandlers::AwsDotnetCsharp.SNSReceiver::EpsagonEnabledHandler
+    events:
+      - sns:
+          arn: !Ref ExampleSNSTopic
+          topicName: ${self:custom.topicName}
+    package:
+      artifact: bin/release/netcoreapp3.1/sender.zip
 
   receiver-sqs:
     handler: CsharpHandlers::AwsDotnetCsharp.SQSReceiver::EpsagonEnabledHandler
