@@ -51,7 +51,6 @@ provider:
         - Ref: ExampleSNSTopic
 
   environment:
-    EPSAGON_TEST: "TRUE"
     EPSAGON_DEBUG: "TRUE"
     EPSAGON_TOKEN: ${env:EPSAGON_TOKEN, ""}
     EPSAGON_APP_NAME: sns-sqs-dotnet
