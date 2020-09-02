@@ -129,4 +129,4 @@ resources:
           - ExampleTestQueue
           - Arn
         Protocol: sqs
-        RawMessageDelivery: 'true'
+        RawMessageDelivery: 'false'

@@ -37,8 +37,7 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             if (!Utils.CurrentConfig.MetadataOnly) {
                 scope.Span.SetTag("aws.sqs.message_id", first.MessageId);
                 if (first.Body.Contains("TopicArn")) {
-                    scope.Span.SetTag("resource.metadata.SNS Trigger", first.Body);
-                    scope.Span.SetTag("aws.sqs.SNS Trigger", first.Body);
+                    scope.Span.SetTag("aws.sqs.sns_trigger", first.Body);
                 }
             }
         }
