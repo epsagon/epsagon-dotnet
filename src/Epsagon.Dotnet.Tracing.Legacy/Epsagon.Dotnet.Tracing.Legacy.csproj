@@ -5,7 +5,7 @@
     <PackageId>Epsagon.Dotnet.Tracing.Legacy</PackageId>
     <Authors>Epsagon</Authors>
     <Company>Epsagon</Company>
-    <Version>1.9.1</Version>
+    <Version>1.9.2</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://epsagon-public-screenshots.s3.us-east-2.amazonaws.com/logo.png</PackageIconUrl>
   </PropertyGroup>
@@ -15,7 +15,7 @@
     <ProjectReference Include="..\Epsagon.Dotnet.Tracing.OpenTracingJaeger\Epsagon.Dotnet.Tracing.OpenTracingJaeger.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Jaeger" Version="0.4.1" />
+    <PackageReference Include="Jaeger" Version="0.3.7" />
     <PackageReference Include="OpenTracing" Version="0.12.1" />
     <PackageReference Include="RestSharp" Version="106.11.4" />
   </ItemGroup>

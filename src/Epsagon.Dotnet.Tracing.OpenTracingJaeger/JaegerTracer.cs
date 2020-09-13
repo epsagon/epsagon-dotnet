@@ -5,7 +5,7 @@ using Jaeger.Samplers;
 using OpenTracing.Util;
 using Epsagon.Dotnet.Core;
 using System.Reflection;
-using Jaeger.Senders.Thrift;
+using Jaeger.Senders;
 
 namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger
 {
