@@ -40,6 +40,7 @@ The following frameworks are supported by Epsagon:
 |----------------------------------------|---------------------------|
 |[ASP.NET MVC](#aspnet-mvc)              |`>=2.1`                    |
 |[AWS Lambda](#aws-lambda)               |All                        |
+|[Generic Function](#generic-function)   |All                        |
 
 
 ### AWS Lambda
@@ -116,7 +117,26 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 - Set the following environment variables:
   - `EPSAGON_TOKEN` - Epsagon's token, can be found in the [Dashboard](https://dashboard.epsagon.com/settings).
   - `EPSAGON_APP_NAME` - Name for the application of this function (optional).
-  
+
+### Generic Function
+
+To trace any generic function, only a single step is needed:
+1. Use EpsagonGeneralHandler to wrap your code, see snippet below
+
+```csharp
+public string FunctionToWrap(string param)
+{
+    return EpsagonGeneralHandler.Handle(() =>
+    {
+      // ...
+      return param;
+    });
+}
+```
+- Set the following environment variables:
+  - `EPSAGON_TOKEN` - Epsagon's token, can be found in the [Dashboard](https://app.epsagon.com/settings).
+  - `EPSAGON_APP_NAME` - Name for the application of this function (optional).
+
 ## Integrations
 
 Epsagon provides out-of-the-box instrumentation (tracing) for many popular frameworks and libraries.
