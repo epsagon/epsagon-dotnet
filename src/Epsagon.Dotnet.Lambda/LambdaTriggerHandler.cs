@@ -13,7 +13,8 @@ namespace Epsagon.Dotnet.Lambda
         private static bool _coldStart = true;
         private ILambdaContext context;
         private IScope scope;
-
+        private string traceUrl = null;
+        
         public LambdaTriggerHandler(TEvent ev, ILambdaContext context, IScope scope)
         {
             this.context = context;
@@ -27,7 +28,11 @@ namespace Epsagon.Dotnet.Lambda
             var coldStart = _coldStart;
             _coldStart = false;
 
-            this.scope.Span.SetTag("event.id", context.AwsRequestId != "1234567890" ? context.AwsRequestId : $"local-{Guid.NewGuid().ToString()}");
+            var awsRequestId = context.AwsRequestId != "1234567890" ? context.AwsRequestId : $"local-{Guid.NewGuid().ToString()}";
+            var awsAccount = this.context.InvokedFunctionArn.Split(':')[AWS_ACCOUNT_INDEX];
+            var awsRegion = Environment.GetEnvironmentVariable("AWS_REGION");
+
+            this.scope.Span.SetTag("event.id", awsRequestId);
             this.scope.Span.SetTag("event.origin", "runner");
             this.scope.Span.SetTag("event.error_code", 0); // OK
             this.scope.Span.SetTag("resource.type", "lambda");
@@ -35,13 +40,14 @@ namespace Epsagon.Dotnet.Lambda
             this.scope.Span.SetTag("aws.agent", "aws-sdk");
             this.scope.Span.SetTag("aws.service", "lambda");
             this.scope.Span.SetTag("resource.operation", "invoke");
-            this.scope.Span.SetTag("aws.lambda.aws_account", this.context.InvokedFunctionArn.Split(':')[AWS_ACCOUNT_INDEX]);
-            this.scope.Span.SetTag("aws.lambda.region", Environment.GetEnvironmentVariable("AWS_REGION"));
+            this.scope.Span.SetTag("aws.lambda.aws_account", awsAccount);
+            this.scope.Span.SetTag("aws.lambda.region", awsRegion);
             this.scope.Span.SetTag("aws.lambda.memory", this.context.MemoryLimitInMB.ToString());
             this.scope.Span.SetTag("aws.lambda.function_version", this.context.FunctionVersion);
             this.scope.Span.SetTag("aws.lambda.log_group_name", this.context.LogGroupName);
             this.scope.Span.SetTag("aws.lambda.log_stream_name", this.context.LogStreamName);
             this.scope.Span.SetTag("aws.lambda.cold_start", coldStart);
+            traceUrl = $"https://app.epsagon.com/functions/{awsAccount}/{awsRegion}/{this.context.FunctionName}?requestId={awsRequestId}";
         }
 
         public void HandleAfter(TRes returnValue)
@@ -56,5 +62,7 @@ namespace Epsagon.Dotnet.Lambda
         }
 
         public void Dispose() => this.scope.Dispose();
+
+        public string getTraceUrl() => traceUrl;
     }
 }
