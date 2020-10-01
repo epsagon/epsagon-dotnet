@@ -24,6 +24,8 @@ namespace Epsagon.Dotnet.Lambda
             {
                 ExecuteClientCode(clientFn, scope);
             }
+
+            CreateTraceAndSend();
         }
 
         public static T Handle<T>(Func<T> clientFn, [CallerMemberName] string methodName = "")
@@ -37,6 +39,7 @@ namespace Epsagon.Dotnet.Lambda
                 scope.Span.SetDataIfNeeded("aws.lambda.return_value", result);
             }
 
+            CreateTraceAndSend();
             return result;
         }
 
@@ -50,6 +53,7 @@ namespace Epsagon.Dotnet.Lambda
                 scope.Span.SetDataIfNeeded("aws.lambda.return_value", result);
             }
 
+            CreateTraceAndSend();
             return result;
         }
 
