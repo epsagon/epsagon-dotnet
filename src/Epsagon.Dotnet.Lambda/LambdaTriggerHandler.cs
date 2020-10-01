@@ -14,7 +14,6 @@ namespace Epsagon.Dotnet.Lambda
         private static bool _coldStart = true;
         private ILambdaContext context;
         private IScope scope;
-        private string traceUrl = null;
         
         public LambdaTriggerHandler(TEvent ev, ILambdaContext context, IScope scope)
         {
