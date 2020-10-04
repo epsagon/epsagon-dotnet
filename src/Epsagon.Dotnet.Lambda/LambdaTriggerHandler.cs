@@ -1,6 +1,7 @@
 using System;
 using Amazon.Lambda.Core;
 using Epsagon.Dotnet.Core;
+using Epsagon.Dotnet.Instrumentation;
 using Newtonsoft.Json;
 using OpenTracing;
 using Serilog;
@@ -47,7 +48,7 @@ namespace Epsagon.Dotnet.Lambda
             this.scope.Span.SetTag("aws.lambda.log_group_name", this.context.LogGroupName);
             this.scope.Span.SetTag("aws.lambda.log_stream_name", this.context.LogStreamName);
             this.scope.Span.SetTag("aws.lambda.cold_start", coldStart);
-            traceUrl = $"https://app.epsagon.com/functions/{awsAccount}/{awsRegion}/{this.context.FunctionName}?requestId={awsRequestId}";
+            EpsagonUtils.SetLambdaTraceUrl(awsAccount, awsRegion, this.context.FunctionName, awsRequestId);
         }
 
         public void HandleAfter(TRes returnValue)
@@ -62,7 +63,5 @@ namespace Epsagon.Dotnet.Lambda
         }
 
         public void Dispose() => this.scope.Dispose();
-
-        public string getTraceUrl() => traceUrl;
     }
 }

@@ -31,20 +31,17 @@ namespace Epsagon.Dotnet.Lambda
             {
 
                 Utils.DebugLogIfEnabled("entered epsagon lambda handler");
-                
                 // handle trigger event
                 using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
                 {
                     var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
                     trigger.Handle(context, scope);
                 }
-       
                 // handle invocation event
                 using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
                 using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context, scope))
                 {
                     handler.HandleBefore();
-                    setTraceUrl(handler.getTraceUrl());
                     try
                     {
                         clientCodeExecuted = true;
@@ -58,11 +55,9 @@ namespace Epsagon.Dotnet.Lambda
 
                     handler.HandleAfter(returnValue);
                 }
-            
                 var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
                 EpsagonTrace.SendTrace(trace);
                 JaegerTracer.Clear();
-
                 Utils.DebugLogIfEnabled("finishing epsagon lambda handler");
             }
             catch (Exception ex)
@@ -81,7 +76,6 @@ namespace Epsagon.Dotnet.Lambda
                     returnValue = handlerFn();
                 }
             }
-
             return returnValue;
         }
 
@@ -119,7 +113,6 @@ namespace Epsagon.Dotnet.Lambda
                 {
                     Utils.DebugLogIfEnabled("handling before execution");
                     handler.HandleBefore();
-                    setTraceUrl(handler.getTraceUrl());
 
                     Utils.DebugLogIfEnabled("calling client handler");
                     try
@@ -198,7 +191,6 @@ namespace Epsagon.Dotnet.Lambda
                 {
                     Utils.DebugLogIfEnabled("handling before execution");
                     handler.HandleBefore();
-                    setTraceUrl(handler.getTraceUrl());
 
                     Utils.DebugLogIfEnabled("calling client handler");
                     try
@@ -249,11 +241,5 @@ namespace Epsagon.Dotnet.Lambda
 
             InstumentationExceptionsCollector.Exceptions.Add(ex);
         }
-        private static void setTraceUrl(string partialTraceUrl)
-        {
-            traceUrl = $"{partialTraceUrl}&requestTime={(int)DateTime.UtcNow.ToUnixTime()}";
-        }
-        public static string getTraceUrl() => traceUrl;
-
     }
 }
