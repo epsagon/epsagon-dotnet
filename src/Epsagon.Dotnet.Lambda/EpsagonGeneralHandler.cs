@@ -64,7 +64,6 @@ namespace Epsagon.Dotnet.Lambda
             EpsagonTrace.SendTrace(trace);
             JaegerTracer.Clear();
             EpsagonUtils.ClearTraceUrl();
-            System.Threading.Thread.Sleep(2000);
         }
 
         private static void ExecuteClientCode(Action clientFn, IScope scope)
