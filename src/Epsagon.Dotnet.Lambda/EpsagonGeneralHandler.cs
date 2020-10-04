@@ -20,12 +20,12 @@ namespace Epsagon.Dotnet.Lambda
                 clientFn();
                 return;
             }
-            
+
             using (var scope = CreateRunner(methodName))
             {
                 ExecuteClientCode(clientFn, scope);
             }
-            
+
             CreateTraceAndSend();
         }
 
