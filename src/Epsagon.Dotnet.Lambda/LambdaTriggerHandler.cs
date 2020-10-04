@@ -59,6 +59,7 @@ namespace Epsagon.Dotnet.Lambda
             }));
             EpsagonLabels.Set();
             EpsagonLabels.Clear();
+            EpsagonUtils.ClearTraceUrl();
             Utils.DebugLogIfEnabled("lambda invoke event - FINISHED");
         }
 
