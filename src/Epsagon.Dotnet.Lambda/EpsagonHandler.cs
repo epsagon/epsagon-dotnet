@@ -14,7 +14,6 @@ namespace Epsagon.Dotnet.Lambda
 {
     public class EpsagonHandler
     {
-        private static string traceUrl = null;
 
         public static TRes Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<TRes> handlerFn)
         {
