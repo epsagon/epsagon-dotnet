@@ -15,6 +15,8 @@ This package provides tracing to .NET applications for the collection of distrib
 ## Contents
 
 - [Installation](#installation)
+- [Usage](#usage)
+  - [Trace URL](#trace-url)
 - [Frameworks](#frameworks)
 - [Integrations](#integrations)
 - [Configuration](#configuration)
@@ -31,6 +33,19 @@ dotnet add package Epsagon.Dotnet.Lambda
 ```
 
 Or, using [PackageReference](https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files) in a `*.csproj` file, follow instructions [here](https://www.nuget.org/packages/Epsagon.Dotnet.Lambda/).
+
+## Usage
+
+### Trace URL
+
+You can get the Epsagon dashboard URL for the current trace, using the following:
+```csharp
+# Inside some endpoint or function
+Console.WriteLine("Epsagon trace URL: "+ EpsagonUtils.GetTraceUrl())
+```
+
+This can be useful to have an easy access the trace from different platforms.
+
 
 ## Frameworks
 
