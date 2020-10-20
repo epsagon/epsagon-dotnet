@@ -33,6 +33,7 @@ namespace Epsagon.Dotnet.Core.Configuration
             _config.UseSSL = this.SelectProp(config.UseSSL, _config.UseSSL);
             _config.TraceCollectorURL = this.SelectProp(config.TraceCollectorURL, _config.TraceCollectorURL);
             _config.IsEpsagonDisabled = this.SelectProp(config.IsEpsagonDisabled, _config.IsEpsagonDisabled);
+            _config.SendTimeout = this.SelectProp(config.SendTimeout, _config.SendTimeout);
         }
 
         private T SelectProp<T>(T first, T second)

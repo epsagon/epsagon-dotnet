@@ -20,7 +20,7 @@ namespace Epsagon.Dotnet.Tracing.Legacy.TraceSenders
         {
             Utils.DebugLogIfEnabled("sending trace, url: {url}", this.CollectorUrl);
 
-            var client = new RestClient(this.CollectorUrl) { Timeout = 500 };
+            var client = new RestClient(this.CollectorUrl) { Timeout = Utils.CurrentConfig.SendTimeout * 1000 };
             var request = new RestRequest(Method.POST);
 
             request
