@@ -53,6 +53,7 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
             span.SetTag("resource.operation", operation);
             span.SetTag("sql.driver", DbConnection.GetType().FullName);
             span.SetTag("sql.statement", CommandText);
+            span.SetTag("sql.table_name", TableNameExtractor.ExtractTableName(CommandText));
             span.SetTag("sql.connection_string", DbConnection.ConnectionString);
             span.SetDataIfNeeded("sql.parameters", parameters);
         }
@@ -71,7 +72,6 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
                     var span = scope.Span;
 
                     SpanDefaults(span);
-                    span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
 
                     try
                     {
@@ -109,7 +109,6 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
                     var span = scope.Span;
 
                     SpanDefaults(span);
-                    span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
                     span.SetTag("sql.cursor_row_count", 1);
 
                     try
@@ -148,7 +147,6 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
                     var span = scope.Span;
 
                     SpanDefaults(span);
-                    span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
 
                     try
                     {
