@@ -1,7 +1,7 @@
 using System.Data;
 using System.Data.Common;
 
-namespace Epsagon.Dotnet.Instrumentation.SystemData
+namespace Epsagon.Dotnet.Instrumentation.ADONET
 {
     /// <summary>
     /// Specialized DbConnection object to allow tracing using Epsagon's tracer

@@ -1,8 +1,8 @@
 using System.Data.Common;
 
-namespace Epsagon.Dotnet.Instrumentation.SystemData
+namespace Epsagon.Dotnet.Instrumentation.ADONET
 {
-    public static class SystemDataEpsagonExtensions
+    public static class ADONETEpsagonExtensions
     {
         public static DbConnection UseEpsagon(this DbConnection conn) => new EpsagonTracedConnection(conn);
     }
