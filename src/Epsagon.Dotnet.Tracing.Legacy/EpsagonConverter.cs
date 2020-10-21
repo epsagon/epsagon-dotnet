@@ -68,10 +68,11 @@ namespace Epsagon.Dotnet.Tracing.Legacy
         {
             return Utils.TimeExecution(() =>
             {
+                var non_meta_tags = new[] { "sampler", "error", "resource", "event" };
                 var tags = span.GetTags();
                 var metadata = tags
-                    .Select(x => new { Key = x.Key.Split('.'), Value = x.Value })
-                    .Where(x => x.Key.First().ToLower().StartsWith("aws") || x.Key.First().ToLower().StartsWith("meta") || x.Key.First().Equals("trace_id"))
+                    .Select(x => new { Key = x.Key.Split('.'), x.Value })
+                    .Where(x => !non_meta_tags.Contains(x.Key.First()))
                     .Where(x => !Utils.IsNullOrDefault(x.Value))
                     .ToDictionary(x => x.Key.Last(), x => x.Value);
                 return metadata;

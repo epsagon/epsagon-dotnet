@@ -12,6 +12,8 @@ namespace Epsagon.Dotnet.Core.Configuration
         public string OpenTracingCollectorURL { get; set; }
         public bool IsEpsagonDisabled { get; set; } = (Environment.GetEnvironmentVariable("DISABLE_EPSAGON") ?? "").ToUpper() == "TRUE";
         public bool UseLogsTransport { get; set; } = (Environment.GetEnvironmentVariable("EPSAGON_LOG_TRANSPORT") ?? "").ToUpper() == "TRUE";
+        public int SendTimeout { get; set; } = ParseInt(Environment.GetEnvironmentVariable("EPSAGON_SEND_TIMEOUT_SEC") ?? "1");
+
         public EpsagonConfiguration()
         {
             if ((Environment.GetEnvironmentVariable("EPSAGON_TEST") ?? "").ToUpper() == "TRUE")
@@ -31,6 +33,12 @@ namespace Epsagon.Dotnet.Core.Configuration
                 TraceCollectorURL = $"https://{region}.tc.epsagon.com";
                 OpenTracingCollectorURL = $"https://{region}.otc.epsagon.com/api/traces";
             }
+        }
+
+        private static int ParseInt(string number)
+        {
+            int.TryParse(number, out int result);
+            return result;
         }
     }
 }
