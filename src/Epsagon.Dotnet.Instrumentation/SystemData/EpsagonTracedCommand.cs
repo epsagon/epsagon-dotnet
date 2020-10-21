@@ -30,6 +30,17 @@ namespace Epsagon.Dotnet.Instrumentation.SystemData
         public override void Prepare() => _inner.Prepare();
         protected override DbParameter CreateDbParameter() => _inner.CreateParameter();
 
+        private void SpanDefaults(OpenTracing.ISpan span)
+        {
+            span.SetTag("event.id", Guid.NewGuid().ToString());
+            span.SetTag("event.origin", "system-data");
+            span.SetTag("resource.type", "database");
+            span.SetTag("resource.name", Connection.Database);
+            span.SetTag("resource.operation", "sql_query"); // parse command text to get SQL command
+            span.SetTag("sql.driver", Connection.DataSource);
+            span.SetTag("sql.statement", CommandText);
+        }
+
         public override int ExecuteNonQuery()
         {
             using (var scope = GlobalTracer.Instance
@@ -40,13 +51,9 @@ namespace Epsagon.Dotnet.Instrumentation.SystemData
                 var span = scope.Span;
                 var affected_rows = _inner.ExecuteNonQuery();
 
-                span.SetTag("event.id", Guid.NewGuid().ToString());
-                span.SetTag("resource.type", "database");
-                span.SetTag("resource.name", Connection.Database);
-                span.SetTag("resource.operation", "sql_query");
-                span.SetTag("sql.driver", Connection.DataSource);
+                SpanDefaults(span);
+
                 span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
-                span.SetTag("sql.statement", CommandText);
                 span.SetTag("sql.parameters", ""); // check other instrum to see how this is obtained
                 span.SetTag("sql.cursor_row_count", affected_rows);
 
@@ -63,13 +70,8 @@ namespace Epsagon.Dotnet.Instrumentation.SystemData
             {
                 var span = scope.Span;
 
-                span.SetTag("event.id", Guid.NewGuid().ToString());
-                span.SetTag("resource.type", "database");
-                span.SetTag("resource.name", Connection.Database);
-                span.SetTag("resource.operation", "sql_query");
-                span.SetTag("sql.driver", Connection.DataSource);
+                SpanDefaults(span);
                 span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
-                span.SetTag("sql.statement", CommandText);
                 span.SetTag("sql.parameters", ""); // check other instrum to see how this is obtained
                 span.SetTag("sql.cursor_row_count", 1);
 
@@ -90,13 +92,8 @@ namespace Epsagon.Dotnet.Instrumentation.SystemData
                 var span = scope.Span;
                 var reader = _inner.ExecuteReader(behavior);
 
-                span.SetTag("event.id", Guid.NewGuid().ToString());
-                span.SetTag("resource.type", "database");
-                span.SetTag("resource.name", Connection.Database);
-                span.SetTag("resource.operation", "sql_query");
-                span.SetTag("sql.driver", Connection.DataSource);
+                SpanDefaults(span);
                 span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
-                span.SetTag("sql.statement", CommandText);
                 span.SetTag("sql.parameters", ""); // check other instrum to see how this is obtained
                 span.SetTag("sql.cursor_row_count", reader.RecordsAffected);
 
