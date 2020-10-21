@@ -72,6 +72,8 @@ namespace Epsagon.Dotnet.Lambda
             catch (Exception e)
             {
                 scope.Span.AddException(e);
+                CreateTraceAndSend();
+
                 throw;
             }
         }
@@ -83,7 +85,11 @@ namespace Epsagon.Dotnet.Lambda
                 T result = clientFn();
                 if (result is Task t)
                 {
-                    t.ContinueWith(task => scope.Span.AddException(task.Exception), TaskContinuationOptions.OnlyOnFaulted);
+                    t.ContinueWith(task =>
+                    {
+                        scope.Span.AddException(task.Exception);
+                        CreateTraceAndSend();
+                    }, TaskContinuationOptions.OnlyOnFaulted);
                     return result;
                 }
 
@@ -92,6 +98,7 @@ namespace Epsagon.Dotnet.Lambda
             catch (Exception e)
             {
                 scope.Span.AddException(e);
+                CreateTraceAndSend();
                 throw;
             }
         }
@@ -106,6 +113,7 @@ namespace Epsagon.Dotnet.Lambda
             catch (Exception e)
             {
                 scope.Span.AddException(e);
+                CreateTraceAndSend();
                 throw;
             }
         }
@@ -114,7 +122,7 @@ namespace Epsagon.Dotnet.Lambda
         {
             var scope = GlobalTracer.Instance.BuildSpan("invoke").StartActive(finishSpanOnDispose: true);
             string traceId = Guid.NewGuid().ToString();
-            string startTime = ((int) DateTime.UtcNow.ToUnixTime()).ToString();
+            string startTime = ((int)DateTime.UtcNow.ToUnixTime()).ToString();
             scope.Span.SetTag("event.id", Guid.NewGuid().ToString());
             scope.Span.SetTag("event.origin", "runner");
             scope.Span.SetTag("resource.name", methodName);

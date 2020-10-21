@@ -77,6 +77,7 @@ namespace Epsagon.Dotnet.Core
             span.SetTag("error.stack_trace", e.StackTrace);
             span.SetTag("error.type", e.GetType().Name);
             span.SetTag("error.time", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0);
+            span.Finish();
         }
 
         public static void RegisterConfiguration(IEpsagonConfiguration configuration)

@@ -53,15 +53,21 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
                             .WithStartTimestamp(DateTime.Now)
                             .StartActive(finishSpanOnDispose: true))
             {
+                int affected_rows = -1;
                 var span = scope.Span;
-                var affected_rows = _inner.ExecuteNonQuery();
 
                 SpanDefaults(span);
-
                 span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
                 span.SetTag("sql.parameters", ""); // check other instrum to see how this is obtained
-                span.SetTag("sql.cursor_row_count", affected_rows);
 
+                try { affected_rows = _inner.ExecuteNonQuery(); }
+                catch (Exception e)
+                {
+                    span.AddException(e);
+                    throw;
+                }
+
+                span.SetTag("sql.cursor_row_count", affected_rows);
                 return affected_rows;
             }
         }
@@ -74,14 +80,23 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
                             .StartActive(finishSpanOnDispose: true))
             {
                 var span = scope.Span;
+                object result = null;
 
                 SpanDefaults(span);
                 span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
                 span.SetTag("sql.parameters", ""); // check other instrum to see how this is obtained
                 span.SetTag("sql.cursor_row_count", 1);
 
-                var result = _inner.ExecuteScalar();
-                span.SetDataIfNeeded("sql.scalar.result", result);
+                try
+                {
+                    result = _inner.ExecuteScalar();
+                    span.SetDataIfNeeded("sql.scalar.result", result);
+                }
+                catch (Exception e)
+                {
+                    span.AddException(e);
+                    throw;
+                }
 
                 return result;
             }
@@ -95,12 +110,22 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
                             .StartActive(finishSpanOnDispose: true))
             {
                 var span = scope.Span;
-                var reader = _inner.ExecuteReader(behavior);
+                DbDataReader reader = null;
 
                 SpanDefaults(span);
                 span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
                 span.SetTag("sql.parameters", ""); // check other instrum to see how this is obtained
-                span.SetTag("sql.cursor_row_count", reader.RecordsAffected);
+
+                try
+                {
+                    reader = _inner.ExecuteReader(behavior);
+                    span.SetTag("sql.cursor_row_count", reader.RecordsAffected);
+                }
+                catch (Exception e)
+                {
+                    span.AddException(e);
+                    throw;
+                }
 
                 return reader;
             }
