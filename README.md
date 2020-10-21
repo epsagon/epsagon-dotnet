@@ -11,7 +11,6 @@
 
 This package provides tracing to .NET applications for the collection of distributed tracing and performance metrics in [Epsagon](https://app.epsagon.com/?utm_source=github).
 
-
 ## Contents
 
 - [Installation](#installation)
@@ -24,10 +23,10 @@ This package provides tracing to .NET applications for the collection of distrib
 - [Opening Issues](#opening-issues)
 - [License](#license)
 
-
 ## Installation
 
 To install Epsagon, simply run:
+
 ```sh
 dotnet add package Epsagon.Dotnet.Lambda
 ```
@@ -39,6 +38,7 @@ Or, using [PackageReference](https://docs.microsoft.com/en-us/nuget/consume-pack
 ### Trace URL
 
 You can get the Epsagon dashboard URL for the current trace, using the following:
+
 ```csharp
 # Inside some endpoint or function
 Console.WriteLine("Epsagon trace URL: "+ EpsagonUtils.GetTraceUrl())
@@ -46,21 +46,20 @@ Console.WriteLine("Epsagon trace URL: "+ EpsagonUtils.GetTraceUrl())
 
 This can be useful to have an easy access the trace from different platforms.
 
-
 ## Frameworks
 
 The following frameworks are supported by Epsagon:
 
-|Framework                               |Supported Version          |
-|----------------------------------------|---------------------------|
-|[ASP.NET MVC](#aspnet-mvc)              |`>=2.1`                    |
-|[AWS Lambda](#aws-lambda)               |All                        |
-|[Generic Function](#generic-function)   |All                        |
-
+| Framework                             | Supported Version |
+| ------------------------------------- | ----------------- |
+| [ASP.NET MVC](#aspnet-mvc)            | `>=2.1`           |
+| [AWS Lambda](#aws-lambda)             | All               |
+| [Generic Function](#generic-function) | All               |
 
 ### AWS Lambda
 
 Tracing Lambda functions can be done in three methods:
+
 1. Inherit from Epsagon's LambdaHandler Base Class.
 2. Passing a callback.
 
@@ -69,7 +68,6 @@ Tracing Lambda functions can be done in three methods:
   - `EPSAGON_APP_NAME` - Name for the application of this function (optional).
 - Generate a new AWS Lambda Function project ([For more info](https://github.com/aws/aws-lambda-dotnet#amazonlambdatools)).
 - Add `Epsagon.Dotnet.Lambda` package to your project.
-
 
 #### To Inherit from Epsagon's LambdaHandler Base Class (example for S3 trigger)
 
@@ -87,8 +85,8 @@ Change the function-handler in your project's aws-lambda-tools-defaults.json to 
 
 #### Passing a callback
 
-* Add a call to EpsagonBootstrap.Bootstrap() in the constructor of your Lambda.
-* Invoke EpsagonHandler.Handle to instrument your function.
+- Add a call to EpsagonBootstrap.Bootstrap() in the constructor of your Lambda.
+- Invoke EpsagonHandler.Handle to instrument your function.
 
 ```csharp
 public class FunctionClass {
@@ -110,11 +108,14 @@ public class FunctionClass {
     }
 }
 ```
+
 ### ASP.NET MVC
 
 To trace ASP.NET MVC, a few simple actions should be taken:
+
 - Add `Epsagon.Dotnet.Mvc` package to your project.
 - Add a call to `EpsagonBootstrap.Bootstrap()` in the constructor of your startup class. for example:
+
 ```csharp
 public Startup(IConfiguration configuration)
 {
@@ -122,13 +123,16 @@ public Startup(IConfiguration configuration)
     Configuration = configuration;
 }
 ```
+
 - Add EpsagonMiddleware to your MVC project. for example:
+
 ```csharp
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
     app.UseEpsagon();
 }
 ```
+
 - Set the following environment variables:
   - `EPSAGON_TOKEN` - Epsagon's token, can be found in the [Dashboard](https://dashboard.epsagon.com/settings).
   - `EPSAGON_APP_NAME` - Name for the application of this function (optional).
@@ -136,6 +140,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 ### Generic Function
 
 To trace any generic function, only a single step is needed:
+
 1. Use EpsagonGeneralHandler to wrap your code, see snippet below
 
 ```csharp
@@ -148,6 +153,7 @@ public string FunctionToWrap(string param)
     });
 }
 ```
+
 - Set the following environment variables:
   - `EPSAGON_TOKEN` - Epsagon's token, can be found in the [Dashboard](https://app.epsagon.com/settings).
   - `EPSAGON_APP_NAME` - Name for the application of this function (optional).
@@ -156,45 +162,45 @@ public string FunctionToWrap(string param)
 
 Epsagon provides out-of-the-box instrumentation (tracing) for many popular frameworks and libraries.
 
-|Library             |Supported Version          |
-|--------------------|---------------------------|
-|Elasticsearch       |`>=5.6`                    |
-|MongoDB.Driver      |`>=2.4`                    |
-|AWSSDK              |`>=3.0`                    |
-|ASP.NET MVC         |`>=2.1`                    |
+| Library        | Supported Version |
+| -------------- | ----------------- |
+| Elasticsearch  | `>=5.6`           |
+| MongoDB.Driver | `>=2.4`           |
+| AWSSDK         | `>=3.0`           |
+| ASP.NET MVC    | `>=2.1`           |
+| ADO.NET        | `all`             |
 
 ## Configuration
 
 Advanced options can be configured as a parameter to the `Config` struct to the `WrapLambdaHandler` or as environment variables.
 
-|Parameter             |Environment Variable          |Type   |Default      |Description                                                                        |
-|----------------------|------------------------------|-------|-------------|-----------------------------------------------------------------------------------|
-|Token                 |EPSAGON_TOKEN                 |String |-            |Epsagon account token                                                              |
-|ApplicationName       |EPSAGON_APP_NAME              |String |-            |Application name that will be set for traces                                       |
-|MetadataOnly          |EPSAGON_METADATA              |Boolean|`true`       |Whether to send only the metadata (`true`) or also the payloads (`false`)          |
-|TraceCollectorURL     |-                             |String |-            |The address of the trace collector to send trace to                                |
-|UseSSL                |                              |Boolean|`true`       |Whether to send the traces over HTTPS SSL or not                                   |
-|IsEpsagonDisabled     |DISABLE_EPSAGON               |Boolean|`false`      |A flag to completely disable Epsagon (can be used for tests or locally)            |
-|_                     |EPSAGON_DEBUG                 |Boolean|`false`      |Enable debug prints for troubleshooting                                            |
-
+| Parameter         | Environment Variable | Type    | Default | Description                                                               |
+| ----------------- | -------------------- | ------- | ------- | ------------------------------------------------------------------------- |
+| Token             | EPSAGON_TOKEN        | String  | -       | Epsagon account token                                                     |
+| ApplicationName   | EPSAGON_APP_NAME     | String  | -       | Application name that will be set for traces                              |
+| MetadataOnly      | EPSAGON_METADATA     | Boolean | `true`  | Whether to send only the metadata (`true`) or also the payloads (`false`) |
+| TraceCollectorURL | -                    | String  | -       | The address of the trace collector to send trace to                       |
+| UseSSL            |                      | Boolean | `true`  | Whether to send the traces over HTTPS SSL or not                          |
+| IsEpsagonDisabled | DISABLE_EPSAGON      | Boolean | `false` | A flag to completely disable Epsagon (can be used for tests or locally)   |
+| \_                | EPSAGON_DEBUG        | Boolean | `false` | Enable debug prints for troubleshooting                                   |
 
 ## Getting Help
 
 If you have any issue around using the library or the product, please don't hesitate to:
 
-* Use the [documentation](https://docs.epsagon.com).
-* Use the help widget inside the product.
-* Open an issue in GitHub.
-
+- Use the [documentation](https://docs.epsagon.com).
+- Use the help widget inside the product.
+- Open an issue in GitHub.
 
 ## Opening Issues
 
 If you encounter a bug with the Epsagon library for .NET, we want to hear about it.
 
 When opening a new issue, please provide as much information about the environment:
-* Library version, .NET runtime version, dependencies, etc.
-* Snippet of the usage.
-* A reproducible example can really help.
+
+- Library version, .NET runtime version, dependencies, etc.
+- Snippet of the usage.
+- A reproducible example can really help.
 
 The GitHub issues are intended for bug reports and feature requests.
 For help and questions about Epsagon, use the help widget inside the product.
