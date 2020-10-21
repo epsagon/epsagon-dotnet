@@ -406,3 +406,5 @@ ASALocalRun/
 .env
 test-lambda/
 scripts/setup-test-project.sh
+
+tags
