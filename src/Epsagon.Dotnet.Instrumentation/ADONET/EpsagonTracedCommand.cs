@@ -36,6 +36,16 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
             var operation = CommandText.Split().First().ToUpper();
             span.SetOperationName(operation);
 
+            var parameters = DbParameterCollection
+                .OfType<DbParameter>()
+                .Select(param => new
+                {
+                    name = param.ParameterName,
+                    type = Enum.GetName(typeof(DbType), param.DbType),
+                    value = param.Value
+                })
+                .ToList();
+
             span.SetTag("event.id", Guid.NewGuid().ToString());
             span.SetTag("event.origin", "system-data");
             span.SetTag("resource.type", "database");
@@ -44,6 +54,7 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
             span.SetTag("sql.driver", DbConnection.GetType().FullName);
             span.SetTag("sql.statement", CommandText);
             span.SetTag("sql.connection_string", DbConnection.ConnectionString);
+            span.SetDataIfNeeded("sql.parameters", parameters);
         }
 
         public override int ExecuteNonQuery()
@@ -58,7 +69,6 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
 
                 SpanDefaults(span);
                 span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
-                span.SetTag("sql.parameters", ""); // check other instrum to see how this is obtained
 
                 try { affected_rows = _inner.ExecuteNonQuery(); }
                 catch (Exception e)
@@ -84,7 +94,6 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
 
                 SpanDefaults(span);
                 span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
-                span.SetTag("sql.parameters", ""); // check other instrum to see how this is obtained
                 span.SetTag("sql.cursor_row_count", 1);
 
                 try
@@ -114,7 +123,6 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
 
                 SpanDefaults(span);
                 span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
-                span.SetTag("sql.parameters", ""); // check other instrum to see how this is obtained
 
                 try
                 {
