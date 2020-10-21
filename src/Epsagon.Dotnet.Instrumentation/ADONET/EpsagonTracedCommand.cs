@@ -59,83 +59,116 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
 
         public override int ExecuteNonQuery()
         {
-            using (var scope = GlobalTracer.Instance
-                            .BuildSpan("")
-                            .WithStartTimestamp(DateTime.Now)
-                            .StartActive(finishSpanOnDispose: true))
+            var affected_rows = -1;
+            var code_executed = false;
+            try
             {
-                int affected_rows = -1;
-                var span = scope.Span;
-
-                SpanDefaults(span);
-                span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
-
-                try { affected_rows = _inner.ExecuteNonQuery(); }
-                catch (Exception e)
+                using (var scope = GlobalTracer.Instance
+                                .BuildSpan("")
+                                .WithStartTimestamp(DateTime.Now)
+                                .StartActive(finishSpanOnDispose: true))
                 {
-                    span.AddException(e);
-                    throw;
-                }
+                    var span = scope.Span;
 
-                span.SetTag("sql.cursor_row_count", affected_rows);
-                return affected_rows;
+                    SpanDefaults(span);
+                    span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
+
+                    try
+                    {
+                        affected_rows = _inner.ExecuteNonQuery();
+                        code_executed = true;
+                    }
+                    catch (Exception e)
+                    {
+                        span.AddException(e);
+                        throw;
+                    }
+
+                    span.SetTag("sql.cursor_row_count", affected_rows);
+                    return affected_rows;
+                }
+            }
+            catch (Exception)
+            {
+                if (!code_executed) return _inner.ExecuteNonQuery();
+                else return affected_rows;
             }
         }
 
         public override object ExecuteScalar()
         {
-            using (var scope = GlobalTracer.Instance
-                            .BuildSpan("")
-                            .WithStartTimestamp(DateTime.Now)
-                            .StartActive(finishSpanOnDispose: true))
+            object result = null;
+            var code_executed = false;
+            try
             {
-                var span = scope.Span;
-                object result = null;
-
-                SpanDefaults(span);
-                span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
-                span.SetTag("sql.cursor_row_count", 1);
-
-                try
+                using (var scope = GlobalTracer.Instance
+                                .BuildSpan("")
+                                .WithStartTimestamp(DateTime.Now)
+                                .StartActive(finishSpanOnDispose: true))
                 {
-                    result = _inner.ExecuteScalar();
-                    span.SetDataIfNeeded("sql.scalar.result", result);
-                }
-                catch (Exception e)
-                {
-                    span.AddException(e);
-                    throw;
-                }
+                    var span = scope.Span;
 
-                return result;
+                    SpanDefaults(span);
+                    span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
+                    span.SetTag("sql.cursor_row_count", 1);
+
+                    try
+                    {
+                        result = _inner.ExecuteScalar();
+                        code_executed = true;
+                        span.SetDataIfNeeded("sql.scalar.result", result);
+                    }
+                    catch (Exception e)
+                    {
+                        span.AddException(e);
+                        throw;
+                    }
+
+                    return result;
+                }
+            }
+            catch
+            {
+                if (!code_executed) return _inner.ExecuteScalar();
+                else return result;
             }
         }
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
-            using (var scope = GlobalTracer.Instance
-                            .BuildSpan("")
-                            .WithStartTimestamp(DateTime.Now)
-                            .StartActive(finishSpanOnDispose: true))
+            DbDataReader reader = null;
+            var code_executed = false;
+            try
             {
-                var span = scope.Span;
-                DbDataReader reader = null;
-
-                SpanDefaults(span);
-                span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
-
-                try
+                using (var scope = GlobalTracer.Instance
+                                .BuildSpan("")
+                                .WithStartTimestamp(DateTime.Now)
+                                .StartActive(finishSpanOnDispose: true))
                 {
-                    reader = _inner.ExecuteReader(behavior);
-                    span.SetTag("sql.cursor_row_count", reader.RecordsAffected);
-                }
-                catch (Exception e)
-                {
-                    span.AddException(e);
-                    throw;
-                }
+                    var span = scope.Span;
 
-                return reader;
+                    SpanDefaults(span);
+                    span.SetTag("sql.table_name", ""); // check other instrum to see how this is obtained
+
+                    try
+                    {
+                        reader = _inner.ExecuteReader(behavior);
+                        code_executed = true;
+                        span.SetTag("sql.cursor_row_count", reader.RecordsAffected);
+                    }
+                    catch (Exception e)
+                    {
+                        span.AddException(e);
+                        throw;
+                    }
+
+                    return reader;
+                }
+            }
+            catch
+            {
+                if (!code_executed) return _inner.ExecuteReader(behavior);
+                else return reader;
             }
         }
     }
