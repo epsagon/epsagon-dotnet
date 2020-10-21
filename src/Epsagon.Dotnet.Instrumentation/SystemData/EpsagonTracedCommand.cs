@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using Epsagon.Dotnet.Core;
 using OpenTracing.Util;
 
@@ -32,19 +34,23 @@ namespace Epsagon.Dotnet.Instrumentation.SystemData
 
         private void SpanDefaults(OpenTracing.ISpan span)
         {
+            var operation = CommandText.Split().First().ToUpper();
+            span.SetOperationName(operation);
+
             span.SetTag("event.id", Guid.NewGuid().ToString());
             span.SetTag("event.origin", "system-data");
             span.SetTag("resource.type", "database");
-            span.SetTag("resource.name", Connection.Database);
-            span.SetTag("resource.operation", "sql_query"); // parse command text to get SQL command
-            span.SetTag("sql.driver", Connection.DataSource);
+            span.SetTag("resource.name", DbConnection.Database);
+            span.SetTag("resource.operation", operation);
+            span.SetTag("sql.driver", DbConnection.GetType().FullName);
             span.SetTag("sql.statement", CommandText);
+            span.SetTag("sql.connection_string", DbConnection.ConnectionString);
         }
 
         public override int ExecuteNonQuery()
         {
             using (var scope = GlobalTracer.Instance
-                            .BuildSpan("sql_query")
+                            .BuildSpan("")
                             .WithStartTimestamp(DateTime.Now)
                             .StartActive(finishSpanOnDispose: true))
             {
@@ -64,7 +70,7 @@ namespace Epsagon.Dotnet.Instrumentation.SystemData
         public override object ExecuteScalar()
         {
             using (var scope = GlobalTracer.Instance
-                            .BuildSpan("sql_query")
+                            .BuildSpan("")
                             .WithStartTimestamp(DateTime.Now)
                             .StartActive(finishSpanOnDispose: true))
             {
@@ -85,7 +91,7 @@ namespace Epsagon.Dotnet.Instrumentation.SystemData
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
             using (var scope = GlobalTracer.Instance
-                            .BuildSpan("sql_query")
+                            .BuildSpan("")
                             .WithStartTimestamp(DateTime.Now)
                             .StartActive(finishSpanOnDispose: true))
             {
