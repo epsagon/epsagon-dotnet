@@ -8,7 +8,7 @@ jobs:
   build:    
     strategy:
       matrix:
-        version: [2.1.23, 3.1.9]
+        version: [2.1.811, 3.1.403]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-          dotnet-version: 3.1.9
+          dotnet-version: 3.1.403
     - name: Install dependencies
       run: dotnet restore
     - name: Build
