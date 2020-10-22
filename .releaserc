@@ -1,13 +1,17 @@
 {
-    "branch": "master",
-    "plugins": [
-        "@semantic-release/commit-analyzer",
-        [
-            "@semantic-release/exec",
-            {
-                "publishCmd": "scripts/publish-all.sh ${nextRelease.version}",
-                "successCmd": "git add . && git commit -m \"patch(version): version bump\""
-            }
-        ]
+  "branch": "master",
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/exec",
+      { "publishCmd": "scripts/publish-all.sh ${nextRelease.version}" }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["src/**/*.csproj"],
+        "message": "chore(release): ${nextRelease.version} [skip ci]"
+      }
     ]
+  ]
 }
