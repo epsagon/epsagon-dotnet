@@ -1,1 +1,44 @@
+name: Publish
 
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:    
+    strategy:
+      matrix:
+        version: [2.1.23, 3.1.9]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+          dotnet-version: ${{ matrix.version }}
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+  
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+          dotnet-version: 3.1.9
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Semantic Release
+      uses: cycjimmy/semantic-release-action@v2
+      with:
+        extra_plugins:  |
+          @semantic-release/exec
+          @semantic-release/git
+      env:
+        GITHUB_TOKNE: ${{ secrets.GITHUB_TOKEN }}
+        NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
