@@ -169,6 +169,7 @@ Epsagon provides out-of-the-box instrumentation (tracing) for many popular frame
 | AWSSDK         | `>=3.0`           |
 | ASP.NET MVC    | `>=2.1`           |
 | ADO.NET        | `all`             |
+| EFCore         | `>=3.1.0`         |
 
 ## Configuration
 
