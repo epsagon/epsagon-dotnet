@@ -1,10 +1,8 @@
 using System;
-using System.Threading;
 using Amazon.Runtime.Internal;
 using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Core.Configuration;
 using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
-using OpenTracing.Util;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -15,10 +13,10 @@ namespace Epsagon.Dotnet.Instrumentation
     {
         private static readonly IConfigurationService configurationService = new ConfigurationService();
 
-        public static void Bootstrap(bool useOpenTracingCollector = false)
+        public static void Bootstrap(bool useOpenTracingCollector = false, IEpsagonConfiguration configuration = null)
         {
             var levelSwitch = new LoggingLevelSwitch(LogEventLevel.Error);
-            if ((System.Environment.GetEnvironmentVariable("EPSAGON_DEBUG") ?? "").ToLower() == "true")
+            if ((Environment.GetEnvironmentVariable("EPSAGON_DEBUG") ?? "").ToLower() == "true")
             {
                 levelSwitch.MinimumLevel = LogEventLevel.Debug;
             }
@@ -31,7 +29,8 @@ namespace Epsagon.Dotnet.Instrumentation
 
             if ((Environment.GetEnvironmentVariable("DISABLE_EPSAGON") ?? "").ToUpper() != "TRUE")
             {
-                Utils.RegisterConfiguration(LoadConfiguration());
+                if (configuration != null) { Utils.RegisterConfiguration(configuration); }
+                else { Utils.RegisterConfiguration(LoadConfiguration()); }
                 CustomizePipeline();
 
                 // Use either legacy tracer or opentracing tracer
