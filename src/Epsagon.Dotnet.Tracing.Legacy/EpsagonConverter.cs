@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Jaeger;
 using Epsagon.Dotnet.Core;
+using Epsagon.Dotnet.Instrumentation;
 using OpenTracing.Tag;
 
 namespace Epsagon.Dotnet.Tracing.Legacy
@@ -31,7 +32,8 @@ namespace Epsagon.Dotnet.Tracing.Legacy
                 string resourceType = tags.GetValue<string>("resource.type");
                 string resourceOperation = tags.GetValue<string>("resource.operation");
 
-                var resource = new EpsagonResource(resourceName, resourceOperation, resourceType, span.GenerateMetadata());
+                var metadata = span.GenerateMetadata();
+                var resource = new EpsagonResource(resourceName, resourceOperation, resourceType, metadata);
                 var epsagonEvent = new EpsagonEvent(startTime, duration, errorCode, id, origin, resource);
 
                 if (tags.GetValue<bool>(Tags.Error.Key))
