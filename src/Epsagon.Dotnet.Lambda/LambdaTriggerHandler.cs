@@ -4,7 +4,6 @@ using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Instrumentation;
 using Newtonsoft.Json;
 using OpenTracing;
-using Serilog;
 
 namespace Epsagon.Dotnet.Lambda
 {
@@ -12,9 +11,9 @@ namespace Epsagon.Dotnet.Lambda
     {
         private static readonly int AWS_ACCOUNT_INDEX = 4;
         private static bool _coldStart = true;
-        private ILambdaContext context;
-        private IScope scope;
-        
+        private readonly ILambdaContext context;
+        private readonly IScope scope;
+
         public LambdaTriggerHandler(TEvent ev, ILambdaContext context, IScope scope)
         {
             this.context = context;
@@ -24,11 +23,10 @@ namespace Epsagon.Dotnet.Lambda
         public void HandleBefore()
         {
             Utils.DebugLogIfEnabled("lambda invoke event - START");
-            EpsagonLabels.Clear();
             var coldStart = _coldStart;
             _coldStart = false;
 
-            var awsRequestId = context.AwsRequestId != "1234567890" ? context.AwsRequestId : $"local-{Guid.NewGuid().ToString()}";
+            var awsRequestId = context.AwsRequestId != "1234567890" ? context.AwsRequestId : $"local-{Guid.NewGuid()}";
             var awsAccount = this.context.InvokedFunctionArn.Split(':')[AWS_ACCOUNT_INDEX];
             var awsRegion = Environment.GetEnvironmentVariable("AWS_REGION");
 
@@ -56,8 +54,7 @@ namespace Epsagon.Dotnet.Lambda
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
-            EpsagonLabels.Set();
-            EpsagonLabels.Clear();
+
             EpsagonUtils.ClearTraceUrl();
             Utils.DebugLogIfEnabled("lambda invoke event - FINISHED");
         }

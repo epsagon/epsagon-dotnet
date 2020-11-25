@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Epsagon.Dotnet.Core\Epsagon.Dotnet.Core.csproj" />
+    <ProjectReference Include="..\Epsagon.Dotnet.Instrumentation\Epsagon.Dotnet.Instrumentation.csproj" />
     <ProjectReference Include="..\Epsagon.Dotnet.Tracing.OpenTracingJaeger\Epsagon.Dotnet.Tracing.OpenTracingJaeger.csproj" />
   </ItemGroup>
   <ItemGroup>
