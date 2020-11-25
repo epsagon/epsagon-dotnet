@@ -158,6 +158,18 @@ public string FunctionToWrap(string param)
   - `EPSAGON_TOKEN` - Epsagon's token, can be found in the [Dashboard](https://app.epsagon.com/settings).
   - `EPSAGON_APP_NAME` - Name for the application of this function (optional).
 
+  
+### Adding Labels
+
+To enrich your trace with additional information you can use the `EpsagonLabels` class:
+
+```csharp
+// ...
+EpsagonLabels.Add("some-key", "some-value");
+```
+
+each label is displayed on the trace view in Epsagon's Dashboard and is automatically searchable!
+  
 ## Integrations
 
 Epsagon provides out-of-the-box instrumentation (tracing) for many popular frameworks and libraries.
