@@ -1,22 +1,16 @@
-using System;
 using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.Runtime.Internal;
-using Amazon.Runtime.Internal.Util;
 using Epsagon.Dotnet.Core;
 using OpenTracing;
-using OpenTracing.Util;
 
 namespace Epsagon.Dotnet.Instrumentation.Handlers.SQS
 {
     public class SQSServiceHandler : PipelineHandler, IServiceHandler
     {
-        IFactory<string, IOperationHandler> _operationsFactory = new SQSOperationsFactory();
-
-        ITracer _tracer = GlobalTracer.Instance;
+        readonly IFactory<string, IOperationHandler> _operationsFactory = new SQSOperationsFactory();
 
         public void HandleAfter(IExecutionContext executionContext, IScope scope) { }
-
         public void HandleBefore(IExecutionContext executionContext, IScope scope) { }
 
         public override Task<T> InvokeAsync<T>(IExecutionContext executionContext)
