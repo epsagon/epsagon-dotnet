@@ -71,12 +71,16 @@ namespace Epsagon.Dotnet.Tracing.Legacy
             return Utils.TimeExecution(() =>
             {
                 var non_meta_tags = new[] { "sampler", "error", "resource", "event" };
-                var tags = span.GetTags();
-                var metadata = tags
-                    .Select(x => new { Key = x.Key.Split('.'), x.Value })
+                var tags = span.GetTags().Select(x => new { Key = x.Key.Split('.'), x.Value })
                     .Where(x => !non_meta_tags.Contains(x.Key.First()))
-                    .Where(x => !Utils.IsNullOrDefault(x.Value))
-                    .ToDictionary(x => x.Key.Last(), x => x.Value);
+                    .Where(x => !Utils.IsNullOrDefault(x.Value));
+
+                var metadata = new Dictionary<string, object>();
+                foreach (var tag in tags)
+                {
+                    metadata[tag.Key.Last()] = tag.Value;
+                }
+
                 return metadata;
             }, "GenerateMetadata");
         }
