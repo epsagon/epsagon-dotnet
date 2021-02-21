@@ -1,0 +1,17 @@
+{
+    "name": "epsagon-dotnet",
+    "version": "0.0.0",
+    "private": "true",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/epsagon/epsagon-dotnet.git"
+    },
+    "author": "Epsagon Inc.",
+    "homepage": "https://github.com/epsagon/epsagon-dotnet#readme",
+    "devDependencies": {
+        "@commitlint/cli": "^11.0.0",
+        "@commitlint/config-conventional": "^11.0.0",
+        "husky": "^5.0.9",
+        "semantic-release": "^17.3.9"
+    }
+}
