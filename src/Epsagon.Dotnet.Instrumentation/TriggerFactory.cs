@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.ApplicationLoadBalancerEvents;
+using Amazon.Lambda.CloudWatchEvents;
 using Amazon.Lambda.CloudWatchEvents.ScheduledEvents;
 using Amazon.Lambda.DynamoDBEvents;
 using Amazon.Lambda.KinesisEvents;
@@ -24,6 +25,7 @@ namespace Epsagon.Dotnet.Instrumentation
                 { typeof(APIGatewayProxyRequest), () => new ProxyAPIGatewayLambda(input as APIGatewayProxyRequest) },
                 { typeof(SNSEvent), () => new SNSLambda(input as SNSEvent) },
                 { typeof(SQSEvent), () => new SQSLambda(input as SQSEvent) },
+                { typeof(CloudWatchEvent<object>), () => new CloudWatchEventsLambda(input as CloudWatchEvent<object>) },
             };
 
             if (dict.ContainsKey(eventType)) {
