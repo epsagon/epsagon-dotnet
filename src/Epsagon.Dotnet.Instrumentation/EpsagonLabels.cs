@@ -7,45 +7,35 @@ namespace Epsagon.Dotnet.Instrumentation
 {
 	public class EpsagonLabels
 	{
-		public static void Add(
-			string key,
-			string value)
+		public static void Add(string key, string value)
 		{
 			AddLabel(
 				key,
 				value);
 		}
 
-		public static void Add(
-			string key,
-			int value)
+		public static void Add(string key, int value)
 		{
 			AddLabel(
 				key,
 				value);
 		}
 
-		public static void Add(
-			string key,
-			double value)
+		public static void Add(string key, double value)
 		{
 			AddLabel(
 				key,
 				value);
 		}
 
-		public static void Add(
-			string key,
-			bool value)
+		public static void Add(string key, bool value)
 		{
 			AddLabel(
 				key,
 				value);
 		}
 
-		private static void AddLabel(
-			string key,
-			object value)
+		private static void AddLabel(string key, object value)
 		{
 			if (!(GlobalTracer.Instance?.ActiveSpan is Span span)) return;
 			var tags = span.GetTags();
