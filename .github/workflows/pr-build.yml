@@ -21,10 +21,7 @@ jobs:
       uses: xt0rted/dotnet-tool-restore@v1
 
     - name: Run dotnet format
-      uses: xt0rted/dotnet-format@v1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        only-changed-files: "true"
+      run: dotnet format --check
 
   build:
     name: Build (dotnet ${{ matrix.version }})
