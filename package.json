@@ -8,10 +8,14 @@
     },
     "author": "Epsagon Inc.",
     "homepage": "https://github.com/epsagon/epsagon-dotnet#readme",
+    "scripts": {
+        "preinstall": "dotnet tool restore"
+    },
     "devDependencies": {
         "@commitlint/cli": "^11.0.0",
         "@commitlint/config-conventional": "^11.0.0",
         "husky": "^5.0.9",
+        "lint-staged": "^10.5.4",
         "semantic-release": "^17.3.9"
     }
 }
