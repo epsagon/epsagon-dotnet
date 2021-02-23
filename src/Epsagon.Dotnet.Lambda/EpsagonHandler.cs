@@ -1,24 +1,24 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Amazon.Lambda.Core;
+
 using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Instrumentation;
 using Epsagon.Dotnet.Tracing.Legacy;
 using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
+
 using OpenTracing.Util;
+
 using Serilog;
 using Serilog.Events;
 
-namespace Epsagon.Dotnet.Lambda
-{
-    public class EpsagonHandler
-    {
+namespace Epsagon.Dotnet.Lambda {
+    public class EpsagonHandler {
 
-        public static TRes Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<TRes> handlerFn)
-        {
-            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled)
-            {
+        public static TRes Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<TRes> handlerFn) {
+            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled) {
                 return handlerFn();
             }
 
@@ -26,28 +26,22 @@ namespace Epsagon.Dotnet.Lambda
             var returnValue = default(TRes);
             Exception exception = null;
 
-            try
-            {
+            try {
 
                 Utils.DebugLogIfEnabled("entered epsagon lambda handler");
                 // handle trigger event
-                using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
-                {
+                using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true)) {
                     var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
                     trigger.Handle(context, scope);
                 }
                 // handle invocation event
                 using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
-                using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context, scope))
-                {
+                using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context, scope)) {
                     handler.HandleBefore();
-                    try
-                    {
+                    try {
                         clientCodeExecuted = true;
                         returnValue = handlerFn();
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         scope.Span.AddException(e);
                         exception = e;
                     }
@@ -58,30 +52,22 @@ namespace Epsagon.Dotnet.Lambda
                 EpsagonTrace.SendTrace(trace);
                 JaegerTracer.Clear();
                 Utils.DebugLogIfEnabled("finishing epsagon lambda handler");
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 HandleInstrumentationError(ex);
-            }
-            finally
-            {
-                if (exception != null)
-                {
+            } finally {
+                if (exception != null) {
                     throw exception;
                 }
 
-                if (!clientCodeExecuted)
-                {
+                if (!clientCodeExecuted) {
                     returnValue = handlerFn();
                 }
             }
             return returnValue;
         }
 
-        public static async Task<TRes> Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<Task<TRes>> handlerFn)
-        {
-            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled)
-            {
+        public static async Task<TRes> Handle<TEvent, TRes>(TEvent input, ILambdaContext context, Func<Task<TRes>> handlerFn) {
+            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled) {
                 return await handlerFn();
             }
 
@@ -89,18 +75,15 @@ namespace Epsagon.Dotnet.Lambda
             var returnValue = default(TRes);
             Exception exception = null;
 
-            try
-            {
-                if (Utils.CurrentConfig.IsEpsagonDisabled)
-                {
+            try {
+                if (Utils.CurrentConfig.IsEpsagonDisabled) {
                     return await handlerFn();
                 }
 
                 Utils.DebugLogIfEnabled("entered epsagon lambda handler");
                 Utils.DebugLogIfEnabled("handling trigger event");
 
-                using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
-                {
+                using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true)) {
                     var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
                     trigger.Handle(context, scope);
                 }
@@ -108,19 +91,15 @@ namespace Epsagon.Dotnet.Lambda
                 // handle invocation event
                 Utils.DebugLogIfEnabled("handling invocation event");
                 using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
-                using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context, scope))
-                {
+                using (var handler = new LambdaTriggerHandler<TEvent, TRes>(input, context, scope)) {
                     Utils.DebugLogIfEnabled("handling before execution");
                     handler.HandleBefore();
 
                     Utils.DebugLogIfEnabled("calling client handler");
-                    try
-                    {
+                    try {
                         clientCodeExecuted = true;
                         returnValue = await handlerFn();
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         scope.Span.AddException(e);
                         exception = e;
                     }
@@ -137,17 +116,12 @@ namespace Epsagon.Dotnet.Lambda
 
                 Utils.DebugLogIfEnabled("finishing epsagon lambda handler");
                 return returnValue;
-            }
-            catch (Exception ex) { HandleInstrumentationError(ex); }
-            finally
-            {
-                if (exception != null)
-                {
+            } catch (Exception ex) { HandleInstrumentationError(ex); } finally {
+                if (exception != null) {
                     throw exception;
                 }
 
-                if (!clientCodeExecuted)
-                {
+                if (!clientCodeExecuted) {
                     returnValue = await handlerFn();
                 }
             }
@@ -155,10 +129,8 @@ namespace Epsagon.Dotnet.Lambda
             return returnValue;
         }
 
-        public static async Task Handle<TEvent>(TEvent input, ILambdaContext context, Func<Task> handlerFn)
-        {
-            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled)
-            {
+        public static async Task Handle<TEvent>(TEvent input, ILambdaContext context, Func<Task> handlerFn) {
+            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled) {
                 await handlerFn();
                 return;
             }
@@ -166,19 +138,16 @@ namespace Epsagon.Dotnet.Lambda
             var clientCodeExecuted = false;
             Exception exception = null;
 
-            try
-            {
+            try {
 
-                if (Utils.CurrentConfig.IsEpsagonDisabled)
-                {
+                if (Utils.CurrentConfig.IsEpsagonDisabled) {
                     await handlerFn();
                 }
 
                 Utils.DebugLogIfEnabled("entered epsagon lambda handler");
                 Utils.DebugLogIfEnabled("handling trigger event");
 
-                using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true))
-                {
+                using (var scope = GlobalTracer.Instance.BuildSpan("").StartActive(finishSpanOnDispose: true)) {
                     var trigger = TriggerFactory.CreateInstance(input.GetType(), input);
                     trigger.Handle(context, scope);
                 }
@@ -186,19 +155,15 @@ namespace Epsagon.Dotnet.Lambda
                 // handle invocation event
                 Utils.DebugLogIfEnabled("handling invocation event");
                 using (var scope = GlobalTracer.Instance.BuildSpan((typeof(TEvent).Name)).StartActive(finishSpanOnDispose: true))
-                using (var handler = new LambdaTriggerHandler<TEvent, string>(input, context, scope))
-                {
+                using (var handler = new LambdaTriggerHandler<TEvent, string>(input, context, scope)) {
                     Utils.DebugLogIfEnabled("handling before execution");
                     handler.HandleBefore();
 
                     Utils.DebugLogIfEnabled("calling client handler");
-                    try
-                    {
+                    try {
                         clientCodeExecuted = true;
                         await handlerFn();
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         scope.Span.AddException(e);
                         exception = e;
                     }
@@ -214,27 +179,20 @@ namespace Epsagon.Dotnet.Lambda
                 JaegerTracer.Clear();
 
                 Utils.DebugLogIfEnabled("finishing epsagon lambda handler");
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 HandleInstrumentationError(ex);
-            }
-            finally
-            {
-                if (exception != null)
-                {
+            } finally {
+                if (exception != null) {
                     throw exception;
                 }
 
-                if (!clientCodeExecuted)
-                {
+                if (!clientCodeExecuted) {
                     await handlerFn();
                 }
             }
         }
 
-        private static void HandleInstrumentationError(Exception ex)
-        {
+        private static void HandleInstrumentationError(Exception ex) {
             Utils.DebugLogIfEnabled("Exception thrown during instrumentation code");
             Utils.DebugLogIfEnabled("Exception: {@ex}", ex);
 

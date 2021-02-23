@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+
 using Epsagon.Dotnet.Instrumentation.Handlers;
 using Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB;
 using Epsagon.Dotnet.Instrumentation.Handlers.Empty;
@@ -10,10 +11,8 @@ using Epsagon.Dotnet.Instrumentation.Handlers.SES;
 using Epsagon.Dotnet.Instrumentation.Handlers.SNS;
 using Epsagon.Dotnet.Instrumentation.Handlers.SQS;
 
-namespace Epsagon.Dotnet.Instrumentation
-{
-    public class HandlerFactory : BaseFactory<Type, IServiceHandler>
-    {
+namespace Epsagon.Dotnet.Instrumentation {
+    public class HandlerFactory : BaseFactory<Type, IServiceHandler> {
         public HandlerFactory(string serviceName) : base(new EmptyHandler(serviceName = "empty")) { }
 
         protected override Dictionary<Type, Func<IServiceHandler>> Operations => new Dictionary<Type, Func<IServiceHandler>>

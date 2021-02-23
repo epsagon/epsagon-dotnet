@@ -1,7 +1,5 @@
-namespace Epsagon.Dotnet.Core.Configuration
-{
-    public interface IEpsagonConfiguration
-    {
+namespace Epsagon.Dotnet.Core.Configuration {
+    public interface IEpsagonConfiguration {
         string Token { get; }
         string AppName { get; }
         bool MetadataOnly { get; }

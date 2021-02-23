@@ -1,21 +1,21 @@
 using System;
 using System.Collections.Generic;
+
 using Amazon.Lambda.ApplicationLoadBalancerEvents;
 using Amazon.Lambda.Core;
+
 using Epsagon.Dotnet.Core;
+
 using Newtonsoft.Json;
+
 using OpenTracing;
 
-namespace Epsagon.Dotnet.Instrumentation.Triggers
-{
-    public class ElasticLoadBalancerLambda : BaseTrigger<ApplicationLoadBalancerRequest>
-    {
-        public ElasticLoadBalancerLambda(ApplicationLoadBalancerRequest input) : base(input)
-        {
+namespace Epsagon.Dotnet.Instrumentation.Triggers {
+    public class ElasticLoadBalancerLambda : BaseTrigger<ApplicationLoadBalancerRequest> {
+        public ElasticLoadBalancerLambda(ApplicationLoadBalancerRequest input) : base(input) {
         }
 
-        public override void Handle(ILambdaContext context, IScope scope)
-        {
+        public override void Handle(ILambdaContext context, IScope scope) {
             base.Handle(context, scope);
             var config = Utils.CurrentConfig;
 
@@ -28,12 +28,11 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers
             }));
             scope.Span.SetTag("aws.elb.target_group_arn", input.RequestContext.Elb.TargetGroupArn);
 
-            if (!config.MetadataOnly)
-            {
+            if (!config.MetadataOnly) {
                 scope.Span.SetTag("aws.elb.body", input.Body);
                 scope.Span.SetTag("aws.elb.headers", JsonConvert.SerializeObject(input.Headers, new JsonSerializerSettings() {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            }));
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                }));
             }
         }
     }

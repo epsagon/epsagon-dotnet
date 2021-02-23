@@ -1,15 +1,15 @@
 using Amazon.DynamoDBv2.Model;
 using Amazon.Runtime;
+
 using Epsagon.Dotnet.Core;
+
 using Newtonsoft.Json;
+
 using OpenTracing;
 
-namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
-{
-    public class QueryRequestHandler : IOperationHandler
-    {
-        public void HandleOperationAfter(IExecutionContext context, IScope scope)
-        {
+namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations {
+    public class QueryRequestHandler : IOperationHandler {
+        public void HandleOperationAfter(IExecutionContext context, IScope scope) {
             var response = context.ResponseContext.Response as QueryResponse;
             var data = response.ToDictionary();
 
@@ -23,13 +23,11 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
             }));
         }
 
-        public void HandleOperationBefore(IExecutionContext context, IScope scope)
-        {
+        public void HandleOperationBefore(IExecutionContext context, IScope scope) {
             var request = context.RequestContext.OriginalRequest as QueryRequest;
             var data = request.ToDictionary();
 
-            if (Utils.CurrentConfig.MetadataOnly)
-            {
+            if (Utils.CurrentConfig.MetadataOnly) {
                 data.Remove("KeyConditions");
                 data.Remove("QueryFilter");
                 data.Remove("ExclusiveStartKey");

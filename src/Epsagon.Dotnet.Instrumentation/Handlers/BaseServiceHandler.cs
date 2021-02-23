@@ -1,69 +1,59 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
+
 using Amazon.Runtime;
 using Amazon.Runtime.Internal;
+
 using Epsagon.Dotnet.Core;
+
 using OpenTracing;
 using OpenTracing.Util;
+
 using Serilog;
 
-namespace Epsagon.Dotnet.Instrumentation.Handlers
-{
-    public abstract class BaseServiceHandler : PipelineHandler, IServiceHandler
-    {
+namespace Epsagon.Dotnet.Instrumentation.Handlers {
+    public abstract class BaseServiceHandler : PipelineHandler, IServiceHandler {
         public abstract void HandleAfter(IExecutionContext executionContext, IScope scope);
         public abstract void HandleBefore(IExecutionContext executionContext, IScope scope);
 
         protected ITracer tracer = GlobalTracer.Instance;
 
-        public override void InvokeSync(IExecutionContext executionContext)
-        {
+        public override void InvokeSync(IExecutionContext executionContext) {
             var name = executionContext.RequestContext.RequestName;
             Utils.DebugLogIfEnabled("AWSSDK request invoked, {name}", name);
 
-            using (var scope = tracer.BuildSpan(name).StartActive(finishSpanOnDispose: true))
-            {
+            using (var scope = tracer.BuildSpan(name).StartActive(finishSpanOnDispose: true)) {
                 BuildSpan(executionContext, scope.Span);
 
-                try { HandleBefore(executionContext, scope); }
-                catch (Exception e) { scope.Span.AddException(e); }
+                try { HandleBefore(executionContext, scope); } catch (Exception e) { scope.Span.AddException(e); }
 
                 base.InvokeSync(executionContext);
 
-                try
-                {
+                try {
                     HandleAfter(executionContext, scope);
                     scope.Span.SetTag("event.id", executionContext.ResponseContext.Response.ResponseMetadata.RequestId);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     scope.Span.SetTag("event.id", executionContext.ResponseContext.Response.ResponseMetadata.RequestId);
                     scope.Span.AddException(e);
                 }
             }
         }
 
-        public override Task<T> InvokeAsync<T>(IExecutionContext executionContext)
-        {
+        public override Task<T> InvokeAsync<T>(IExecutionContext executionContext) {
             var name = executionContext.RequestContext.RequestName;
             Utils.DebugLogIfEnabled("AWSSDK request invoked, {name}", name);
 
-            using (var scope = tracer.BuildSpan(name).StartActive(finishSpanOnDispose: true))
-            {
+            using (var scope = tracer.BuildSpan(name).StartActive(finishSpanOnDispose: true)) {
                 BuildSpan(executionContext, scope.Span);
 
-                try { HandleBefore(executionContext, scope); }
-                catch (Exception e) { scope.Span.AddException(e); }
+                try { HandleBefore(executionContext, scope); } catch (Exception e) { scope.Span.AddException(e); }
 
                 var result = base.InvokeAsync<T>(executionContext).Result;
 
-                try
-                {
+                try {
                     HandleAfter(executionContext, scope);
                     scope.Span.SetTag("event.id", executionContext.ResponseContext.Response.ResponseMetadata.RequestId);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     scope.Span.SetTag("event.id", executionContext.ResponseContext.Response.ResponseMetadata.RequestId);
                     scope.Span.AddException(e);
                 }
@@ -72,8 +62,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers
             }
         }
 
-        private void BuildSpan(IExecutionContext context, ISpan span)
-        {
+        private void BuildSpan(IExecutionContext context, ISpan span) {
             var resoureType = context?.RequestContext?.ServiceMetaData.ServiceId;
             var serviceName = context?.RequestContext?.ServiceMetaData.ServiceId;
             var operationName = context?.RequestContext?.RequestName;

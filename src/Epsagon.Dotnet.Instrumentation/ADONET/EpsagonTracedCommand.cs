@@ -2,13 +2,13 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+
 using Epsagon.Dotnet.Core;
+
 using OpenTracing.Util;
 
-namespace Epsagon.Dotnet.Instrumentation.ADONET
-{
-    public class EpsagonTracedCommand : DbCommand
-    {
+namespace Epsagon.Dotnet.Instrumentation.ADONET {
+    public class EpsagonTracedCommand : DbCommand {
         private readonly DbCommand _inner;
 
         /// <summary>
@@ -31,15 +31,13 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
         public override void Prepare() => _inner.Prepare();
         protected override DbParameter CreateDbParameter() => _inner.CreateParameter();
 
-        private void SpanDefaults(OpenTracing.ISpan span)
-        {
+        private void SpanDefaults(OpenTracing.ISpan span) {
             var operation = CommandText.Split().First().ToUpper();
             span.SetOperationName(operation);
 
             var parameters = DbParameterCollection
                 .OfType<DbParameter>()
-                .Select(param => new
-                {
+                .Select(param => new {
                     name = param.ParameterName,
                     type = Enum.GetName(typeof(DbType), param.DbType),
                     value = param.Value
@@ -58,28 +56,22 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
             span.SetDataIfNeeded("sql.parameters", parameters);
         }
 
-        public override int ExecuteNonQuery()
-        {
+        public override int ExecuteNonQuery() {
             var affected_rows = -1;
             var code_executed = false;
-            try
-            {
+            try {
                 using (var scope = GlobalTracer.Instance
                                 .BuildSpan("")
                                 .WithStartTimestamp(DateTime.Now)
-                                .StartActive(finishSpanOnDispose: true))
-                {
+                                .StartActive(finishSpanOnDispose: true)) {
                     var span = scope.Span;
 
                     SpanDefaults(span);
 
-                    try
-                    {
+                    try {
                         affected_rows = _inner.ExecuteNonQuery();
                         code_executed = true;
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         span.AddException(e);
                         throw;
                     }
@@ -87,86 +79,74 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
                     span.SetTag("sql.cursor_row_count", affected_rows);
                     return affected_rows;
                 }
-            }
-            catch (Exception)
-            {
-                if (!code_executed) return _inner.ExecuteNonQuery();
-                else return affected_rows;
+            } catch (Exception) {
+                if (!code_executed)
+                    return _inner.ExecuteNonQuery();
+                else
+                    return affected_rows;
             }
         }
 
-        public override object ExecuteScalar()
-        {
+        public override object ExecuteScalar() {
             object result = null;
             var code_executed = false;
-            try
-            {
+            try {
                 using (var scope = GlobalTracer.Instance
                                 .BuildSpan("")
                                 .WithStartTimestamp(DateTime.Now)
-                                .StartActive(finishSpanOnDispose: true))
-                {
+                                .StartActive(finishSpanOnDispose: true)) {
                     var span = scope.Span;
 
                     SpanDefaults(span);
                     span.SetTag("sql.cursor_row_count", 1);
 
-                    try
-                    {
+                    try {
                         result = _inner.ExecuteScalar();
                         code_executed = true;
                         span.SetDataIfNeeded("sql.scalar.result", result);
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         span.AddException(e);
                         throw;
                     }
 
                     return result;
                 }
-            }
-            catch
-            {
-                if (!code_executed) return _inner.ExecuteScalar();
-                else return result;
+            } catch {
+                if (!code_executed)
+                    return _inner.ExecuteScalar();
+                else
+                    return result;
             }
         }
 
-        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
-        {
+        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior) {
             DbDataReader reader = null;
             var code_executed = false;
-            try
-            {
+            try {
                 using (var scope = GlobalTracer.Instance
                                 .BuildSpan("")
                                 .WithStartTimestamp(DateTime.Now)
-                                .StartActive(finishSpanOnDispose: true))
-                {
+                                .StartActive(finishSpanOnDispose: true)) {
                     var span = scope.Span;
 
                     SpanDefaults(span);
 
-                    try
-                    {
+                    try {
                         reader = _inner.ExecuteReader(behavior);
                         code_executed = true;
                         span.SetTag("sql.cursor_row_count", reader.RecordsAffected);
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         span.AddException(e);
                         throw;
                     }
 
                     return reader;
                 }
-            }
-            catch
-            {
-                if (!code_executed) return _inner.ExecuteReader(behavior);
-                else return reader;
+            } catch {
+                if (!code_executed)
+                    return _inner.ExecuteReader(behavior);
+                else
+                    return reader;
             }
         }
     }

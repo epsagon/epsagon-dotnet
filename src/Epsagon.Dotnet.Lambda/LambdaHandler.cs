@@ -1,14 +1,13 @@
-﻿using Amazon.Lambda.Core;
 using System.Threading.Tasks;
+
+using Amazon.Lambda.Core;
+
 using Epsagon.Dotnet.Instrumentation;
 
-namespace Epsagon.Dotnet.Lambda
-{
-    public abstract class LambdaHandler<TEvent, TRes>
-    {
+namespace Epsagon.Dotnet.Lambda {
+    public abstract class LambdaHandler<TEvent, TRes> {
 
-        public LambdaHandler()
-        {
+        public LambdaHandler() {
             EpsagonBootstrap.Bootstrap();
         }
 
@@ -28,8 +27,7 @@ namespace Epsagon.Dotnet.Lambda
         /// <param name="input">input event from AWS Lambda</param>
         /// <param name="context">lambda context</param>
         /// <returns></returns>
-        private TRes EpsagonEnabledHandler(TEvent input, ILambdaContext context)
-        {
+        private TRes EpsagonEnabledHandler(TEvent input, ILambdaContext context) {
             return EpsagonHandler.Handle(input, context, () => this.HandlerFunction(input, context)).Result;
         }
 

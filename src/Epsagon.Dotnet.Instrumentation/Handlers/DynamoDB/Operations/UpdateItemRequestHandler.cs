@@ -1,19 +1,18 @@
 using System.Collections.Generic;
+
 using Amazon.DynamoDBv2.Model;
 using Amazon.Runtime;
+
 using Newtonsoft.Json;
+
 using OpenTracing;
 
-namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations
-{
-    public class UpdateItemRequestHandler : IOperationHandler
-    {
-        public void HandleOperationAfter(IExecutionContext context, IScope scope)
-        {
+namespace Epsagon.Dotnet.Instrumentation.Handlers.DynamoDB.Operations {
+    public class UpdateItemRequestHandler : IOperationHandler {
+        public void HandleOperationAfter(IExecutionContext context, IScope scope) {
         }
 
-        public void HandleOperationBefore(IExecutionContext context, IScope scope)
-        {
+        public void HandleOperationBefore(IExecutionContext context, IScope scope) {
             var request = context.RequestContext.OriginalRequest as UpdateItemRequest;
             var updateParams = new Dictionary<string, string>();
 

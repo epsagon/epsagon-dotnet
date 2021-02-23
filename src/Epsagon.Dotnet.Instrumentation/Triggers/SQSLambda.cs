@@ -1,19 +1,18 @@
 using System.Linq;
+
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
+
 using Epsagon.Dotnet.Core;
+
 using OpenTracing;
 
-namespace Epsagon.Dotnet.Instrumentation.Triggers
-{
-    public class SQSLambda : BaseTrigger<SQSEvent>
-    {
-        public SQSLambda(SQSEvent input) : base(input)
-        {
+namespace Epsagon.Dotnet.Instrumentation.Triggers {
+    public class SQSLambda : BaseTrigger<SQSEvent> {
+        public SQSLambda(SQSEvent input) : base(input) {
         }
 
-        public override void Handle(ILambdaContext context, IScope scope)
-        {
+        public override void Handle(ILambdaContext context, IScope scope) {
             string queueName = "";
             base.Handle(context, scope);
 

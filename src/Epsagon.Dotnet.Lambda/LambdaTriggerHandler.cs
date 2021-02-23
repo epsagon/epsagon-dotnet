@@ -1,27 +1,27 @@
 using System;
+
 using Amazon.Lambda.Core;
+
 using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Instrumentation;
+
 using Newtonsoft.Json;
+
 using OpenTracing;
 
-namespace Epsagon.Dotnet.Lambda
-{
-    public class LambdaTriggerHandler<TEvent, TRes> : IDisposable
-    {
+namespace Epsagon.Dotnet.Lambda {
+    public class LambdaTriggerHandler<TEvent, TRes> : IDisposable {
         private static readonly int AWS_ACCOUNT_INDEX = 4;
         private static bool _coldStart = true;
         private readonly ILambdaContext context;
         private readonly IScope scope;
 
-        public LambdaTriggerHandler(TEvent ev, ILambdaContext context, IScope scope)
-        {
+        public LambdaTriggerHandler(TEvent ev, ILambdaContext context, IScope scope) {
             this.context = context;
             this.scope = scope;
         }
 
-        public void HandleBefore()
-        {
+        public void HandleBefore() {
             Utils.DebugLogIfEnabled("lambda invoke event - START");
             var coldStart = _coldStart;
             _coldStart = false;
@@ -48,10 +48,8 @@ namespace Epsagon.Dotnet.Lambda
             EpsagonUtils.SetLambdaTraceUrl(awsAccount, awsRegion, this.context.FunctionName, awsRequestId);
         }
 
-        public void HandleAfter(TRes returnValue)
-        {
-            this.scope.Span.SetTag("aws.lambda.return_value", JsonConvert.SerializeObject(returnValue, new JsonSerializerSettings()
-            {
+        public void HandleAfter(TRes returnValue) {
+            this.scope.Span.SetTag("aws.lambda.return_value", JsonConvert.SerializeObject(returnValue, new JsonSerializerSettings() {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
 
