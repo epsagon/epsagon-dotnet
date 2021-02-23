@@ -1,20 +1,20 @@
 using System.Linq;
+
 using Amazon.Lambda.Core;
 using Amazon.Lambda.DynamoDBEvents;
+
 using Epsagon.Dotnet.Core;
+
 using Newtonsoft.Json;
+
 using OpenTracing;
 
-namespace Epsagon.Dotnet.Instrumentation.Triggers
-{
-    public class DynamoDBLambda : BaseTrigger<DynamoDBEvent>
-    {
-        public DynamoDBLambda(DynamoDBEvent input) : base(input)
-        {
+namespace Epsagon.Dotnet.Instrumentation.Triggers {
+    public class DynamoDBLambda : BaseTrigger<DynamoDBEvent> {
+        public DynamoDBLambda(DynamoDBEvent input) : base(input) {
         }
 
-        public override void Handle(ILambdaContext context, IScope scope)
-        {
+        public override void Handle(ILambdaContext context, IScope scope) {
             base.Handle(context, scope);
             var eventSourceSplit = input.Records.First().EventSourceArn.Split('/');
             var resourceName = eventSourceSplit[eventSourceSplit.Length - 3];

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.ApplicationLoadBalancerEvents;
 using Amazon.Lambda.CloudWatchEvents;
@@ -9,12 +10,11 @@ using Amazon.Lambda.KinesisEvents;
 using Amazon.Lambda.S3Events;
 using Amazon.Lambda.SNSEvents;
 using Amazon.Lambda.SQSEvents;
+
 using Epsagon.Dotnet.Instrumentation.Triggers;
 
-namespace Epsagon.Dotnet.Instrumentation
-{
-    public class TriggerFactory
-    {
+namespace Epsagon.Dotnet.Instrumentation {
+    public class TriggerFactory {
         public static ITrigger CreateInstance(Type eventType, object input) {
             var dict = new Dictionary<Type, Func<ITrigger>> {
                 { typeof(S3Event), () => new S3Lambda(input as S3Event) },

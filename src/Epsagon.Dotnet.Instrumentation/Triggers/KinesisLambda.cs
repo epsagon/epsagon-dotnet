@@ -1,19 +1,18 @@
 using System.Linq;
+
 using Amazon.Lambda.Core;
 using Amazon.Lambda.KinesisEvents;
+
 using Newtonsoft.Json;
+
 using OpenTracing;
 
-namespace Epsagon.Dotnet.Instrumentation.Triggers
-{
-    public class KinesisLambda : BaseTrigger<KinesisEvent>
-    {
-        public KinesisLambda(KinesisEvent input) : base(input)
-        {
+namespace Epsagon.Dotnet.Instrumentation.Triggers {
+    public class KinesisLambda : BaseTrigger<KinesisEvent> {
+        public KinesisLambda(KinesisEvent input) : base(input) {
         }
 
-        public override void Handle(ILambdaContext context, IScope scope)
-        {
+        public override void Handle(ILambdaContext context, IScope scope) {
             base.Handle(context, scope);
             scope.Span.SetTag("event.id", input.Records.First().EventId);
             scope.Span.SetTag("resource.type", "kinesis");

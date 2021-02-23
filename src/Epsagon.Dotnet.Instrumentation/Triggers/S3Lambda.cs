@@ -1,19 +1,18 @@
 using System.Linq;
+
 using Amazon.Lambda.Core;
 using Amazon.Lambda.S3Events;
+
 using Newtonsoft.Json;
+
 using OpenTracing;
 
-namespace Epsagon.Dotnet.Instrumentation.Triggers
-{
-    public class S3Lambda : BaseTrigger<S3Event>
-    {
-        public S3Lambda(S3Event input) : base(input)
-        {
+namespace Epsagon.Dotnet.Instrumentation.Triggers {
+    public class S3Lambda : BaseTrigger<S3Event> {
+        public S3Lambda(S3Event input) : base(input) {
         }
 
-        public override void Handle(ILambdaContext context, IScope scope)
-        {
+        public override void Handle(ILambdaContext context, IScope scope) {
             base.Handle(context, scope);
             var requestId = input.Records.First().ResponseElements.XAmzRequestId;
             scope.Span.SetTag("event.id", $"s3-trigger-{requestId}");

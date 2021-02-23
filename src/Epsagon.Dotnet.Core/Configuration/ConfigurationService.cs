@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 
-namespace Epsagon.Dotnet.Core.Configuration
-{
-    public class ConfigurationService : IConfigurationService
-    {
+namespace Epsagon.Dotnet.Core.Configuration {
+    public class ConfigurationService : IConfigurationService {
         private static EpsagonConfiguration _config = new EpsagonConfiguration();
 
 
@@ -25,8 +23,7 @@ namespace Epsagon.Dotnet.Core.Configuration
         /// so you can omit options you don't want to change
         /// </summary>
         /// <param name="config">new config to use</param>
-        public void SetConfig(IEpsagonConfiguration config)
-        {
+        public void SetConfig(IEpsagonConfiguration config) {
             _config.Token = this.SelectProp(config.Token, _config.Token);
             _config.AppName = this.SelectProp(config.AppName, _config.AppName);
             _config.MetadataOnly = this.SelectProp(config.MetadataOnly, _config.MetadataOnly);
@@ -36,16 +33,13 @@ namespace Epsagon.Dotnet.Core.Configuration
             _config.SendTimeout = this.SelectProp(config.SendTimeout, _config.SendTimeout);
         }
 
-        private T SelectProp<T>(T first, T second)
-        {
+        private T SelectProp<T>(T first, T second) {
             // check for null value
-            if (EqualityComparer<T>.Default.Equals(first, default(T)))
-            {
+            if (EqualityComparer<T>.Default.Equals(first, default(T))) {
                 return second;
             }
 
-            if (!first.Equals(second))
-            {
+            if (!first.Equals(second)) {
                 return first;
             }
 

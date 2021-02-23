@@ -1,24 +1,23 @@
-using System.Linq;
 using System.Collections.Generic;
-using Jaeger;
+using System.Linq;
+
 using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Instrumentation;
+
+using Jaeger;
+
 using OpenTracing.Tag;
 
-namespace Epsagon.Dotnet.Tracing.Legacy
-{
-    public static class EpsagonConverter
-    {
-        public static T GetValue<T>(this IReadOnlyDictionary<string, object> tags, string tagName)
-        {
-            if (tags.ContainsKey(tagName)) return (T)tags[tagName];
+namespace Epsagon.Dotnet.Tracing.Legacy {
+    public static class EpsagonConverter {
+        public static T GetValue<T>(this IReadOnlyDictionary<string, object> tags, string tagName) {
+            if (tags.ContainsKey(tagName))
+                return (T) tags[tagName];
             return default(T);
         }
 
-        public static EpsagonEvent ToEvent(this Span span)
-        {
-            return Utils.TimeExecution(() =>
-            {
+        public static EpsagonEvent ToEvent(this Span span) {
+            return Utils.TimeExecution(() => {
                 var tags = span.GetTags();
                 string id = tags.GetValue<string>("event.id");
                 string origin = tags.GetValue<string>("event.origin");
@@ -36,8 +35,7 @@ namespace Epsagon.Dotnet.Tracing.Legacy
                 var resource = new EpsagonResource(resourceName, resourceOperation, resourceType, metadata);
                 var epsagonEvent = new EpsagonEvent(startTime, duration, errorCode, id, origin, resource);
 
-                if (tags.GetValue<bool>(Tags.Error.Key))
-                {
+                if (tags.GetValue<bool>(Tags.Error.Key)) {
                     epsagonEvent.Exception = new EpsagonException();
                     epsagonEvent.Exception.Message = tags.GetValue<string>("error.message");
                     epsagonEvent.Exception.Traceback = tags.GetValue<string>("error.stack_trace");
@@ -49,10 +47,8 @@ namespace Epsagon.Dotnet.Tracing.Legacy
             }, "ToEvent");
         }
 
-        public static EpsagonTrace CreateTrace(IEnumerable<Span> spans)
-        {
-            return Utils.TimeExecution(() =>
-            {
+        public static EpsagonTrace CreateTrace(IEnumerable<Span> spans) {
+            return Utils.TimeExecution(() => {
                 var config = Utils.CurrentConfig;
 
                 return new EpsagonTrace(
@@ -66,18 +62,15 @@ namespace Epsagon.Dotnet.Tracing.Legacy
             }, "CreateTrace");
         }
 
-        public static IDictionary<string, object> GenerateMetadata(this Span span)
-        {
-            return Utils.TimeExecution(() =>
-            {
+        public static IDictionary<string, object> GenerateMetadata(this Span span) {
+            return Utils.TimeExecution(() => {
                 var non_meta_tags = new[] { "sampler", "error", "resource", "event" };
                 var tags = span.GetTags().Select(x => new { Key = x.Key.Split('.'), x.Value })
                     .Where(x => !non_meta_tags.Contains(x.Key.First()))
                     .Where(x => !Utils.IsNullOrDefault(x.Value));
 
                 var metadata = new Dictionary<string, object>();
-                foreach (var tag in tags)
-                {
+                foreach (var tag in tags) {
                     metadata[tag.Key.Last()] = tag.Value;
                 }
 

@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
+
 using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Tracing.Legacy.TraceSenders;
 
-namespace Epsagon.Dotnet.Tracing.Legacy
-{
-    public class EpsagonTrace
-    {
+namespace Epsagon.Dotnet.Tracing.Legacy {
+    public class EpsagonTrace {
         public string AppName { get; set; }
         public IEnumerable<EpsagonEvent> Events { get; set; }
         public IEnumerable<Exception> Exceptions { get; set; }
@@ -21,8 +20,7 @@ namespace Epsagon.Dotnet.Tracing.Legacy
             string version,
             IEnumerable<EpsagonEvent> events,
             IEnumerable<Exception> exceptions
-        )
-        {
+        ) {
             this.AppName = appName;
             this.Platform = platform;
             this.Token = token;
@@ -31,21 +29,17 @@ namespace Epsagon.Dotnet.Tracing.Legacy
             this.Exceptions = exceptions;
         }
 
-        public static void SendTrace(EpsagonTrace trace)
-        {
-            Utils.TimeExecution(() =>
-            {
+        public static void SendTrace(EpsagonTrace trace) {
+            Utils.TimeExecution(() => {
                 var sender = GetTraceSender();
                 sender.SendTrace(trace);
             }, "SendTrace");
         }
 
-        public static ITraceSender GetTraceSender()
-        {
+        public static ITraceSender GetTraceSender() {
             var config = Utils.CurrentConfig;
 
-            if (config.UseLogsTransport)
-            {
+            if (config.UseLogsTransport) {
                 return new LogTraceSender();
             }
 

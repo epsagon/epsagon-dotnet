@@ -2,35 +2,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+
 using Epsagon.Dotnet.Core;
+
 using MongoDB.Bson;
 using MongoDB.Driver.Core.Events;
+
 using OpenTracing;
 using OpenTracing.Util;
 
-namespace Epsagon.Dotnet.Instrumentation.MongoDB
-{
-    public class MongoDBEventsSubscriber : IEventSubscriber
-    {
+namespace Epsagon.Dotnet.Instrumentation.MongoDB {
+    public class MongoDBEventsSubscriber : IEventSubscriber {
         private ReflectionEventSubscriber eventSubscriber;
 
         private Dictionary<int, IScope> scopes;
 
-        public MongoDBEventsSubscriber()
-        {
+        public MongoDBEventsSubscriber() {
             this.eventSubscriber = new ReflectionEventSubscriber(this);
             this.scopes = new Dictionary<int, IScope>();
         }
 
-        public bool TryGetEventHandler<TEvent>(out Action<TEvent> handler)
-        {
+        public bool TryGetEventHandler<TEvent>(out Action<TEvent> handler) {
             return this.eventSubscriber.TryGetEventHandler(out handler);
         }
 
-        public void Handle(CommandStartedEvent startedEvent)
-        {
+        public void Handle(CommandStartedEvent startedEvent) {
             var commandName = startedEvent.CommandName;
-            if (commandName != "insert") return;
+            if (commandName != "insert")
+                return;
 
             var tracer = GlobalTracer.Instance;
             var scope = tracer.BuildSpan(commandName).StartActive(finishSpanOnDispose: true);
@@ -52,20 +51,20 @@ namespace Epsagon.Dotnet.Instrumentation.MongoDB
             Utils.DebugLogIfEnabled("MongoDb event");
         }
 
-        public void Handle(CommandSucceededEvent succeededEvent)
-        {
+        public void Handle(CommandSucceededEvent succeededEvent) {
             var commandName = succeededEvent.CommandName;
-            if (commandName != "insert" || !this.scopes.ContainsKey(succeededEvent.RequestId)) return;
+            if (commandName != "insert" || !this.scopes.ContainsKey(succeededEvent.RequestId))
+                return;
 
             // close the scope and finish the span
             this.scopes[succeededEvent.RequestId].Dispose();
             this.scopes.Remove(succeededEvent.RequestId);
         }
 
-        public void Handle(CommandFailedEvent failedEvent)
-        {
+        public void Handle(CommandFailedEvent failedEvent) {
             var commandName = failedEvent.CommandName;
-            if (commandName != "insert" || !this.scopes.ContainsKey(failedEvent.RequestId)) return;
+            if (commandName != "insert" || !this.scopes.ContainsKey(failedEvent.RequestId))
+                return;
 
             var scope = this.scopes[failedEvent.RequestId];
             scope.Span.AddException(failedEvent.Failure);
@@ -74,10 +73,11 @@ namespace Epsagon.Dotnet.Instrumentation.MongoDB
             this.scopes.Remove(failedEvent.RequestId);
         }
 
-        private string GetEndpointUrl(EndPoint endPoint)
-        {
-            if (endPoint is IPEndPoint ip) return ip.Address.ToString();
-            if (endPoint is DnsEndPoint dns) return $"{dns.Host}:{dns.Port}";
+        private string GetEndpointUrl(EndPoint endPoint) {
+            if (endPoint is IPEndPoint ip)
+                return ip.Address.ToString();
+            if (endPoint is DnsEndPoint dns)
+                return $"{dns.Host}:{dns.Port}";
             return endPoint.ToString();
         }
     }

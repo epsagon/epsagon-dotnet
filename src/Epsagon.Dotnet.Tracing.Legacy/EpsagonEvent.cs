@@ -1,7 +1,5 @@
-namespace Epsagon.Dotnet.Tracing.Legacy
-{
-    public class EpsagonEvent
-    {
+namespace Epsagon.Dotnet.Tracing.Legacy {
+    public class EpsagonEvent {
         public double StartTime { get; set; }
         public double Duration { get; set; }
         public int ErrorCode { get; set; }
@@ -19,7 +17,7 @@ namespace Epsagon.Dotnet.Tracing.Legacy
             EpsagonResource resource,
             EpsagonException exception = null
         ) {
-            this.StartTime  = startTime;
+            this.StartTime = startTime;
             this.Duration = duration;
             this.ErrorCode = errorCode;
             this.Id = id;

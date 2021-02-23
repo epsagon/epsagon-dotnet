@@ -1,7 +1,5 @@
-namespace Epsagon.Dotnet.Core.Configuration
-{
-    public interface IConfigurationService
-    {
+namespace Epsagon.Dotnet.Core.Configuration {
+    public interface IConfigurationService {
         IEpsagonConfiguration GetConfig();
         IEpsagonConfiguration DefaultConfig();
         void SetConfig(IEpsagonConfiguration config);

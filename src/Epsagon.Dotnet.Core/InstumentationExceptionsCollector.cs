@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace Epsagon.Dotnet.Core
-{
-    public static class InstumentationExceptionsCollector
-    {
+namespace Epsagon.Dotnet.Core {
+    public static class InstumentationExceptionsCollector {
         public static List<Exception> Exceptions;
 
-        static InstumentationExceptionsCollector()
-        {
+        static InstumentationExceptionsCollector() {
             Exceptions = new List<Exception>();
         }
     }

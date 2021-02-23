@@ -1,8 +1,7 @@
 using System.Data;
 using System.Data.Common;
 
-namespace Epsagon.Dotnet.Instrumentation.ADONET
-{
+namespace Epsagon.Dotnet.Instrumentation.ADONET {
     /// <summary>
     /// Specialized DbConnection object to allow tracing using Epsagon's tracer
     /// 
@@ -11,8 +10,7 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET
     /// generated command with an EpsagonTracedCommand instance
     /// to allow tracing the command execution
     /// </summary>
-    public class EpsagonTracedConnection : DbConnection
-    {
+    public class EpsagonTracedConnection : DbConnection {
         private readonly DbConnection _inner;
 
         /// <summary>
