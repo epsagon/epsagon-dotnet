@@ -3,6 +3,8 @@ using System;
 using Amazon.Kinesis.Model;
 using Amazon.Runtime;
 
+using Epsagon.Dotnet.Core;
+
 using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.Handlers.Kinesis.Operations {
@@ -15,10 +17,11 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.Kinesis.Operations {
 
         public void HandleOperationBefore(IExecutionContext context, IScope scope) {
             var request = context.RequestContext.OriginalRequest as PutRecordRequest;
+
             scope.Span.SetTag("resource.name", request.StreamName);
             scope.Span.SetTag("aws.kinesis.stream_name", request.StreamName);
             scope.Span.SetTag("aws.kinesis.partition_key", request.PartitionKey);
-            scope.Span.SetTag("aws.kinesis.data", BitConverter.ToString(request.Data.ToArray()).Replace("-", ""));
+            scope.Span.SetDataIfNeeded("aws.kinesis.data", BitConverter.ToString(request.Data.ToArray()).Replace("-", ""));
         }
     }
 }
