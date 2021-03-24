@@ -33,7 +33,6 @@ namespace Epsagon.Dotnet.Instrumentation.EFCore {
             }
         }
 
-        public void OnCommandError(CommandErrorEventData payload) { }
 
         /// <summary>
         /// Handle successfull db command
@@ -70,6 +69,37 @@ namespace Epsagon.Dotnet.Instrumentation.EFCore {
                     var result = payload.Result as RelationalDataReader;
                     scope.Span.SetTag("sql.cursor_row_count", result.DbDataReader.RecordsAffected);
                 }
+            }
+        }
+
+        public void OnCommandError(CommandErrorEventData payload) {
+            var operation = payload.Command.CommandText.Split().First().ToUpper();
+            var parameters = payload.Command.Parameters.OfType<DbParameter>().Select(param => new {
+                value = param.Value,
+                name = param.ParameterName,
+                type = Enum.GetName(typeof(DbType), param.DbType),
+            }).ToList();
+
+            // do not report unnecessary events
+            if (operation == "PRAGMA")
+                return;
+
+            using (var scope = GlobalTracer.Instance
+                .BuildSpan(operation)
+                .WithStartTimestamp(payload.StartTime.UtcDateTime)
+                .StartActive(finishSpanOnDispose: true)) {
+                scope.Span.SetTag("event.id", Guid.NewGuid().ToString());
+                scope.Span.SetTag("event.origin", "system-data");
+                scope.Span.SetTag("resource.name", payload.Command.Connection.Database);
+                scope.Span.SetTag("resource.type", "database");
+                scope.Span.SetTag("resource.operation", operation);
+                scope.Span.SetTag("sql.driver", payload.Command.Connection.GetType().FullName);
+                scope.Span.SetTag("sql.statement", payload.Command.CommandText);
+                scope.Span.SetTag("sql.table_name", TableNameExtractor.ExtractTableName(payload.Command.CommandText));
+                scope.Span.SetTag("sql.connection_string", payload.Command.Connection.ConnectionString);
+                scope.Span.SetDataIfNeeded("sql.parameters", parameters);
+
+                scope.Span.AddException(payload.Exception);
             }
         }
     }
