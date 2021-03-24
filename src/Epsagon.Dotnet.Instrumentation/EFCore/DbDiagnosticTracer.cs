@@ -8,7 +8,6 @@ using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Instrumentation.ADONET;
 
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Storage;
 
 using OpenTracing.Util;
 
@@ -65,9 +64,9 @@ namespace Epsagon.Dotnet.Instrumentation.EFCore {
                 scope.Span.SetTag("sql.connection_string", payload.Command.Connection.ConnectionString);
                 scope.Span.SetDataIfNeeded("sql.parameters", parameters);
 
-                if (payload.Result is RelationalDataReader) {
-                    var result = payload.Result as RelationalDataReader;
-                    scope.Span.SetTag("sql.cursor_row_count", result.DbDataReader.RecordsAffected);
+                if (payload.Result is DbDataReader) {
+                    var result = payload.Result as DbDataReader;
+                    scope.Span.SetTag("sql.cursor_row_count", result.RecordsAffected);
                 }
             }
         }
