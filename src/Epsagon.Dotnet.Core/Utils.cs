@@ -49,13 +49,13 @@ namespace Epsagon.Dotnet.Core {
         }
 
         public static void SetDataIfNeeded(this ISpan span, string tagName, string input) {
-            if (!Utils.CurrentConfig.MetadataOnly) {
+            if ((!CurrentConfig?.MetadataOnly).GetValueOrDefault(false)) {
                 span.SetTag(tagName, input);
             }
         }
 
         public static void SetDataIfNeeded(this ISpan span, string tagName, int input) {
-            if (!Utils.CurrentConfig.MetadataOnly) {
+            if ((!CurrentConfig?.MetadataOnly).GetValueOrDefault(false)) {
                 span.SetTag(tagName, input);
             }
         }

@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Epsagon.Dotnet.Instrumentation.EFCore {
@@ -8,7 +10,8 @@ namespace Epsagon.Dotnet.Instrumentation.EFCore {
         /// <param name="options"></param>
         /// <returns></returns>
         public static DbContextOptionsBuilder UseEpsagon(this DbContextOptionsBuilder options) {
-            return options.AddInterceptors(new EpsagonCommandInterceptor());
+            DiagnosticListener.AllListeners.Subscribe(new DbDiagnosticsListener());
+            return options;
         }
     }
 }
