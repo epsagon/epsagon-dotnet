@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 
 using Amazon.Runtime.Internal;
 
@@ -20,11 +21,16 @@ namespace Epsagon.Dotnet.Instrumentation {
                 levelSwitch.MinimumLevel = LogEventLevel.Debug;
             }
 
-            Log.Logger = new LoggerConfiguration()
+            var loggerConfig = new LoggerConfiguration()
                 .MinimumLevel.ControlledBy(levelSwitch)
                 .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .CreateLogger();
+                .WriteTo.Console();
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                loggerConfig.WriteTo.EventLog("Epsagon");
+            }
+
+            Log.Logger = loggerConfig.CreateLogger();
 
             if ((Environment.GetEnvironmentVariable("DISABLE_EPSAGON") ?? "").ToUpper() != "TRUE") {
                 if (configuration != null) { Utils.RegisterConfiguration(configuration); } else { Utils.RegisterConfiguration(LoadConfiguration()); }
