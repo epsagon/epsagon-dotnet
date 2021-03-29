@@ -181,7 +181,7 @@ Epsagon provides out-of-the-box instrumentation (tracing) for many popular frame
 | AWSSDK         | `>=3.0`           |
 | ASP.NET MVC    | `>=2.1`           |
 | ADO.NET        | `all`             |
-| EFCore         | `>=3.1.0`         |
+| EFCore         | `>=2.1.0`         |
 
 ## Configuration
 
@@ -196,6 +196,7 @@ Advanced options can be configured as a parameter to the `Config` struct to the 
 | UseSSL            |                      | Boolean | `true`  | Whether to send the traces over HTTPS SSL or not                          |
 | IsEpsagonDisabled | DISABLE_EPSAGON      | Boolean | `false` | A flag to completely disable Epsagon (can be used for tests or locally)   |
 | \_                | EPSAGON_DEBUG        | Boolean | `false` | Enable debug prints for troubleshooting                                   |
+| LogFile           | EPSAGON_LOG_FILE     | String  | -       | Enable logging to the specified file path                                 |
 
 ## Getting Help
 
