@@ -9,5 +9,6 @@ namespace Epsagon.Dotnet.Core.Configuration {
         bool IsEpsagonDisabled { get; }
         bool UseLogsTransport { get; }
         int SendTimeout { get; }
+        string LogFile { get; }
     }
 }

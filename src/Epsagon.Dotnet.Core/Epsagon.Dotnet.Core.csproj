@@ -18,6 +18,7 @@
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.EventLog" Version="3.1.0" />
+    <PackageReference Include="Serilog.Sinks.File" version="4.1.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="AttributeExtractor.cs" />
