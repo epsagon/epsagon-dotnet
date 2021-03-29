@@ -30,6 +30,10 @@ namespace Epsagon.Dotnet.Instrumentation {
                 loggerConfig.WriteTo.EventLog("Epsagon");
             }
 
+            if (configuration.LogFile != "" || Environment.GetEnvironmentVariable("EPSAGON_LOG_FILE") != "") {
+                loggerConfig.WriteTo.File(configuration.LogFile != "" ? configuration.LogFile : Environment.GetEnvironmentVariable("EPSAGON_LOG_FILE"));
+            }
+
             Log.Logger = loggerConfig.CreateLogger();
 
             if ((Environment.GetEnvironmentVariable("DISABLE_EPSAGON") ?? "").ToUpper() != "TRUE") {
