@@ -1,5 +1,9 @@
+using System.Linq;
+
 using Amazon.Runtime;
 using Amazon.SimpleNotificationService.Model;
+
+using Epsagon.Dotnet.Core;
 
 using OpenTracing;
 
@@ -19,6 +23,9 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.SNS.Operations {
 
             scope.Span.SetTag("resource.name", topicName);
             scope.Span.SetTag("aws.sns.message", request.Message);
+
+            var attributes = request.MessageAttributes.ToDictionary(attr => attr.Key, attr => attr.Value);
+            scope.Span.SetDataIfNeeded("aws.sns.message_attributes", attributes);
         }
     }
 }
