@@ -183,6 +183,54 @@ Epsagon provides out-of-the-box instrumentation (tracing) for many popular frame
 | ADO.NET        | `all`             |
 | EFCore         | `>=2.1.0`         |
 
+
+### Elasticsearch
+
+To enable Epsagon's Elasticsearch integration call the `UseEpsagon()` method when creating a connection:
+
+```csharp
+var settings = new ConnectionSettings()
+    .DefaultIndex("some-index")
+    ...
+    .UseEpsagon();
+var client = new ElasticClient(settings);
+```
+
+
+### MongoDB
+
+To enable Epsagon's MongoDB integration call the `WithEpsagon()` method when creating a connection:
+
+```csharp
+var client = new MongoClient("mongodb://localhost:27017").WithEpsagon();
+```
+
+### ADO.NET
+
+To enable Epsagon's ADO.NET integration call the `UseEpsagon()` method on the SqlConnection object:
+
+```csharp
+// can be any ADO.NET sql connection object (SQLiteConnection / NpgsqlConnection / etc.)
+var connection = new SomeSqlConnection("connection-string").UseEpsagon();
+```
+
+### EFCore
+
+To enable Epsagon's EFCore integration call the `UseEpsagon()` method on the `DbContextOptionsBuilder`
+
+```csharp
+public class MyDbContext : DbContext
+{
+    public DbSet<MyModel> MyModelSet { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    {
+        options.UseSqlite("...").UseEpsagon();
+    }
+}
+```
+
+
 ## Configuration
 
 Advanced options can be configured as a parameter to the `Config` struct to the `WrapLambdaHandler` or as environment variables.
