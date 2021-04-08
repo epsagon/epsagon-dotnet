@@ -30,7 +30,7 @@ namespace Epsagon.Dotnet.Instrumentation {
                 loggerConfig.WriteTo.EventLog("Epsagon");
             }
 
-            var logConfig = configuration.LogFile ?? Environment.GetEnvironmentVariable("EPSAGON_LOG_FILE");
+            var logConfig = configuration?.LogFile ?? Environment.GetEnvironmentVariable("EPSAGON_LOG_FILE");
             if (!string.IsNullOrWhiteSpace(logConfig)) {
                 loggerConfig.WriteTo.File(logConfig);
             }
