@@ -27,6 +27,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.SQS.Operations {
                     messageScope.Span.SetTag("resource.operation", context.RequestContext.RequestName);
                     messageScope.Span.SetTag("aws.sqs.queue.url", request.QueueUrl);
                     messageScope.Span.SetTag("aws.sqs.message_body", message.Body);
+                    messageScope.Span.SetTag("aws.sqs.Message ID", message.MessageId);
                     messageScope.Span.SetTag("aws.sqs.message_id", message.MessageId);
                     messageScope.Span.SetTag("aws.sqs.message_body_md5", message.MD5OfBody);
                 }

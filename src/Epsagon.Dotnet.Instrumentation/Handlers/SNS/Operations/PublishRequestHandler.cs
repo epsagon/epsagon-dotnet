@@ -12,6 +12,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.SNS.Operations {
         public void HandleOperationAfter(IExecutionContext context, IScope scope) {
             var response = context.ResponseContext.Response as PublishResponse;
             scope.Span.SetTag("aws.sns.message_id", response.MessageId);
+            scope.Span.SetTag("aws.sns.Message ID", response.MessageId);
         }
 
         public void HandleOperationBefore(IExecutionContext context, IScope scope) {

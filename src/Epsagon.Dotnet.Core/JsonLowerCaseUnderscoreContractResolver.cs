@@ -7,6 +7,8 @@ namespace Epsagon.Dotnet.Core {
         private Regex regex = new Regex("(?!(^[A-Z]))([A-Z])");
 
         protected override string ResolvePropertyName(string propertyName) {
+            if (propertyName == "Message ID")
+                return propertyName;
             return regex.Replace(propertyName, "_$2").ToLower();
         }
     }

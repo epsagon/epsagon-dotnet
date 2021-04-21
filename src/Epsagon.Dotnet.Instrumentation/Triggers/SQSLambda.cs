@@ -22,6 +22,8 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers {
                 queueName = queueArnSplit[queueArnSplit.Length - 1];
             }
 
+            Utils.DebugLogIfEnabled("Message: {@message}", first);
+
             scope.Span.SetTag("event.id", first.MessageId);
             scope.Span.SetTag("resource.type", "sqs");
             scope.Span.SetTag("resource.name", queueName);
