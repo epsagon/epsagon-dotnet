@@ -26,12 +26,11 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers {
             scope.Span.SetTag("resource.type", "sqs");
             scope.Span.SetTag("resource.name", queueName);
             scope.Span.SetTag("resource.operation", "Receive Operation");
-            scope.Span.SetTag("aws.sqs.MD5 Of Message Body", first.Md5OfBody);
-            scope.Span.SetTag("aws.sqs.Sender ID", first.Attributes["SenderId"]);
-            scope.Span.SetTag("aws.sqs.Approximate Receive Count", first.Attributes["ApproximateReceiveCount"]);
-            scope.Span.SetTag("aws.sqs.Sent Timestamp", first.Attributes["SentTimestamp"]);
-            scope.Span.SetTag("aws.sqs.Approximate First Receive Timestamp", first.Attributes["ApproximateFirstReceiveTimestamp"]);
-            scope.Span.SetDataIfNeeded("aws.sqs.Message Body", first.Body);
+            scope.Span.SetTag("aws.sqs.md5_of_message_body", first.Md5OfBody);
+            scope.Span.SetTag("aws.sqs.sender_id", first.Attributes["SenderId"]);
+            scope.Span.SetTag("aws.sqs.approximate_receive_count", first.Attributes["ApproximateReceiveCount"]);
+            scope.Span.SetTag("aws.sqs.sent_timestamp", first.Attributes["SentTimestamp"]);
+            scope.Span.SetTag("aws.sqs.approximate_first_receive_timestamp", first.Attributes["ApproximateFirstReceiveTimestamp"]);
 
             if (!Utils.CurrentConfig.MetadataOnly) {
                 scope.Span.SetTag("aws.sqs.message_id", first.MessageId);
