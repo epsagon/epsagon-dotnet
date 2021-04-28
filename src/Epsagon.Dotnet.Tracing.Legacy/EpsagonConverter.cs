@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Instrumentation;
@@ -51,8 +52,9 @@ namespace Epsagon.Dotnet.Tracing.Legacy {
             return Utils.TimeExecution(() => {
                 var config = Utils.CurrentConfig;
 
+
                 return new EpsagonTrace(
-                    version: "1.0.0",
+                    version: Assembly.GetAssembly(typeof(EpsagonConverter)).GetName().Version.ToString(),
                     token: config.Token,
                     appName: config.AppName,
                     exceptions: InstumentationExceptionsCollector.Exceptions,
