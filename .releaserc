@@ -8,16 +8,16 @@
             {"type": "chore", "scope": "release", "release": false} 
         ]
     }],
-    ["@semantic-release/exec", { 
-        "prepareCmd": "scripts/prepare.sh ${nextRelease.version}",
-        "publishCmd": "scripts/publish.sh" 
-    }],
     ["@semantic-release/github", {
         "assets": [{"path": "src/**/*.nupkg" }]
     }],
     ["@semantic-release/git", { 
         "assets": ["src/**/*.csproj"],
         "message": "chore(release): ${nextRelease.version} [skip ci]" 
+    }],
+    ["@semantic-release/exec", { 
+        "prepareCmd": "scripts/prepare.sh ${nextRelease.version}",
+        "publishCmd": "scripts/publish.sh" 
     }]
   ]
 }
