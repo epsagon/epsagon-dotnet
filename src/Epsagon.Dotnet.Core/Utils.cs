@@ -96,27 +96,5 @@ namespace Epsagon.Dotnet.Core {
                 Log.Debug(format, args);
             }
         }
-
-        public static T TimeExecution<T>(Func<T> func, string fname = "") {
-            var stopWatch = new Stopwatch();
-            try {
-                stopWatch.Start();
-                return func();
-            } finally {
-                stopWatch.Stop();
-                DebugLogIfEnabled("Execution time: {time}ms, Function: {name}", stopWatch.ElapsedMilliseconds, fname);
-            }
-        }
-
-        public static void TimeExecution(Action func, string fname = "") {
-            var stopWatch = new Stopwatch();
-            try {
-                stopWatch.Start();
-                func();
-            } finally {
-                stopWatch.Stop();
-                DebugLogIfEnabled("Execution time: {time}ms, Function: {name}", stopWatch.ElapsedMilliseconds, fname);
-            }
-        }
     }
 }
