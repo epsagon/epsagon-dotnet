@@ -30,10 +30,8 @@ namespace Epsagon.Dotnet.Tracing.Legacy {
         }
 
         public static void SendTrace(EpsagonTrace trace) {
-            Utils.TimeExecution(() => {
-                var sender = GetTraceSender();
-                sender.SendTrace(trace);
-            }, "SendTrace");
+            var sender = GetTraceSender();
+            sender.SendTrace(trace);
         }
 
         public static ITraceSender GetTraceSender() {
