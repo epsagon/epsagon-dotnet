@@ -117,6 +117,8 @@ To trace ASP.NET MVC, a few simple actions should be taken:
 - Add a call to `EpsagonBootstrap.Bootstrap()` in the constructor of your startup class. for example:
 
 ```csharp
+using Epsagon.Dotnet.Instrumentation;
+
 public Startup(IConfiguration configuration)
 {
     EpsagonBootstrap.Bootstrap();
