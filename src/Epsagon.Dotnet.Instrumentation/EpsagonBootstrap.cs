@@ -25,14 +25,14 @@ namespace Epsagon.Dotnet.Instrumentation {
                 .MinimumLevel.ControlledBy(levelSwitch)
                 .Enrich.FromLogContext()
                 .WriteTo.Console();
-            if ((configuration?.EnableEventLog).GetValueOrDefault(false) && RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
-                loggerConfig.WriteTo.EventLog("Epsagon");
-            }
+            // if ((configuration?.EnableEventLog).GetValueOrDefault(false) && RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+            //     loggerConfig.WriteTo.EventLog("Epsagon");
+            // }
 
-            var logConfig = configuration?.LogFile ?? Environment.GetEnvironmentVariable("EPSAGON_LOG_FILE");
-            if (!string.IsNullOrWhiteSpace(logConfig)) {
-                loggerConfig.WriteTo.File(logConfig);
-            }
+            // var logConfig = configuration?.LogFile ?? Environment.GetEnvironmentVariable("EPSAGON_LOG_FILE");
+            // if (!string.IsNullOrWhiteSpace(logConfig)) {
+            //     loggerConfig.WriteTo.File(logConfig);
+            // }
 
             Log.Logger = loggerConfig.CreateLogger();
 
