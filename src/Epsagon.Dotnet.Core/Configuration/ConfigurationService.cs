@@ -32,6 +32,7 @@ namespace Epsagon.Dotnet.Core.Configuration {
             _config.IsEpsagonDisabled = this.SelectProp(config.IsEpsagonDisabled, _config.IsEpsagonDisabled);
             _config.SendTimeout = this.SelectProp(config.SendTimeout, _config.SendTimeout);
             _config.LogFile = this.SelectProp(config.LogFile, _config.LogFile);
+            _config.EnableEventLog = this.SelectProp(config.EnableEventLog, _config.EnableEventLog);
         }
 
         private T SelectProp<T>(T first, T second) {

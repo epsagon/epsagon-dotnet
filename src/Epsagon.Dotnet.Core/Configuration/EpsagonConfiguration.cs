@@ -12,6 +12,7 @@ namespace Epsagon.Dotnet.Core.Configuration {
         public bool UseLogsTransport { get; set; } = (Environment.GetEnvironmentVariable("EPSAGON_LOG_TRANSPORT") ?? "").ToUpper() == "TRUE";
         public int SendTimeout { get; set; } = ParseInt(Environment.GetEnvironmentVariable("EPSAGON_SEND_TIMEOUT_SEC") ?? "1");
         public string LogFile { get; set; } = Environment.GetEnvironmentVariable("EPSAGON_LOG_FILE") ?? "";
+        public bool EnableEventLog { get; set; } = (Environment.GetEnvironmentVariable("EPSAGON_EVENT_LOG") ?? "").ToUpper() == "TRUE";
 
         public EpsagonConfiguration() {
             if ((Environment.GetEnvironmentVariable("EPSAGON_TEST") ?? "").ToUpper() == "TRUE") {

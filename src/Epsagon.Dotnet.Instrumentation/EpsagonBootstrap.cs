@@ -25,8 +25,7 @@ namespace Epsagon.Dotnet.Instrumentation {
                 .MinimumLevel.ControlledBy(levelSwitch)
                 .Enrich.FromLogContext()
                 .WriteTo.Console();
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+            if ((configuration?.EnableEventLog).GetValueOrDefault(false) && RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
                 loggerConfig.WriteTo.EventLog("Epsagon");
             }
 
