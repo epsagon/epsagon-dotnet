@@ -12,7 +12,7 @@ namespace Epsagon.Dotnet.Instrumentation {
             var handler = new HandlerFactory(type.Name).GetInstace(type);
             pipeline.AddHandler(handler);
 
-            Utils.DebugLogIfEnabled("done adding pipeline handler, type: {}", type.Name);
+            Utils.DebugLogIfEnabled("done adding pipeline handler, type: {}", type.FullName);
         }
     }
 }

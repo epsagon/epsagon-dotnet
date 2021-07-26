@@ -50,7 +50,7 @@ namespace Epsagon.Dotnet.Instrumentation {
             }
         }
 
-        private static void CustomizePipeline() {
+        public static void CustomizePipeline() {
             Utils.DebugLogIfEnabled("customizing AWSSDK pipeline - START");
             RuntimePipelineCustomizerRegistry.Instance.Register(new EpsagonPipelineCustomizer());
             Utils.DebugLogIfEnabled("customizing AWSSDK pipeline - FINISHED");
