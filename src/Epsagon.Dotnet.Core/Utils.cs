@@ -61,6 +61,8 @@ namespace Epsagon.Dotnet.Core {
         }
 
         public static void AddException(this ISpan span, Exception e) {
+            Utils.DebugLogIfEnabled("EXCEPTION: {@ex}", e);
+
             Tags.Error.Set(span, true);
             span.SetTag("event.error_code", 2); // exception
             span.SetTag("error.message", e.Message);
