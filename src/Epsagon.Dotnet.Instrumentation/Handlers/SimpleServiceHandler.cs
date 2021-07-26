@@ -2,6 +2,8 @@ using System;
 
 using Amazon.Runtime;
 
+using Epsagon.Dotnet.Core;
+
 using OpenTracing;
 
 namespace Epsagon.Dotnet.Instrumentation.Handlers {
@@ -21,9 +23,11 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers {
             var operation = executionContext.RequestContext.RequestName;
             var instance = factory.GetInstace(operation);
 
+            Utils.DebugLogIfEnabled("calling handle before, instance: {@i}", instance);
             if (!(instance is null)) {
                 instance.HandleOperationBefore(executionContext, scope);
             }
+            Utils.DebugLogIfEnabled("done");
         }
     }
 }
