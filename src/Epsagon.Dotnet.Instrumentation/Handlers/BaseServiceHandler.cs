@@ -50,11 +50,17 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers {
             Utils.DebugLogIfEnabled("AWSSDK request invoked, {name}", name);
 
             using (var scope = tracer.BuildSpan(name).StartActive(finishSpanOnDispose: true)) {
+                Utils.DebugLogIfEnabled("started building span");
                 BuildSpan(executionContext, scope.Span);
+                Utils.DebugLogIfEnabled("finished building span");
 
+                Utils.DebugLogIfEnabled("handle before");
                 try { HandleBefore(executionContext, scope); } catch (Exception e) { scope.Span.AddException(e); }
+                Utils.DebugLogIfEnabled("done handle before");
 
+                Utils.DebugLogIfEnabled("invoking client code");
                 var result = base.InvokeAsync<T>(executionContext).Result;
+                Utils.DebugLogIfEnabled("done invoking client code");
 
                 try {
                     HandleAfter(executionContext, scope);
