@@ -14,6 +14,7 @@ namespace Epsagon.Dotnet.Instrumentation.Handlers.SQS.Operations {
             var response = context.ResponseContext.Response as SendMessageResponse;
 
             _scope.Span.SetTag("aws.sqs.message_id", response.MessageId);
+            _scope.Span.SetTag("aws.sqs.Message ID", response.MessageId);
             _scope.Span.SetTag("aws.sqs.message_body_md5", response.MD5OfMessageBody);
             _scope.Dispose();
         }
