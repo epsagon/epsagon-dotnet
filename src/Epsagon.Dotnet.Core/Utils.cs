@@ -17,6 +17,7 @@ namespace Epsagon.Dotnet.Core {
     public static class Utils {
         private static IEpsagonConfiguration _config;
         public static IEpsagonConfiguration CurrentConfig => _config;
+        public static List<IDisposable> disposables = new List<IDisposable>();
 
         public static string SerializeObject(object obj) {
             return JsonConvert.SerializeObject(obj, new JsonSerializerSettings {
@@ -95,6 +96,10 @@ namespace Epsagon.Dotnet.Core {
             if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug)) {
                 Log.Debug(format, args);
             }
+        }
+
+        public static void AddDisposable(IDisposable disposable) {
+            disposables.Add(disposable);
         }
     }
 }
