@@ -20,7 +20,8 @@ namespace Epsagon.Dotnet.Instrumentation.Triggers {
             var hostKey = input?.Headers?.ContainsKey("Host");
 
             scope.Span.SetTag("resource.name", hostKey.HasValue && hostKey.Value ? input?.Headers["Host"] : input?.RequestContext?.ApiId);
-            scope.Span.SetTag("resource.operation", input?.HttpMethod);
+            scope.Span.SetTag("resource.operation", input?.HttpMethod ?? "Trigger");
+            scope.Span.SetTag("aws.api_gateway.method", input?.HttpMethod);
             scope.Span.SetTag("aws.api_gateway.stage", input?.RequestContext?.Stage);
             scope.Span.SetTag("aws.api_gateway.query_string_parameters", JsonConvert.SerializeObject(input?.QueryStringParameters, new JsonSerializerSettings() {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
