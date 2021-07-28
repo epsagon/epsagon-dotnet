@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 using Amazon.Runtime.Internal;
 
 using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Core.Configuration;
+using Epsagon.Dotnet.Instrumentation.EFCore;
 using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
 
 using Serilog;
@@ -40,6 +42,7 @@ namespace Epsagon.Dotnet.Instrumentation {
             if ((Environment.GetEnvironmentVariable("DISABLE_EPSAGON") ?? "").ToUpper() != "TRUE") {
                 if (configuration != null) { Utils.RegisterConfiguration(configuration); } else { Utils.RegisterConfiguration(LoadConfiguration()); }
                 CustomizePipeline();
+                SetupDiagnosticListeners();
 
                 // Use either legacy tracer or opentracing tracer
                 if (useOpenTracingCollector) {
@@ -55,6 +58,10 @@ namespace Epsagon.Dotnet.Instrumentation {
             Utils.DebugLogIfEnabled("customizing AWSSDK pipeline - START");
             RuntimePipelineCustomizerRegistry.Instance.Register(new EpsagonPipelineCustomizer());
             Utils.DebugLogIfEnabled("customizing AWSSDK pipeline - FINISHED");
+        }
+
+        private static void SetupDiagnosticListeners() {
+            DiagnosticListener.AllListeners.Subscribe(new DbDiagnosticsListener());
         }
 
         private static IEpsagonConfiguration LoadConfiguration() {
