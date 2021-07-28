@@ -158,7 +158,6 @@ public string FunctionToWrap(string param)
   - `EPSAGON_TOKEN` - Epsagon's token, can be found in the [Dashboard](https://app.epsagon.com/settings).
   - `EPSAGON_APP_NAME` - Name for the application of this function (optional).
 
-  
 ### Adding Labels
 
 To enrich your trace with additional information you can use the `EpsagonLabels` class:
@@ -169,20 +168,20 @@ EpsagonLabels.Add("some-key", "some-value");
 ```
 
 each label is displayed on the trace view in Epsagon's Dashboard and is automatically searchable!
-  
+
 ## Integrations
 
 Epsagon provides out-of-the-box instrumentation (tracing) for many popular frameworks and libraries.
 
-| Library        | Supported Version |
-| -------------- | ----------------- |
-| Elasticsearch  | `>=5.6`           |
-| MongoDB.Driver | `>=2.4`           |
-| AWSSDK         | `>=3.0`           |
-| ASP.NET MVC    | `>=2.1`           |
-| ADO.NET        | `all`             |
-| EFCore         | `>=2.1.0`         |
-
+| Library             | Supported Version |
+| ------------------- | ----------------- |
+| Elasticsearch       | `>=5.6`           |
+| MongoDB.Driver      | `>=2.4`           |
+| AWSSDK              | `>=3.0`           |
+| ASP.NET MVC         | `>=2.1`           |
+| ADO.NET             | `all`             |
+| EFCore              | `>=2.1.0`         |
+| StackExchange.Redis | `>=2`             |
 
 ### Elasticsearch
 
@@ -195,7 +194,6 @@ var settings = new ConnectionSettings()
     .UseEpsagon();
 var client = new ElasticClient(settings);
 ```
-
 
 ### MongoDB
 
@@ -216,20 +214,15 @@ var connection = new SomeSqlConnection("connection-string").UseEpsagon();
 
 ### EFCore
 
-To enable Epsagon's EFCore integration call the `UseEpsagon()` method on the `DbContextOptionsBuilder`
+EFCore integration is done automatically, no need for extra actions
+
+### StackExchange.Redis
+
+To enable Epsagon's StackExchange.Redis integration call the `UseEpsagon()` method on the connection object:
 
 ```csharp
-public class MyDbContext : DbContext
-{
-    public DbSet<MyModel> MyModelSet { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-    {
-        options.UseSqlite("...").UseEpsagon();
-    }
-}
+var connection = ConnectionMultiplexer.Connect("localhost").UseEpsagon();
 ```
-
 
 ## Configuration
 
