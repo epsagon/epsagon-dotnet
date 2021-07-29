@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 
 using Epsagon.Dotnet.Core;
@@ -41,10 +42,12 @@ namespace Epsagon.Dotnet.Instrumentation.StackExchange.Redis {
                     .WithStartTimestamp(new DateTimeOffset(command.CommandCreated))
                     .StartActive();
 
+                var endpoint = new EndpointDetails(command.EndPoint);
+
                 scope.Span.SetTag("event.id", Guid.NewGuid().ToString());
                 scope.Span.SetTag("event.origin", "stackexchange.redis");
                 scope.Span.SetTag("resource.type", "redis");
-                scope.Span.SetTag("resource.name", RedisConnection.Configuration);
+                scope.Span.SetTag("resource.name", endpoint.ToString());
                 scope.Span.SetTag("resource.operation", command.Command);
                 scope.Span.SetTag("redis.db_index", command.Db);
                 scope.Span.SetTag("redis.client_name", RedisConnection.ClientName);
@@ -52,6 +55,28 @@ namespace Epsagon.Dotnet.Instrumentation.StackExchange.Redis {
 
                 scope.Span.Finish(new DateTimeOffset(command.CommandCreated + command.ElapsedTime));
             }
+        }
+    }
+
+    public class EndpointDetails {
+        public int Port { get; set; }
+        public string Host { get; set; }
+
+        public EndpointDetails(EndPoint ep) {
+            switch (ep) {
+                case DnsEndPoint dns:
+                    this.Port = dns.Port;
+                    this.Host = dns.Host;
+                    break;
+                case IPEndPoint ip:
+                    this.Port = ip.Port;
+                    this.Host = ip.Address.ToString();
+                    break;
+            }
+        }
+
+        public override string ToString() {
+            return $"{this.Host}:{this.Port}";
         }
     }
 }
