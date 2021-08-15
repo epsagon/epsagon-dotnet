@@ -15,15 +15,15 @@ using OpenTracing.Util;
 namespace Epsagon.Dotnet.Mvc {
     public class EpsagonMvcHandler {
 
-        public static T Handle<T>(Func<T> clientFn, HttpContext context) {
+        public static async Task<T> Handle<T>(Func<Task<T>> clientFn, HttpContext context) {
             if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled)
-                return clientFn();
+                return await clientFn();
 
             T result;
 
             var startTime = new DateTimeOffset(DateTime.UtcNow);
             using (var scope = CreateRunner(context)) {
-                result = ExecuteClientCode(clientFn, scope);
+                result = await ExecuteClientCode(clientFn, scope);
             }
 
             CreateTrigger(context, startTime);
@@ -35,15 +35,41 @@ namespace Epsagon.Dotnet.Mvc {
             return result;
         }
 
-        private static T ExecuteClientCode<T>(Func<T> clientFn, IScope scope) {
+        public static async Task Handle(Func<Task> clientFn, HttpContext context) {
+            if (Utils.CurrentConfig == null || Utils.CurrentConfig.IsEpsagonDisabled)
+                await clientFn();
+
+            var startTime = new DateTimeOffset(DateTime.UtcNow);
+            using (var scope = CreateRunner(context)) {
+                await ExecuteClientCode(clientFn, scope);
+            }
+
+            CreateTrigger(context, startTime);
+
+            var trace = EpsagonConverter.CreateTrace(JaegerTracer.GetSpans());
+            EpsagonTrace.SendTrace(trace);
+            JaegerTracer.Clear();
+            EpsagonUtils.ClearTraceUrl();
+        }
+
+        private static async Task<T> ExecuteClientCode<T>(Func<Task<T>> clientFn, IScope scope) {
             try {
-                T result = clientFn();
+                T result = await clientFn();
                 if (result is Task t) {
-                    t.ContinueWith(task => scope.Span.AddException(task.Exception), TaskContinuationOptions.OnlyOnFaulted);
+                    await t.ContinueWith(task => scope.Span.AddException(task.Exception), TaskContinuationOptions.OnlyOnFaulted);
                     return result;
                 }
 
                 return result;
+            } catch (Exception e) {
+                scope.Span.AddException(e);
+                throw;
+            }
+        }
+
+        private static async Task ExecuteClientCode(Func<Task> clientFn, IScope scope) {
+            try {
+                await clientFn();
             } catch (Exception e) {
                 scope.Span.AddException(e);
                 throw;
