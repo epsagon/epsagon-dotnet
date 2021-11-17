@@ -101,5 +101,13 @@ namespace Epsagon.Dotnet.Core {
         public static void AddDisposable(IDisposable disposable) {
             disposables.Add(disposable);
         }
+
+        public static T ExtractAttribute<T>(this object source, string name) where T : class {
+            var type = source.GetType();
+            var propertyInfo = type.GetProperty(name);
+            var propertyValue = propertyInfo.GetValue(source);
+
+            return propertyValue as T;
+        }
     }
 }
