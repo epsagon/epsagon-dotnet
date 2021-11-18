@@ -7,6 +7,7 @@ using Amazon.Runtime.Internal;
 using Epsagon.Dotnet.Core;
 using Epsagon.Dotnet.Core.Configuration;
 using Epsagon.Dotnet.Instrumentation.EFCore;
+using Epsagon.Dotnet.Instrumentation.HttpClients;
 using Epsagon.Dotnet.Tracing.OpenTracingJaeger;
 
 using Serilog;
@@ -61,7 +62,8 @@ namespace Epsagon.Dotnet.Instrumentation {
         }
 
         private static void SetupDiagnosticListeners() {
-            DiagnosticListener.AllListeners.Subscribe(new DbDiagnosticsListener());
+            Utils.AddDisposable(DiagnosticListener.AllListeners.Subscribe(new DbDiagnosticsListener()));
+            Utils.AddDisposable(DiagnosticListener.AllListeners.Subscribe(new HttpDiagnosticsListener()));
         }
 
         private static IEpsagonConfiguration LoadConfiguration() {
