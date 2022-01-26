@@ -28,7 +28,7 @@ namespace Epsagon.Dotnet.Instrumentation.HttpClients {
             var request = value.Value.ExtractAttribute<HttpRequestMessage>("Request");
             var response = value.Value.ExtractAttribute<HttpResponseMessage>("Response");
 
-            // filter out calls to the trace collector
+            /* filter out calls to the trace collector */
             if (request.RequestUri.ToString().Contains("tc.epsagon.com"))
                 return;
 
@@ -51,10 +51,10 @@ namespace Epsagon.Dotnet.Instrumentation.HttpClients {
                 if (response is null) {
                     scope.Span.AddException(new HttpRequestException(ActivityName));
                 } else {
-                    scope.Span.SetTag("http.status_code", (int) (response?.StatusCode ?? 0));
-
-                    var responseBody = this.LoadContent(response?.Content);
+                    var responseBody = this.LoadContent(response.Content);
+                    scope.Span.SetDataIfNeeded("http.response_body", responseBody);
                     scope.Span.SetDataIfNeeded("http.response_headers", response.Headers.ToDictionary());
+                    scope.Span.SetTag("http.status_code", ((int) response.StatusCode));
 
                     if (!response.IsSuccessStatusCode) {
                         scope.Span.SetTag("event.error_code", 2); // exception
