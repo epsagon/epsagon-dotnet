@@ -41,21 +41,25 @@ namespace Epsagon.Dotnet.Instrumentation.HttpClients {
                 scope.Span.SetTag("resource.type", "http");
                 scope.Span.SetTag("resource.name", request.RequestUri.Host);
                 scope.Span.SetTag("resource.operation", request.Method.ToString());
-
                 scope.Span.SetTag("http.url", request.RequestUri.ToString());
-                scope.Span.SetTag("http.status_code", ((int) response.StatusCode));
                 scope.Span.SetDataIfNeeded("http.request_headers", request.Headers.ToDictionary());
-                scope.Span.SetDataIfNeeded("http.response_headers", response.Headers.ToDictionary());
 
                 var requestBody = this.LoadContent(request.Content);
-                var responseBody = this.LoadContent(response.Content);
-
                 scope.Span.SetDataIfNeeded("http.request_body", requestBody);
-                scope.Span.SetDataIfNeeded("http.response_body", responseBody);
 
-                if (!response.IsSuccessStatusCode) {
-                    scope.Span.SetTag("event.error_code", 2); // exception
-                    scope.Span.SetTag("error.message", response.ReasonPhrase);
+                // A null response extracted signifies a connection failed to establish.
+                if (response is null) {
+                    scope.Span.AddException(new HttpRequestException(ActivityName));
+                } else {
+                    var responseBody = this.LoadContent(response.Content);
+                    scope.Span.SetDataIfNeeded("http.response_body", responseBody);
+                    scope.Span.SetDataIfNeeded("http.response_headers", response.Headers.ToDictionary());
+                    scope.Span.SetTag("http.status_code", ((int) response.StatusCode));
+
+                    if (!response.IsSuccessStatusCode) {
+                        scope.Span.SetTag("event.error_code", 2); // exception
+                        scope.Span.SetTag("error.message", response.ReasonPhrase);
+                    }
                 }
             }
         }
