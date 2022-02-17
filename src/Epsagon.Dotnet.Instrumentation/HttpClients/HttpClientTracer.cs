@@ -29,9 +29,7 @@ namespace Epsagon.Dotnet.Instrumentation.HttpClients {
             var response = value.Value.ExtractAttribute<HttpResponseMessage>("Response");
 
             // filter out calls to the trace collector OR calls from amazon sdk
-            if (request.RequestUri.ToString().Contains("tc.epsagon.com") || 
-            (request.Headers.Contains("amz-sdk-request")
-            && request.Headers.UserAgent.ToString().Contains("aws-sdk-dotnet")))
+            if (request.RequestUri.ToString().Contains("tc.epsagon.com"))
                 return;
 
             using (var scope = GlobalTracer.Instance.BuildSpan(request.Method.ToString())
@@ -46,15 +44,10 @@ namespace Epsagon.Dotnet.Instrumentation.HttpClients {
                 scope.Span.SetTag("http.url", request.RequestUri.ToString());
                 scope.Span.SetDataIfNeeded("http.request_headers", request.Headers.ToDictionary());
 
-                var requestBody = this.LoadContent(request.Content);
-                scope.Span.SetDataIfNeeded("http.request_body", requestBody);
-
                 // A null response extracted signifies a connection failed to establish.
                 if (response is null) {
                     scope.Span.AddException(new HttpRequestException(ActivityName));
                 } else {
-                    var responseBody = this.LoadContent(response.Content);
-                    scope.Span.SetDataIfNeeded("http.response_body", responseBody);
                     scope.Span.SetDataIfNeeded("http.response_headers", response.Headers.ToDictionary());
                     scope.Span.SetTag("http.status_code", ((int) response.StatusCode));
 
