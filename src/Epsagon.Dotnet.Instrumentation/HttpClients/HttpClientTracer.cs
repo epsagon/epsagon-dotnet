@@ -6,8 +6,6 @@ using Newtonsoft.Json;
 
 using Epsagon.Dotnet.Core;
 
-using Newtonsoft.Json;
-
 using OpenTracing.Util;
 
 namespace Epsagon.Dotnet.Instrumentation.HttpClients {
