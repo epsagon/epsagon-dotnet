@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
+using Newtonsoft.Json;
 
 using Epsagon.Dotnet.Core;
 
@@ -28,8 +29,10 @@ namespace Epsagon.Dotnet.Instrumentation.HttpClients {
             var request = value.Value.ExtractAttribute<HttpRequestMessage>("Request");
             var response = value.Value.ExtractAttribute<HttpResponseMessage>("Response");
 
-            // filter out calls to the trace collector
-            if (request.RequestUri.ToString().Contains("tc.epsagon.com"))
+            // filter out calls to the trace collector OR calls from amazon sdk
+            if (request.RequestUri.ToString().Contains("tc.epsagon.com") || 
+            (request.Headers.Contains("amz-sdk-request")
+            && request.Headers.UserAgent.ToString().Contains("aws-sdk-dotnet")))
                 return;
 
             using (var scope = GlobalTracer.Instance.BuildSpan(request.Method.ToString())
