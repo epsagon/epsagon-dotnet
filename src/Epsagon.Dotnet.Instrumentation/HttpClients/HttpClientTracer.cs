@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
-using Newtonsoft.Json;
 
 using Epsagon.Dotnet.Core;
+
+using Newtonsoft.Json;
 
 using OpenTracing.Util;
 
