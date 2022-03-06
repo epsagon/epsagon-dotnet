@@ -56,6 +56,8 @@ namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger {
                 disposable.Dispose();
             }
 
+            Utils.disposables.Clear();
+
             return memoryReporter.GetSpans();
         }
     }
