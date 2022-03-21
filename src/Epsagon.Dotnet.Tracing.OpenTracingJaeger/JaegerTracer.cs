@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -50,6 +51,14 @@ namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger {
             memoryReporter.Clear();
         }
 
-        public static IEnumerable<Span> GetSpans() => memoryReporter.GetSpans();
+        public static IEnumerable<Span> GetSpans() {
+            foreach (var disposable in Utils.disposables.ToArray()) {
+                disposable.Dispose();
+            }
+
+            Utils.disposables.Clear();
+
+            return memoryReporter.GetSpans();
+        }
     }
 }
