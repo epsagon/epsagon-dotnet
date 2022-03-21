@@ -3,7 +3,6 @@ name: Build Library
 on:
   pull_request:
     branches: [ master ]
-
 jobs:
   lint:
     name: Lint
@@ -21,7 +20,7 @@ jobs:
       uses: xt0rted/dotnet-tool-restore@v1
 
     - name: Run dotnet format
-      run: dotnet format --check
+      run: dotnet format --verify-no-changes
 
   build:
     name: Build (dotnet ${{ matrix.version }})

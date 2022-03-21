@@ -52,9 +52,11 @@ namespace Epsagon.Dotnet.Tracing.OpenTracingJaeger {
         }
 
         public static IEnumerable<Span> GetSpans() {
-            foreach (var disposable in Utils.disposables) {
+            foreach (var disposable in Utils.disposables.ToArray()) {
                 disposable.Dispose();
             }
+
+            Utils.disposables.Clear();
 
             return memoryReporter.GetSpans();
         }
