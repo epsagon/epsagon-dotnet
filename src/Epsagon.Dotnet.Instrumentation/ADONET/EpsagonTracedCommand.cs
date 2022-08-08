@@ -52,7 +52,7 @@ namespace Epsagon.Dotnet.Instrumentation.ADONET {
             span.SetTag("sql.driver", DbConnection.GetType().FullName);
             span.SetTag("sql.statement", CommandText);
             span.SetTag("sql.table_name", TableNameExtractor.ExtractTableName(CommandText));
-            span.SetTag("sql.connection_string", DbConnection.ConnectionString);
+            span.SetIgnoredKeysIfNeeded("sql.connection_string", DbConnection.ConnectionString);
             span.SetDataIfNeeded("sql.parameters", parameters);
         }
 

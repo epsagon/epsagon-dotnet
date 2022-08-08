@@ -61,6 +61,27 @@ namespace Epsagon.Dotnet.Core {
             }
         }
 
+        public static void SetIgnoredKeysIfNeeded(this ISpan span, string tagName, string attr) {
+            try {
+                    Dictionary<string, string> input = StrToDict(attr);
+
+                    if (String.IsNullOrEmpty(CurrentConfig?.IgnoredKeys)) {
+                        span.SetTag(tagName, string.Join(";", input.Select(x => x.Key + "=" + x.Value)));
+                    } else {
+                        foreach (var key in input.Keys) {
+                        if (CurrentConfig.IgnoredKeys.Contains(key.Trim())){
+                                input[key] = "*********";
+                            }
+                        }
+                        span.SetTag(tagName, string.Join(";", input.Select(x => x.Key + "=" + x.Value)));  
+                    } 
+                }
+                catch (Exception e) {
+                    span.AddException(e);
+                    throw;
+                }
+        }
+
         public static void AddException(this ISpan span, Exception e) {
             Tags.Error.Set(span, true);
             span.SetTag("event.error_code", 2); // exception
@@ -108,6 +129,12 @@ namespace Epsagon.Dotnet.Core {
             var propertyValue = propertyInfo.GetValue(source);
 
             return propertyValue as T;
+        }
+
+        public static Dictionary<string, string> StrToDict(string obj) {
+            return obj.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries)
+               .Select(part => part.Split('='))
+               .ToDictionary(split => split[0], split => split[1]);
         }
     }
 }
