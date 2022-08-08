@@ -64,7 +64,6 @@ namespace Epsagon.Dotnet.Core {
         public static void SetIgnoredKeysIfNeeded(this ISpan span, string tagName, string attr) {
             try {
                     Dictionary<string, string> input = StrToDict(attr);
-
                     if (String.IsNullOrEmpty(CurrentConfig?.IgnoredKeys)) {
                         span.SetTag(tagName, string.Join(";", input.Select(x => x.Key + "=" + x.Value)));
                     } else {
