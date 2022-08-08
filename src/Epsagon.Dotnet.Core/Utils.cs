@@ -63,22 +63,22 @@ namespace Epsagon.Dotnet.Core {
 
         public static void SetIgnoredKeysIfNeeded(this ISpan span, string tagName, string attr) {
             try {
-                    Dictionary<string, string> input = StrToDict(attr);
-                    if (String.IsNullOrEmpty(CurrentConfig?.IgnoredKeys)) {
-                        span.SetTag(tagName, string.Join(";", input.Select(x => x.Key + "=" + x.Value)));
-                    } else {
-                        foreach (var key in input.Keys) {
-                        if (CurrentConfig.IgnoredKeys.Contains(key.Trim())){
-                                input[key] = "*********";
-                            }
+                Dictionary<string, string> input = StrToDict(attr);
+                if (String.IsNullOrEmpty(CurrentConfig?.IgnoredKeys)) {
+                    span.SetTag(tagName, string.Join(";", input.Select(x => x.Key + "=" + x.Value)));
+                } else {
+                    foreach (var key in input.Keys) {
+                    if (CurrentConfig.IgnoredKeys.Contains(key.Trim())){
+                        input[key] = "*********";
                         }
-                        span.SetTag(tagName, string.Join(";", input.Select(x => x.Key + "=" + x.Value)));  
-                    } 
-                }
-                catch (Exception e) {
-                    span.AddException(e);
-                    throw;
-                }
+                    }
+                    span.SetTag(tagName, string.Join(";", input.Select(x => x.Key + "=" + x.Value)));  
+                } 
+            }
+            catch (Exception e) {
+                span.AddException(e);
+                throw;
+            }
         }
 
         public static void AddException(this ISpan span, Exception e) {
