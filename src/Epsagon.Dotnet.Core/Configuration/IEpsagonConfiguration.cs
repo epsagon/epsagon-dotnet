@@ -10,5 +10,6 @@ namespace Epsagon.Dotnet.Core.Configuration {
         bool UseLogsTransport { get; }
         int SendTimeout { get; }
         string LogFile { get; }
+        string IgnoredKeys { get; }
     }
 }

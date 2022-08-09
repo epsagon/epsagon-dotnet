@@ -61,7 +61,7 @@ namespace Epsagon.Dotnet.Instrumentation.EFCore {
                 scope.Span.SetTag("sql.driver", payload.Command.Connection.GetType().FullName);
                 scope.Span.SetTag("sql.statement", payload.Command.CommandText);
                 scope.Span.SetTag("sql.table_name", TableNameExtractor.ExtractTableName(payload.Command.CommandText));
-                scope.Span.SetTag("sql.connection_string", payload.Command.Connection.ConnectionString);
+                scope.Span.SetIgnoredKeysIfNeeded("sql.connection_string", payload.Command.Connection.ConnectionString);
                 scope.Span.SetDataIfNeeded("sql.parameters", parameters);
 
                 if (payload.Result is DbDataReader) {
@@ -95,7 +95,7 @@ namespace Epsagon.Dotnet.Instrumentation.EFCore {
                 scope.Span.SetTag("sql.driver", payload.Command.Connection.GetType().FullName);
                 scope.Span.SetTag("sql.statement", payload.Command.CommandText);
                 scope.Span.SetTag("sql.table_name", TableNameExtractor.ExtractTableName(payload.Command.CommandText));
-                scope.Span.SetTag("sql.connection_string", payload.Command.Connection.ConnectionString);
+                scope.Span.SetIgnoredKeysIfNeeded("sql.connection_string", payload.Command.Connection.ConnectionString);
                 scope.Span.SetDataIfNeeded("sql.parameters", parameters);
 
                 scope.Span.AddException(payload.Exception);
