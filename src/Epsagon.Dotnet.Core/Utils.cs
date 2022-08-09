@@ -68,14 +68,13 @@ namespace Epsagon.Dotnet.Core {
                     span.SetTag(tagName, string.Join(";", input.Select(x => x.Key + "=" + x.Value)));
                 } else {
                     foreach (var key in input.Keys) {
-                    if (CurrentConfig.IgnoredKeys.Contains(key.Trim())){
-                        input[key] = "*********";
+                        if (CurrentConfig.IgnoredKeys.Contains(key.Trim())) {
+                            input[key] = "*********";
                         }
                     }
-                    span.SetTag(tagName, string.Join(";", input.Select(x => x.Key + "=" + x.Value)));  
-                } 
-            }
-            catch (Exception e) {
+                    span.SetTag(tagName, string.Join(";", input.Select(x => x.Key + "=" + x.Value)));
+                }
+            } catch (Exception e) {
                 span.AddException(e);
                 throw;
             }
@@ -131,7 +130,7 @@ namespace Epsagon.Dotnet.Core {
         }
 
         public static Dictionary<string, string> StrToDict(string obj) {
-            return obj.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries)
+            return obj.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                .Select(part => part.Split('='))
                .ToDictionary(split => split[0], split => split[1]);
         }
