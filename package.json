@@ -12,10 +12,10 @@
         "preinstall": "dotnet tool restore"
     },
     "devDependencies": {
-        "@commitlint/cli": "^11.0.0",
+        "@commitlint/cli": "^17.6.1",
         "@commitlint/config-conventional": "^11.0.0",
         "husky": "^5.0.9",
-        "lint-staged": "^10.5.4",
-        "semantic-release": "^17.3.9"
+        "lint-staged": "^13.2.1",
+        "semantic-release": "^21.0.1"
     }
 }
