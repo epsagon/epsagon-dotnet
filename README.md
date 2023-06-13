@@ -7,6 +7,8 @@
 
 [![NuGet](https://img.shields.io/nuget/v/Epsagon.Dotnet.Core.svg)](https://www.nuget.org/packages/Epsagon.Dotnet.Core)
 
+> **Note:**  This repository is archived since Epsagon is no longer supported
+
 # Epsagon Tracing for .NET
 
 This package provides tracing to .NET applications for the collection of distributed tracing and performance metrics in [Epsagon](https://app.epsagon.com/?utm_source=github).
